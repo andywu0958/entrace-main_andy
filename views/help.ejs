@@ -1,0 +1,308 @@
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0"><i class="fas fa-question-circle me-2"></i>使用說明</h4>
+            </div>
+            <div class="card-body">
+                <div class="accordion" id="helpAccordion">
+                    <!-- 登入與認證 -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#helpOne">
+                                <i class="fas fa-sign-in-alt me-2"></i>登入與認證
+                            </button>
+                        </h2>
+                        <div id="helpOne" class="accordion-collapse collapse show" data-bs-parent="#helpAccordion">
+                            <div class="accordion-body">
+                                <h5>預設帳號</h5>
+                                <div class="alert alert-info">
+                                    <p class="mb-1"><strong>使用者名稱:</strong> admin</p>
+                                    <p class="mb-0"><strong>密碼:</strong> admin123</p>
+                                </div>
+                                <p>請在首次登入後立即變更密碼以確保系統安全。</p>
+                                
+                                <h5 class="mt-3">登入步驟</h5>
+                                <ol>
+                                    <li>開啟瀏覽器，訪問系統網址</li>
+                                    <li>點擊右上角的「登入」按鈕</li>
+                                    <li>輸入使用者名稱和密碼</li>
+                                    <li>點擊「登入」按鈕</li>
+                                </ol>
+                                
+                                <h5 class="mt-3">角色權限</h5>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="card mb-3">
+                                            <div class="card-header bg-danger text-white">
+                                                <i class="fas fa-user-shield me-2"></i>管理員 (admin)
+                                            </div>
+                                            <div class="card-body">
+                                                <ul class="mb-0">
+                                                    <li>管理所有資產</li>
+                                                    <li>管理所有部門</li>
+                                                    <li>管理所有使用者</li>
+                                                    <li>存取所有統計資料</li>
+                                                    <li>匯出資料</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="card mb-3">
+                                            <div class="card-header bg-info text-white">
+                                                <i class="fas fa-user-tie me-2"></i>部門管理員 (dept_manager)
+                                            </div>
+                                            <div class="card-body">
+                                                <ul class="mb-0">
+                                                    <li>只能管理自己部門的資產</li>
+                                                    <li>只能檢視自己部門的資料</li>
+                                                    <li>不能管理部門</li>
+                                                    <li>不能管理使用者</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 資產管理 -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#helpTwo">
+                                <i class="fas fa-box me-2"></i>資產管理
+                            </button>
+                        </h2>
+                        <div id="helpTwo" class="accordion-collapse collapse" data-bs-parent="#helpAccordion">
+                            <div class="accordion-body">
+                                <h5>新增資產</h5>
+                                <ol>
+                                    <li>點擊左側選單「資產管理」</li>
+                                    <li>點擊「新增資產」按鈕</li>
+                                    <li>填寫資產資訊：
+                                        <ul>
+                                            <li><strong>資產名稱:</strong> 資產的識別名稱</li>
+                                            <li><strong>類別:</strong> 選擇資產類別</li>
+                                            <li><strong>部門:</strong> 選擇所屬部門</li>
+                                            <li><strong>狀態:</strong> 選擇資產狀態</li>
+                                        </ul>
+                                    </li>
+                                    <li>點擊「儲存」按鈕</li>
+                                </ol>
+                                
+                                <h5 class="mt-3">查詢資產</h5>
+                                <p>在資產列表頁面，您可以使用以下篩選條件：</p>
+                                <ul>
+                                    <li><strong>部門篩選:</strong> 選擇特定部門</li>
+                                    <li><strong>類別篩選:</strong> 選擇特定類別</li>
+                                    <li><strong>狀態篩選:</strong> 選擇資產狀態</li>
+                                    <li><strong>關鍵字搜尋:</strong> 搜尋資產名稱</li>
+                                </ul>
+                                
+                                <h5 class="mt-3">編輯與刪除資產</h5>
+                                <ul>
+                                    <li><strong>編輯:</strong> 點擊資產列表中的「編輯」按鈕</li>
+                                    <li><strong>刪除:</strong> 點擊資產列表中的「刪除」按鈕</li>
+                                    <li><strong>檢視詳細:</strong> 點擊資產名稱或「檢視」按鈕</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- QR Code 功能 -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#helpThree">
+                                <i class="fas fa-qrcode me-2"></i>QR Code 功能
+                            </button>
+                        </h2>
+                        <div id="helpThree" class="accordion-collapse collapse" data-bs-parent="#helpAccordion">
+                            <div class="accordion-body">
+                                <h5>QR Code 生成</h5>
+                                <p>系統會在新增資產時自動生成 QR Code，包含以下資訊：</p>
+                                <ul>
+                                    <li>資產 ID</li>
+                                    <li>資產名稱</li>
+                                    <li>所屬部門</li>
+                                    <li>檢視網址</li>
+                                </ul>
+                                
+                                <h5 class="mt-3">QR Code 使用</h5>
+                                <ol>
+                                    <li>在資產詳細頁面查看 QR Code</li>
+                                    <li>使用手機掃描 QR Code</li>
+                                    <li>系統將導向資產的唯讀頁面</li>
+                                    <li>可查看資產的基本資訊</li>
+                                </ol>
+                                
+                                <div class="alert alert-warning">
+                                    <i class="fas fa-exclamation-triangle me-2"></i>
+                                    <strong>注意:</strong> QR Code 唯讀頁面不需要登入即可查看，適合現場盤點使用。
+                                </div>
+                                
+                                <h5 class="mt-3">重新生成 QR Code</h5>
+                                <p>如果需要重新生成 QR Code：</p>
+                                <ol>
+                                    <li>進入資產詳細頁面</li>
+                                    <li>點擊「重新生成 QR Code」按鈕</li>
+                                    <li>系統將生成新的 QR Code 圖片</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 部門管理 -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#helpFour">
+                                <i class="fas fa-building me-2"></i>部門管理
+                            </button>
+                        </h2>
+                        <div id="helpFour" class="accordion-collapse collapse" data-bs-parent="#helpAccordion">
+                            <div class="accordion-body">
+                                <div class="alert alert-info">
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    <strong>注意:</strong> 部門管理功能僅限管理員使用。
+                                </div>
+                                
+                                <h5>新增部門</h5>
+                                <ol>
+                                    <li>點擊左側選單「部門管理」</li>
+                                    <li>點擊「新增部門」按鈕</li>
+                                    <li>輸入部門名稱</li>
+                                    <li>點擊「儲存」按鈕</li>
+                                </ol>
+                                
+                                <h5 class="mt-3">管理部門</h5>
+                                <ul>
+                                    <li><strong>檢視部門:</strong> 點擊部門名稱查看詳細資訊</li>
+                                    <li><strong>編輯部門:</strong> 點擊「編輯」按鈕修改部門名稱</li>
+                                    <li><strong>刪除部門:</strong> 點擊「刪除」按鈕刪除部門</li>
+                                </ul>
+                                
+                                <div class="alert alert-warning">
+                                    <i class="fas fa-exclamation-triangle me-2"></i>
+                                    <strong>注意:</strong> 刪除部門時，該部門的所有資產也會被刪除，請謹慎操作。
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 統計分析 -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#helpFive">
+                                <i class="fas fa-chart-bar me-2"></i>統計分析
+                            </button>
+                        </h2>
+                        <div id="helpFive" class="accordion-collapse collapse" data-bs-parent="#helpAccordion">
+                            <div class="accordion-body">
+                                <h5>統計功能</h5>
+                                <p>系統提供以下統計分析功能：</p>
+                                
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="card mb-3">
+                                            <div class="card-header">
+                                                <i class="fas fa-chart-pie me-2"></i>部門資產分佈
+                                            </div>
+                                            <div class="card-body">
+                                                <p class="mb-0">顯示各部門的資產數量和使用率統計</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="card mb-3">
+                                            <div class="card-header">
+                                                <i class="fas fa-tags me-2"></i>資產類別統計
+                                            </div>
+                                            <div class="card-body">
+                                                <p class="mb-0">顯示各類別資產的數量統計</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <h5 class="mt-3">資料匯出</h5>
+                                <p>管理員可以匯出資產資料：</p>
+                                <ol>
+                                    <li>點擊左側選單「統計分析」</li>
+                                    <li>點擊「匯出資料」按鈕</li>
+                                    <li>系統將下載 CSV 格式的資產資料</li>
+                                </ol>
+                                
+                                <div class="alert alert-info">
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    CSV 檔案包含所有資產的詳細資訊，適合用於 Excel 分析或備份。
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 常見問題 -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#helpSix">
+                                <i class="fas fa-life-ring me-2"></i>常見問題
+                            </button>
+                        </h2>
+                        <div id="helpSix" class="accordion-collapse collapse" data-bs-parent="#helpAccordion">
+                            <div class="accordion-body">
+                                <h5>Q: 忘記密碼怎麼辦？</h5>
+                                <p>A: 請聯繫系統管理員重置密碼。</p>
+                                
+                                <h5 class="mt-3">Q: 為什麼無法新增資產？</h5>
+                                <p>A: 請檢查以下事項：
+                                    <ul>
+                                        <li>是否已登入系統</li>
+                                        <li>是否有新增資產的權限</li>
+                                        <li>是否填寫了所有必填欄位</li>
+                                        <li>是否選擇了有效的部門</li>
+                                    </ul>
+                                </p>
+                                
+                                <h5 class="mt-3">Q: QR Code 掃描後無法顯示資訊？</h5>
+                                <p>A: 請檢查以下事項：
+                                    <ul>
+                                        <li>網路連線是否正常</li>
+                                        <li>資產是否已被刪除</li>
+                                        <li>伺服器是否正常運行</li>
+                                    </ul>
+                                </p>
+                                
+                                <h5 class="mt-3">Q: 如何變更個人資料？</h5>
+                                <p>A: 點擊右上角的使用者名稱，選擇「個人資料」進行修改。</p>
+                                
+                                <h5 class="mt-3">Q: 系統支援行動裝置嗎？</h5>
+                                <p>A: 是的，系統採用響應式設計，支援各種尺寸的裝置，包括手機和平板電腦。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <hr class="my-4">
+                
+                <div class="alert alert-success">
+                    <h5><i class="fas fa-lightbulb me-2"></i>使用小技巧</h5>
+                    <ul class="mb-0">
+                        <li>使用鍵盤快速鍵：Tab 鍵可在表單欄位間切換</li>
+                        <li>在列表頁面使用篩選功能快速找到需要的資料</li>
+                        <li>定期匯出資料進行備份</li>
+                        <li>使用 QR Code 進行現場資產盤點</li>
+                        <li>定期檢查系統統計報表，了解資產使用狀況</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="card-footer text-center">
+                <p class="mb-0">
+                    如需進一步協助，請聯繫系統管理員或參考系統文件。
+                    <br>
+                    <small class="text-muted">最後更新: 2024年</small>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,54 @@
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white pb-0 border-bottom-0 pt-4 px-4">
+                <h4 class="mb-0"><i class="fas fa-user-cog me-2 text-primary"></i>個人資料</h4>
+            </div>
+            <div class="card-body p-4">
+                <form action="/auth/profile" method="POST">
+                    <div class="mb-3">
+                        <label class="form-label text-muted">使用者名稱</label>
+                        <input type="text" class="form-control" name="username" value="<%= user.username %>" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label text-muted">角色</label>
+                        <input type="text" class="form-control" value="<%= user.role === 'admin' ? '系統管理員' : '部門管理員' %>" disabled>
+                    </div>
+
+                    <% if (user.department_id) { %>
+                        <% const userDept = departments.find(d => d.id === user.department_id); %>
+                        <div class="mb-3">
+                            <label class="form-label text-muted">所屬部門</label>
+                            <input type="text" class="form-control" value="<%= userDept ? userDept.name : '未知' %>" disabled>
+                        </div>
+                    <% } %>
+
+                    <hr class="my-4">
+                    <h5 class="mb-3">變更密碼 (選填)</h5>
+
+                    <div class="mb-3">
+                        <label class="form-label text-muted">目前密碼</label>
+                        <input type="password" class="form-control" name="currentPassword" placeholder="輸入目前密碼">
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label text-muted">新密碼</label>
+                            <input type="password" class="form-control" name="newPassword" placeholder="輸入新密碼">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label text-muted">確認新密碼</label>
+                            <input type="password" class="form-control" name="confirmPassword" placeholder="再次輸入新密碼">
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                        <a href="/" class="btn btn-outline-secondary me-md-2">取消</a>
+                        <button type="submit" class="btn btn-primary">儲存變更</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

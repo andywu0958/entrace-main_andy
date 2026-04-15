@@ -1,0 +1,124 @@
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0"><i class="fas fa-plus-circle me-2"></i>新增資產</h4>
+            </div>
+            <div class="card-body">
+                <form action="/assets" method="POST">
+                    <div class="row g-4">
+                        <div class="col-12 col-md-6">
+                            <div class="mb-3">
+                                <label for="name" class="form-label">資產名稱 <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="name" name="name" required placeholder="例如：筆記型電腦 Dell XPS 15">
+                                <div class="form-text">請輸入資產的詳細名稱</div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="category" class="form-label">類別 <span class="text-danger">*</span></label>
+                                <select class="form-select" id="category" name="category" required>
+                                    <option value="">請選擇類別</option>
+                                    <option value="電子設備">電子設備</option>
+                                    <option value="辦公家具">辦公家具</option>
+                                    <option value="會議設備">會議設備</option>
+                                    <option value="網路設備">網路設備</option>
+                                    <option value="軟體授權">軟體授權</option>
+                                    <option value="其他">其他</option>
+                                </select>
+                                <div class="form-text">選擇資產所屬類別</div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="department_id" class="form-label">所屬部門 <span class="text-danger">*</span></label>
+                                <select class="form-select" id="department_id" name="department_id" required>
+                                    <option value="">請選擇部門</option>
+                                    <% departments.forEach(dept => { %>
+                                        <option value="<%= dept.id %>"><%= dept.name %></option>
+                                    <% }); %>
+                                </select>
+                                <div class="form-text">選擇資產所屬部門</div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-12 col-md-6">
+                            <div class="mb-3">
+                                <label for="status" class="form-label">狀態 <span class="text-danger">*</span></label>
+                                <select class="form-select" id="status" name="status" required>
+                                    <option value="active" selected>使用中</option>
+                                    <option value="inactive">閒置</option>
+                                    <option value="maintenance">維修中</option>
+                                    <option value="retired">已報廢</option>
+                                </select>
+                                <div class="form-text">選擇資產目前狀態</div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="description" class="form-label">備註說明</label>
+                                <textarea class="form-control" id="description" name="description" rows="3" placeholder="可選：輸入資產的詳細說明或特殊注意事項"></textarea>
+                                <div class="form-text">可選：輸入資產的詳細說明</div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="serial_number" class="form-label">序號/編號</label>
+                                <input type="text" class="form-control" id="serial_number" name="serial_number" placeholder="例如：SN-2024-001">
+                                <div class="form-text">可選：輸入資產的序號或內部編號</div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="purchase_date" class="form-label">購買日期</label>
+                                <input type="date" class="form-control" id="purchase_date" name="purchase_date">
+                                <div class="form-text">可選：輸入資產購買日期</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle me-2"></i>
+                                <strong>注意：</strong> 儲存後系統將自動生成 QR Code，可用於資產追蹤與管理。
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <div class="d-flex flex-column flex-md-row justify-content-md-between gap-2">
+                                <a href="/assets" class="btn btn-outline-secondary order-md-1">
+                                    <i class="fas fa-arrow-left me-2"></i>返回列表
+                                </a>
+                                <button type="submit" class="btn btn-primary order-md-2">
+                                    <i class="fas fa-save me-2"></i>儲存資產
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="card-footer">
+                <small class="text-muted">
+                    <i class="fas fa-lightbulb me-1"></i>
+                    提示：填寫完整的資產資訊有助於後續的管理與追蹤。
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // 設定購買日期的預設值為今天
+    document.addEventListener('DOMContentLoaded', function() {
+        const today = new Date().toISOString().split('T')[0];
+        const purchaseDateInput = document.getElementById('purchase_date');
+        if (purchaseDateInput && !purchaseDateInput.value) {
+            purchaseDateInput.value = today;
+        }
+        
+        // 自動聚焦第一個輸入欄位
+        const nameInput = document.getElementById('name');
+        if (nameInput) {
+            nameInput.focus();
+        }
+    });
+</script>

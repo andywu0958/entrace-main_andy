@@ -1,0 +1,266 @@
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h4 class="mb-0"><i class="fas fa-tachometer-alt me-2"></i>系統概覽</h4>
+                <span class="badge bg-primary">歡迎回來，<%= user.username %></span>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-6 col-md-3">
+                        <div class="stat-card" style="background: linear-gradient(135deg, #3498db, #2980b9);">
+                            <i class="fas fa-box"></i>
+                            <div class="count">
+                                <% 
+                                let totalAssets = 0;
+                                departmentStats.forEach(dept => {
+                                    totalAssets += parseInt(dept.total_assets || 0);
+                                });
+                                %>
+                                <%= totalAssets %>
+                            </div>
+                            <div class="label">總資產數量</div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="stat-card" style="background: linear-gradient(135deg, #27ae60, #219653);">
+                            <i class="fas fa-check-circle"></i>
+                            <div class="count">
+                                <% 
+                                let activeAssets = 0;
+                                departmentStats.forEach(dept => {
+                                    activeAssets += parseInt(dept.active_assets || 0);
+                                });
+                                %>
+                                <%= activeAssets %>
+                            </div>
+                            <div class="label">使用中資產</div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="stat-card" style="background: linear-gradient(135deg, #f39c12, #e67e22);">
+                            <i class="fas fa-building"></i>
+                            <div class="count"><%= departmentStats.length %></div>
+                            <div class="label">部門數量</div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="stat-card" style="background: linear-gradient(135deg, #9b59b6, #8e44ad);">
+                            <i class="fas fa-tags"></i>
+                            <div class="count"><%= categoryStats.length %></div>
+                            <div class="label">資產類別</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <!-- 最近新增的資產 -->
+    <div class="col-lg-8">
+        <div class="card h-100">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-history me-2"></i>最近新增的資產</h5>
+            </div>
+            <div class="card-body">
+                <% if (recentAssets.length > 0) { %>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>資產名稱</th>
+                                    <th class="d-none d-md-table-cell">類別</th>
+                                    <th class="d-none d-md-table-cell">部門</th>
+                                    <th>狀態</th>
+                                    <th class="d-none d-md-table-cell">建立時間</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% recentAssets.forEach(asset => { %>
+                                <tr>
+                                    <td><%= asset.name %></td>
+                                    <td class="d-none d-md-table-cell"><span class="badge bg-info"><%= asset.category %></span></td>
+                                    <td class="d-none d-md-table-cell"><%= asset.department_name %></td>
+                                    <td>
+                                        <% 
+                                        let statusClass = 'bg-secondary';
+                                        if (asset.status === 'active') statusClass = 'bg-success';
+                                        if (asset.status === 'inactive') statusClass = 'bg-danger';
+                                        if (asset.status === 'maintenance') statusClass = 'bg-warning';
+                                        %>
+                                        <span class="badge <%= statusClass %>"><%= asset.status === 'active' ? '使用中' : asset.status === 'inactive' ? '停用' : asset.status === 'maintenance' ? '維修中' : '已報廢' %></span>
+                                    </td>
+                                    <td class="d-none d-md-table-cell"><%= new Date(asset.created_at).toLocaleDateString('zh-TW') %></td>
+                                    <td>
+                                        <a href="/assets/<%= asset.id %>" class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                <% }); %>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="text-end mt-3">
+                        <a href="/assets" class="btn btn-primary">查看所有資產</a>
+                    </div>
+                <% } else { %>
+                    <div class="text-center py-4">
+                        <i class="fas fa-box-open fa-3x text-muted mb-3"></i>
+                        <p class="text-muted">目前沒有資產資料</p>
+                        <a href="/assets/create" class="btn btn-primary">新增第一筆資產</a>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+    </div>
+
+    <!-- 部門資產統計和快速操作 -->
+    <div class="col-lg-4">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-chart-pie me-2"></i>部門資產分佈</h5>
+            </div>
+            <div class="card-body">
+                <% if (departmentStats.length > 0) { %>
+                    <div class="list-group">
+                        <% departmentStats.forEach(dept => { %>
+                            <div class="list-group-item border-0">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="mb-1"><%= dept.department_name %></h6>
+                                        <small class="text-muted">
+                                            總資產: <%= dept.total_assets || 0 %> | 
+                                            使用中: <%= dept.active_assets || 0 %>
+                                        </small>
+                                    </div>
+                                    <div class="text-end">
+                                        <div class="progress" style="width: 100px; height: 8px;">
+                                            <% 
+                                            const total = parseInt(dept.total_assets || 0);
+                                            const active = parseInt(dept.active_assets || 0);
+                                            const percentage = total > 0 ? Math.round((active / total) * 100) : 0;
+                                            %>
+                                            <div class="progress-bar bg-success" style="width: <%= percentage %>%"></div>
+                                        </div>
+                                        <small class="text-muted"><%= percentage %>% 使用率</small>
+                                    </div>
+                                </div>
+                            </div>
+                        <% }); %>
+                    </div>
+                    <div class="text-end mt-3">
+                        <a href="/assets/stats" class="btn btn-outline-primary">詳細統計</a>
+                    </div>
+                <% } else { %>
+                    <div class="text-center py-4">
+                        <i class="fas fa-building fa-3x text-muted mb-3"></i>
+                        <p class="text-muted">目前沒有部門資料</p>
+                        <% if (user.role === 'admin') { %>
+                            <a href="/departments/create" class="btn btn-primary">新增部門</a>
+                        <% } %>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+
+        <!-- 快速操作 -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-bolt me-2"></i>快速操作</h5>
+            </div>
+            <div class="card-body">
+                <div class="row g-2">
+                    <div class="col-6 col-md-6 col-lg-12">
+                        <a href="/assets/create" class="btn btn-primary w-100 py-3">
+                            <i class="fas fa-plus fa-2x mb-2"></i><br>
+                            新增資產
+                        </a>
+                    </div>
+                    <div class="col-6 col-md-6 col-lg-12">
+                        <a href="/assets" class="btn btn-outline-primary w-100 py-3">
+                            <i class="fas fa-search fa-2x mb-2"></i><br>
+                            查詢資產
+                        </a>
+                    </div>
+                    <% if (user.role === 'admin') { %>
+                    <div class="col-6 col-md-6 col-lg-12">
+                        <a href="/departments" class="btn btn-outline-success w-100 py-3">
+                            <i class="fas fa-building fa-2x mb-2"></i><br>
+                            部門管理
+                        </a>
+                    </div>
+                    <div class="col-6 col-md-6 col-lg-12">
+                        <a href="/auth/register" class="btn btn-outline-info w-100 py-3">
+                            <i class="fas fa-user-plus fa-2x mb-2"></i><br>
+                            新增使用者
+                        </a>
+                    </div>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 系統資訊 -->
+<div class="row mt-4 g-3">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-info-circle me-2"></i>系統資訊</h5>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-6 col-md-3">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="bg-primary rounded-circle p-3 me-3">
+                                <i class="fas fa-shield-alt fa-2x text-white"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-0">安全可靠</h6>
+                                <small class="text-muted">角色權限控制</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="bg-success rounded-circle p-3 me-3">
+                                <i class="fas fa-qrcode fa-2x text-white"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-0">QR Code 管理</h6>
+                                <small class="text-muted">快速掃描存取</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="bg-warning rounded-circle p-3 me-3">
+                                <i class="fas fa-chart-line fa-2x text-white"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-0">即時統計</h6>
+                                <small class="text-muted">數據分析報表</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="bg-info rounded-circle p-3 me-3">
+                                <i class="fas fa-mobile-alt fa-2x text-white"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-0">行動友善</h6>
+                                <small class="text-muted">響應式設計</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

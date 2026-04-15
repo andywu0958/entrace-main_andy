@@ -1,0 +1,57 @@
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white pb-0 border-bottom-0 pt-4 px-4">
+                <h4 class="mb-0"><i class="fas fa-user-edit me-2 text-warning"></i>編輯使用者</h4>
+            </div>
+            <div class="card-body p-4">
+                <form action="/users/<%= editUser.id %>?_method=PUT" method="POST">
+                    <div class="mb-3">
+                        <label class="form-label text-muted">使用者名稱 <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" name="username" value="<%= editUser.username %>" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label text-muted">角色 <span class="text-danger">*</span></label>
+                        <select class="form-select" name="role" required>
+                            <option value="admin" <%= editUser.role === 'admin' ? 'selected' : '' %>>系統管理員</option>
+                            <option value="dept_manager" <%= editUser.role === 'dept_manager' ? 'selected' : '' %>>部門管理員</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label text-muted">所屬部門</label>
+                        <select class="form-select" name="department_id">
+                            <option value="">(無)</option>
+                            <% departments.forEach(dept => { %>
+                                <option value="<%= dept.id %>" <%= editUser.department_id === dept.id ? 'selected' : '' %>><%= dept.name %></option>
+                            <% }); %>
+                        </select>
+                        <div class="form-text">部門管理員必須選擇部門。</div>
+                    </div>
+
+                    <hr class="my-4">
+                    <h5 class="mb-3">重設密碼 (選填)</h5>
+                    <div class="alert alert-warning py-2 mb-3">
+                        <i class="fas fa-exclamation-triangle me-2"></i>若不變更密碼，請留空。
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label text-muted">新密碼</label>
+                        <input type="password" class="form-control" name="password" placeholder="輸入新密碼">
+                        <div class="form-text">密碼長度至少需要 6 個字元。</div>
+                    </div>
+
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                        <a href="/users" class="btn btn-outline-secondary me-md-2">
+                            <i class="fas fa-times me-1"></i>取消
+                        </a>
+                        <button type="submit" class="btn btn-warning text-white">
+                            <i class="fas fa-save me-1"></i>儲存變更
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

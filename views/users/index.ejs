@@ -1,0 +1,108 @@
+<div class="row">
+    <div class="col-12">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white pb-0 border-bottom-0 pt-4 px-4 d-flex justify-content-between align-items-center">
+                <h4 class="mb-0"><i class="fas fa-users me-2 text-primary"></i>使用者管理</h4>
+                <a href="/auth/register" class="btn btn-primary btn-sm">
+                    <i class="fas fa-plus me-2"></i>新增使用者
+                </a>
+            </div>
+            
+            <div class="card-body p-4">
+                <% if (users && users.length > 0) { %>
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th width="80">ID</th>
+                                    <th>使用者名稱</th>
+                                    <th>角色</th>
+                                    <th>所屬部門</th>
+                                    <th>加入時間</th>
+                                    <th width="120" class="text-center">操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% users.forEach(u => { %>
+                                    <tr>
+                                        <td class="text-muted">#<%= u.id %></td>
+                                        <td class="fw-semibold">
+                                            <%= u.username %>
+                                            <% if (u.id === currentUser.id) { %>
+                                                <span class="badge bg-secondary ms-1">您</span>
+                                            <% } %>
+                                        </td>
+                                        <td>
+                                            <% if (u.role === 'admin') { %>
+                                                <span class="badge bg-danger">系統管理員</span>
+                                            <% } else { %>
+                                                <span class="badge bg-info">部門管理員</span>
+                                            <% } %>
+                                        </td>
+                                        <td>
+                                            <% if (u.department_name) { %>
+                                                <i class="fas fa-building me-1 text-muted"></i><%= u.department_name %>
+                                            <% } else { %>
+                                                <span class="text-muted">-</span>
+                                            <% } %>
+                                        </td>
+                                        <td>
+                                            <small class="text-muted">
+                                                <%= new Date(u.created_at).toLocaleDateString('zh-TW') %>
+                                            </small>
+                                        </td>
+                                        <td class="text-center">
+                                            <div class="btn-group btn-group-sm" role="group">
+                                                <a href="/users/<%= u.id %>/edit" class="btn btn-outline-warning" title="編輯">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                                <% if (u.id !== currentUser.id) { %>
+                                                    <form action="/users/<%= u.id %>?_method=DELETE" method="POST" class="d-inline" onsubmit="return confirm('確定要刪除此使用者嗎？此操作無法復原。');">
+                                                        <button type="submit" class="btn btn-outline-danger" title="刪除">
+                                                            <i class="fas fa-trash"></i>
+                                                        </button>
+                                                    </form>
+                                                <% } else { %>
+                                                    <button type="button" class="btn btn-outline-secondary disabled" title="無法刪除自己">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                <% } %>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                <% }); %>
+                            </tbody>
+                        </table>
+                    </div>
+                <% } else { %>
+                    <div class="text-center py-5">
+                        <div class="mb-3">
+                            <i class="fas fa-users fa-3x text-muted opacity-50"></i>
+                        </div>
+                        <h5 class="text-muted">暫無使用者資料</h5>
+                        <p class="text-muted mb-4">系統中尚未有其他使用者。</p>
+                        <a href="/auth/register" class="btn btn-primary">
+                            <i class="fas fa-plus me-2"></i>新增使用者
+                        </a>
+                    </div>
+                <% } %>
+            </div>
+            
+            <div class="card-footer bg-white border-top-0 pb-4 px-4">
+                <div class="row">
+                    <div class="col-md-6">
+                        <small class="text-muted">
+                            共 <%= users ? users.length : 0 %> 位使用者
+                        </small>
+                    </div>
+                    <div class="col-md-6 text-md-end">
+                        <small class="text-muted">
+                            <i class="fas fa-shield-alt me-1"></i>
+                            系統管理員可以管理所有使用者
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

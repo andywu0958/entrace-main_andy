@@ -1,0 +1,1408 @@
+/* 公司資產管理系統 - 主要樣式 (美化版) */
+
+/* CSS 變數定義 - 增強色彩對比度 */
+:root {
+    --primary-color: #1a252f;
+    --secondary-color: #2980b9;
+    --success-color: #27ae60;
+    --danger-color: #c0392b;
+    --warning-color: #d35400;
+    --info-color: #117a8b;
+    --light-color: #f8f9fa;
+    --dark-color: #2c3e50;
+    --border-radius: 10px;
+    --box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+    --box-shadow-hover: 0 12px 30px rgba(0, 0, 0, 0.15);
+    --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    --gradient-primary: linear-gradient(135deg, #3498db, #2980b9);
+    --gradient-success: linear-gradient(135deg, #27ae60, #219653);
+    --gradient-warning: linear-gradient(135deg, #f39c12, #e67e22);
+    --gradient-danger: linear-gradient(135deg, #e74c3c, #c0392b);
+    --gradient-purple: linear-gradient(135deg, #9b59b6, #8e44ad);
+}
+
+/* 全域樣式 */
+body {
+    font-family: 'Segoe UI', 'Microsoft JhengHei', 'PingFang TC', 'Helvetica Neue', Arial, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: #f8f9fa;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* 導航列增強 */
+.navbar {
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-brand {
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    font-size: 1.25rem;
+}
+
+.navbar-dark .navbar-brand {
+    color: white !important;
+}
+
+/* 卡片樣式增強 */
+.card {
+    transition: var(--transition);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: var(--box-shadow);
+    margin-bottom: 1.5rem;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15) !important;
+}
+
+.card-header {
+    font-weight: 600;
+    background-color: white;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    padding: 1rem 1.25rem;
+}
+
+.card-body {
+    padding: 1.5rem;
+}
+
+/* 統計卡片專用樣式 */
+.stat-card {
+    background: linear-gradient(135deg, var(--secondary-color), #2980b9);
+    color: white;
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    text-align: center;
+    transition: var(--transition);
+    box-shadow: var(--box-shadow);
+    margin-bottom: 1rem;
+    border: none;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(52, 152, 219, 0.3) !important;
+}
+
+.stat-card i {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    opacity: 0.9;
+}
+
+.stat-card .count {
+    font-size: 2.5rem;
+    font-weight: 700;
+    line-height: 1;
+    margin: 0.5rem 0;
+}
+
+.stat-card .label {
+    font-size: 0.9rem;
+    opacity: 0.9;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* 按鈕樣式增強 */
+.btn {
+    border-radius: 6px;
+    font-weight: 500;
+    transition: var(--transition);
+    padding: 0.5rem 1.25rem;
+    border: none;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--secondary-color), #2980b9);
+    border: none;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #2980b9, #1c6ea4);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(41, 128, 185, 0.4);
+}
+
+.btn-outline-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(52, 152, 219, 0.2);
+}
+
+/* 表格樣式增強 */
+.table {
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    margin-bottom: 0;
+}
+
+.table th {
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+    background-color: var(--light-color);
+    border-bottom: 2px solid #dee2e6;
+    padding: 1rem;
+}
+
+.table td {
+    vertical-align: middle;
+    padding: 1rem;
+}
+
+.table-hover tbody tr:hover {
+    background-color: rgba(52, 152, 219, 0.05);
+}
+
+/* 徽章樣式增強 */
+.badge {
+    font-weight: 500;
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+}
+
+/* 表單樣式增強 */
+.form-control, .form-select {
+    border-radius: 6px;
+    border: 1px solid #ced4da;
+    padding: 0.75rem 1rem;
+    transition: var(--transition);
+    font-size: 1rem;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--secondary-color);
+    box-shadow: 0 0 0 0.25rem rgba(52, 152, 219, 0.25);
+    transform: translateY(-1px);
+}
+
+.form-label {
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    color: var(--dark-color);
+}
+
+/* 警告訊息增強 */
+.alert {
+    border: none;
+    border-radius: var(--border-radius);
+    padding: 1rem 1.25rem;
+    margin-bottom: 1rem;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+    border-left: 4px solid #28a745;
+}
+
+.alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+    border-left: 4px solid #dc3545;
+}
+
+.alert-info {
+    background-color: #d1ecf1;
+    color: #0c5460;
+    border-left: 4px solid #17a2b8;
+}
+
+.alert-warning {
+    background-color: #fff3cd;
+    color: #856404;
+    border-left: 4px solid #ffc107;
+}
+
+/* 進度條樣式 */
+.progress {
+    border-radius: 10px;
+    height: 10px;
+    background-color: #e9ecef;
+}
+
+.progress-bar {
+    border-radius: 10px;
+    background: linear-gradient(90deg, var(--success-color), #2ecc71);
+}
+
+/* 側邊欄樣式 */
+.sidebar {
+    background: linear-gradient(180deg, var(--primary-color), #34495e);
+}
+
+.sidebar .nav-link {
+    color: rgba(255, 255, 255, 0.8);
+    border-radius: 0;
+    margin: 2px 0;
+    transition: var(--transition);
+    padding: 0.75rem 1.25rem;
+}
+
+.sidebar .nav-link:hover, .sidebar .nav-link.active {
+    color: white;
+    background: rgba(255, 255, 255, 0.1);
+    border-left: 4px solid var(--secondary-color);
+}
+
+/* 頁尾樣式 */
+.footer {
+    background: linear-gradient(180deg, var(--primary-color), #1a252f);
+    color: white;
+    margin-top: 3rem;
+    padding: 2rem 0;
+}
+
+.footer a {
+    color: var(--secondary-color);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.footer a:hover {
+    color: #2980b9;
+    text-decoration: underline;
+}
+
+/* 動畫效果 */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in {
+    animation: fadeIn 0.5s ease-out;
+}
+
+/* 載入動畫 */
+.loading-spinner {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid var(--secondary-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* 自訂滾動條 */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--secondary-color);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #2980b9;
+}
+
+/* 工具提示 */
+.tooltip-inner {
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 0.85rem;
+}
+
+/* 分頁樣式 */
+.pagination .page-link {
+    border-radius: 6px;
+    margin: 0 3px;
+    border: 1px solid #dee2e6;
+    color: var(--secondary-color);
+    font-weight: 500;
+}
+
+.pagination .page-item.active .page-link {
+    background: linear-gradient(135deg, var(--secondary-color), #2980b9);
+    border-color: var(--secondary-color);
+    color: white;
+}
+
+.pagination .page-link:hover {
+    background-color: var(--light-color);
+    border-color: var(--secondary-color);
+}
+
+/* 下拉選單 */
+.dropdown-menu {
+    border-radius: var(--border-radius);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    padding: 0.5rem 0;
+}
+
+.dropdown-item {
+    padding: 0.5rem 1.25rem;
+    transition: var(--transition);
+}
+
+.dropdown-item:hover {
+    background-color: var(--light-color);
+    color: var(--secondary-color);
+}
+
+/* 標題樣式 */
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+/* 連結樣式 */
+a {
+    color: var(--secondary-color);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: #2980b9;
+    text-decoration: underline;
+}
+
+/* 列表樣式 */
+.list-group-item {
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    margin-bottom: 0.5rem;
+    border-radius: 6px;
+    transition: var(--transition);
+}
+
+.list-group-item:hover {
+    background-color: var(--light-color);
+    transform: translateX(5px);
+}
+
+/* 輸入群組 */
+.input-group-text {
+    background-color: var(--light-color);
+    border: 1px solid #ced4da;
+    color: #495057;
+    font-weight: 500;
+}
+
+/* 模態框 */
+.modal-content {
+    border-radius: var(--border-radius);
+    border: none;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.modal-header {
+    border-bottom: 1px solid #dee2e6;
+    background-color: var(--light-color);
+    border-radius: var(--border-radius) var(--border-radius) 0 0;
+}
+
+.modal-footer {
+    border-top: 1px solid #dee2e6;
+    background-color: var(--light-color);
+    border-radius: 0 0 var(--border-radius) var(--border-radius);
+}
+
+/* 增強響應式設計 */
+
+/* 中型裝置 (平板, 768px 以下) */
+@media (max-width: 768px) {
+    .sidebar {
+        margin-bottom: 1rem;
+        border-radius: var(--border-radius);
+    }
+    
+    .main-content {
+        padding: 1rem !important;
+    }
+    
+    .card {
+        margin-bottom: 1rem;
+    }
+    
+    .stat-card {
+        margin-bottom: 1rem;
+        padding: 1.25rem;
+    }
+    
+    .table-responsive {
+        font-size: 0.9rem;
+    }
+    
+    .table th, .table td {
+        padding: 0.75rem;
+    }
+    
+    .btn {
+        font-size: 0.95rem;
+        padding: 0.5rem 1rem;
+    }
+    
+    h1, h2, h3, h4, h5, h6 {
+        font-size: calc(1rem + 1vw);
+    }
+}
+
+/* 小型裝置 (手機, 576px 以下) */
+@media (max-width: 576px) {
+    .card-body {
+        padding: 1rem;
+    }
+    
+    .btn {
+        padding: 0.75rem 1rem;
+        font-size: 1rem;
+        width: 100%;
+    }
+    
+    .form-control, .form-select {
+        padding: 0.875rem;
+        font-size: 16px; /* 防止iOS縮放 */
+    }
+    
+    .alert {
+        padding: 0.875rem 1rem;
+        font-size: 0.95rem;
+    }
+    
+    .navbar-brand {
+        font-size: 1.1rem;
+    }
+    
+    .list-group-item {
+        padding: 1rem;
+    }
+    
+    .modal-dialog {
+        margin: 0.5rem;
+    }
+    
+    .pagination .page-link {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.9rem;
+    }
+}
+
+/* 超小型裝置 (320px 以下) */
+@media (max-width: 320px) {
+    .stat-card .count {
+        font-size: 2rem;
+    }
+    
+    .stat-card i {
+        font-size: 2rem;
+    }
+}
+
+/* 觸控裝置優化 */
+@media (hover: none) and (pointer: coarse) {
+    .btn:hover {
+        transform: none;
+    }
+    
+    .card:hover {
+        transform: none;
+    }
+    
+    .stat-card:hover {
+        transform: none;
+    }
+    
+    .list-group-item:hover {
+        transform: none;
+    }
+}
+
+/* 橫向模式優化 (例如平板橫放) */
+@media (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
+    .main-content {
+        padding: 1.5rem;
+    }
+    
+    .sidebar {
+        width: 200px;
+    }
+}
+
+/* 列印樣式 */
+@media print {
+    .navbar, .sidebar, .footer, .btn {
+        display: none !important;
+    }
+    
+    .card {
+        border: 1px solid #000 !important;
+        box-shadow: none !important;
+        page-break-inside: avoid;
+    }
+    
+    a {
+        color: #000 !important;
+        text-decoration: none !important;
+    }
+    
+    .table {
+        font-size: 10pt;
+    }
+}
+
+/* 高對比度模式支援 */
+@media (prefers-contrast: high) {
+    .btn-primary {
+        background: var(--secondary-color);
+        color: #fff;
+    }
+    
+    .stat-card {
+        background: var(--secondary-color);
+        color: #fff;
+    }
+    
+    body {
+        color: #000;
+        background-color: #fff;
+    }
+}
+
+/* 減少動畫模式 */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* 深色模式支援 */
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #121212;
+        color: #e0e0e0;
+    }
+    
+    .card {
+        background-color: #1e1e1e;
+        border-color: #333;
+    }
+    
+    .card-header {
+        background-color: #1e1e1e;
+    }
+    
+    .table {
+        color: #e0e0e0;
+    }
+    
+    .table th {
+        background-color: #2c2c2c;
+    }
+    
+    .alert {
+        color: #e0e0e0;
+    }
+    
+    /* 調整其他元素顏色 */
+}
+
+/* ========== 新增 UI/UX 增強樣式 ========== */
+
+/* 1. 增強卡片樣式 */
+.card {
+    position: relative;
+    overflow: hidden;
+}
+
+.card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: var(--gradient-primary);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s ease;
+}
+
+.card:hover::before {
+    transform: scaleX(1);
+}
+
+/* 2. 增強統計卡片 */
+.stat-card {
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.stat-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+    background-size: 20px 20px;
+    opacity: 0.3;
+    z-index: -1;
+    animation: float 20s linear infinite;
+}
+
+@keyframes float {
+    0% { transform: translate(0, 0) rotate(0deg); }
+    100% { transform: translate(-20px, -20px) rotate(360deg); }
+}
+
+/* 3. 增強按鈕樣式 */
+.btn {
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.btn::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 5px;
+    height: 5px;
+    background: rgba(255, 255, 255, 0.5);
+    opacity: 0;
+    border-radius: 100%;
+    transform: scale(1, 1) translate(-50%);
+    transform-origin: 50% 50%;
+}
+
+.btn:focus:not(:active)::after {
+    animation: ripple 1s ease-out;
+}
+
+@keyframes ripple {
+    0% {
+        transform: scale(0, 0);
+        opacity: 0.5;
+    }
+    20% {
+        transform: scale(25, 25);
+        opacity: 0.3;
+    }
+    100% {
+        transform: scale(40, 40);
+        opacity: 0;
+    }
+}
+
+/* 4. 增強表單輸入 */
+.form-control, .form-select {
+    background-color: white;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus, .form-select:focus {
+    background-color: #fff;
+    border-color: var(--secondary-color);
+    box-shadow: 0 0 0 0.25rem rgba(41, 128, 185, 0.25);
+    transform: translateY(-2px);
+}
+
+/* 5. 增強表格行懸停效果 */
+.table-hover tbody tr {
+    transition: all 0.2s ease;
+}
+
+.table-hover tbody tr:hover {
+    background-color: rgba(41, 128, 185, 0.08);
+    transform: scale(1.002);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* 6. 增強導航列 */
+.navbar {
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.navbar-dark {
+    background-color: rgba(26, 37, 47, 0.95) !important;
+}
+
+/* 7. 增強側邊欄 */
+.sidebar {
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    background: linear-gradient(180deg, rgba(26, 37, 47, 0.95), rgba(52, 73, 94, 0.95)) !important;
+}
+
+.sidebar .nav-link {
+    position: relative;
+    overflow: hidden;
+}
+
+.sidebar .nav-link::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: var(--secondary-color);
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: transform 0.3s ease;
+}
+
+.sidebar .nav-link:hover::before,
+.sidebar .nav-link.active::before {
+    transform: scaleY(1);
+}
+
+/* 8. 增強頁尾 */
+.footer {
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    background: linear-gradient(180deg, rgba(26, 37, 47, 0.95), rgba(26, 37, 47, 0.95)) !important;
+}
+
+/* 9. 載入狀態 */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    backdrop-filter: blur(5px);
+}
+
+.loading-spinner-lg {
+    width: 60px;
+    height: 60px;
+    border-width: 5px;
+}
+
+/* 10. 空狀態樣式 */
+.empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+}
+
+.empty-state i {
+    font-size: 4rem;
+    color: #dee2e6;
+    margin-bottom: 1.5rem;
+}
+
+.empty-state h4 {
+    color: #6c757d;
+    margin-bottom: 1rem;
+}
+
+.empty-state p {
+    color: #adb5bd;
+    margin-bottom: 2rem;
+}
+
+/* 11. 工具提示增強 */
+.tooltip {
+    --bs-tooltip-bg: var(--dark-color);
+    --bs-tooltip-color: white;
+}
+
+.tooltip-inner {
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+}
+
+/* 12. 分頁增強 */
+.pagination {
+    gap: 0.25rem;
+}
+
+.pagination .page-link {
+    min-width: 40px;
+    text-align: center;
+    transition: all 0.2s ease;
+}
+
+.pagination .page-link:hover {
+    transform: translateY(-2px);
+}
+
+/* 13. 徽章增強 */
+.badge {
+    position: relative;
+    overflow: hidden;
+}
+
+.badge::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+        to right,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.3) 50%,
+        rgba(255, 255, 255, 0) 100%
+    );
+    transform: rotate(30deg);
+    animation: shine 3s infinite;
+}
+
+@keyframes shine {
+    0% { transform: translateX(-100%) rotate(30deg); }
+    100% { transform: translateX(100%) rotate(30deg); }
+}
+
+/* 14. 響應式圖片 */
+.img-responsive {
+    max-width: 100%;
+    height: auto;
+    border-radius: var(--border-radius);
+}
+
+/* 15. 行動裝置特定優化 */
+@media (max-width: 768px) {
+    /* 改善觸控目標大小 */
+    .btn, .nav-link, .form-check-label {
+        min-height: 44px;
+        min-width: 44px;
+    }
+    
+    /* 改善表格可讀性 */
+    .table-responsive {
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    /* 改善卡片間距 */
+    .card {
+        margin-bottom: 1rem;
+    }
+    
+    /* 改善表單輸入 */
+    input, select, textarea {
+        font-size: 16px !important;
+    }
+}
+
+/* 16. 列印優化 */
+@media print {
+    .card {
+        break-inside: avoid;
+        border: 1px solid #ddd !important;
+    }
+    
+    .table {
+        font-size: 11pt;
+    }
+    
+    a[href]::after {
+        content: " (" attr(href) ")";
+        font-size: 9pt;
+        color: #666;
+    }
+}
+
+/* 17. 可訪問性增強 */
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+:focus {
+    outline: 3px solid var(--secondary-color);
+    outline-offset: 2px;
+}
+
+:focus:not(:focus-visible) {
+    outline: none;
+}
+
+/* 18. 動畫延遲類別 */
+.delay-1 { animation-delay: 0.1s; }
+.delay-2 { animation-delay: 0.2s; }
+.delay-3 { animation-delay: 0.3s; }
+.delay-4 { animation-delay: 0.4s; }
+.delay-5 { animation-delay: 0.5s; }
+
+/* 19. 懸浮效果 */
+.hover-lift {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hover-lift:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--box-shadow-hover);
+}
+
+/* 20. 漸變文字 */
+.gradient-text {
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+/* 21. 網格系統增強 */
+.row.gutter-sm { margin-left: -0.25rem; margin-right: -0.25rem; }
+.row.gutter-sm > [class*="col-"] { padding-left: 0.25rem; padding-right: 0.25rem; }
+
+.row.gutter-md { margin-left: -0.5rem; margin-right: -0.5rem; }
+.row.gutter-md > [class*="col-"] { padding-left: 0.5rem; padding-right: 0.5rem; }
+
+.row.gutter-lg { margin-left: -1rem; margin-right: -1rem; }
+.row.gutter-lg > [class*="col-"] { padding-left: 1rem; padding-right: 1rem; }
+
+/* 22. 陰影類別 */
+.shadow-sm { box-shadow: 0 2px 4px rgba(0,0,0,0.05) !important; }
+.shadow-md { box-shadow: 0 4px 8px rgba(0,0,0,0.1) !important; }
+.shadow-lg { box-shadow: 0 8px 16px rgba(0,0,0,0.15) !important; }
+.shadow-xl { box-shadow: 0 12px 24px rgba(0,0,0,0.2) !important; }
+
+/* 23. 圓角類別 */
+.rounded-sm { border-radius: 4px !important; }
+.rounded-md { border-radius: 8px !important; }
+.rounded-lg { border-radius: 12px !important; }
+.rounded-xl { border-radius: 16px !important; }
+.rounded-full { border-radius: 9999px !important; }
+
+/* 24. 透明度類別 */
+.opacity-25 { opacity: 0.25; }
+.opacity-50 { opacity: 0.5; }
+.opacity-75 { opacity: 0.75; }
+.opacity-100 { opacity: 1; }
+
+/* 25. 響應式文字大小 */
+.text-xs { font-size: 0.75rem; }
+.text-sm { font-size: 0.875rem; }
+.text-base { font-size: 1rem; }
+.text-lg { font-size: 1.125rem; }
+.text-xl { font-size: 1.25rem; }
+.text-2xl { font-size: 1.5rem; }
+.text-3xl { font-size: 1.875rem; }
+.text-4xl { font-size: 2.25rem; }
+
+@media (max-width: 768px) {
+    .text-xs-mobile { font-size: 0.75rem; }
+    .text-sm-mobile { font-size: 0.875rem; }
+    .text-base-mobile { font-size: 1rem; }
+    .text-lg-mobile { font-size: 1.125rem; }
+    .text-xl-mobile { font-size: 1.25rem; }
+}
+
+/* 26. 自訂滾動條增強 */
+.custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: var(--secondary-color) #f1f1f1;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+    width: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 5px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: var(--secondary-color);
+    border-radius: 5px;
+    border: 2px solid #f1f1f1;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #2980b9;
+}
+
+/* 27. 骨架載入動畫 */
+.skeleton {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s infinite;
+}
+
+@keyframes skeleton-loading {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+/* 28. 響應式邊距和填充 */
+@media (max-width: 768px) {
+    .m-sm-0 { margin: 0 !important; }
+    .m-sm-1 { margin: 0.25rem !important; }
+    .m-sm-2 { margin: 0.5rem !important; }
+    .m-sm-3 { margin: 1rem !important; }
+    .m-sm-4 { margin: 1.5rem !important; }
+    .m-sm-5 { margin: 3rem !important; }
+    
+    .p-sm-0 { padding: 0 !important; }
+    .p-sm-1 { padding: 0.25rem !important; }
+    .p-sm-2 { padding: 0.5rem !important; }
+    .p-sm-3 { padding: 1rem !important; }
+    .p-sm-4 { padding: 1.5rem !important; }
+    .p-sm-5 { padding: 3rem !important; }
+}
+
+/* 29. 響應式顯示類別 */
+.d-mobile-none { display: none !important; }
+.d-mobile-block { display: block !important; }
+.d-mobile-inline { display: inline !important; }
+.d-mobile-inline-block { display: inline-block !important; }
+.d-mobile-flex { display: flex !important; }
+
+@media (min-width: 769px) {
+    .d-desktop-none { display: none !important; }
+    .d-desktop-block { display: block !important; }
+    .d-desktop-inline { display: inline !important; }
+    .d-desktop-inline-block { display: inline-block !important; }
+    .d-desktop-flex { display: flex !important; }
+}
+
+/* 30. 最終優化 - 效能和體驗 */
+* {
+    -webkit-tap-highlight-color: transparent;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    vertical-align: middle;
+}
+
+/* 減少動畫對效能的影響 */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* 高對比度模式優化 */
+@media (prefers-contrast: high) {
+    .btn,
+    .badge,
+    .alert {
+        border: 2px solid currentColor;
+    }
+    
+    .btn-primary {
+        border-color: var(--secondary-color);
+    }
+    
+    .btn-success {
+        border-color: var(--success-color);
+    }
+    
+    .btn-danger {
+        border-color: var(--danger-color);
+    }
+    
+    .btn-warning {
+        border-color: var(--warning-color);
+    }
+    
+    .stat-card {
+        border: 2px solid var(--secondary-color);
+    }
+    
+    .card {
+        border: 2px solid #000;
+    }
+    
+    .table th {
+        border-bottom: 3px solid #000;
+    }
+    
+    .alert {
+        border: 2px solid currentColor;
+    }
+}
+
+/* 31. 最終整理和優化 */
+.container-fluid {
+    max-width: 1400px;
+}
+
+.main-content {
+    transition: padding 0.3s ease;
+}
+
+/* 32. 自訂動畫 */
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+.pulse {
+    animation: pulse 2s infinite;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.slide-in {
+    animation: slideIn 0.5s ease-out;
+}
+
+/* 33. 響應式工具類別 */
+.text-truncate-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.text-truncate-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* 34. 行動裝置底部安全區域 */
+.safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* 35. 圖片載入優化 */
+.img-loading {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s infinite;
+}
+
+/* 36. 觸控反饋優化 */
+.touch-feedback:active {
+    opacity: 0.7;
+    transform: scale(0.98);
+}
+
+/* 37. 列印優化增強 */
+@media print {
+    * {
+        color: #000 !important;
+        background: #fff !important;
+    }
+    
+    .container-fluid {
+        max-width: 100% !important;
+    }
+    
+    .card {
+        break-inside: avoid;
+        margin-bottom: 20pt;
+    }
+    
+    .table {
+        font-size: 10pt;
+        border-collapse: collapse;
+    }
+    
+    .table th,
+    .table td {
+        border: 1px solid #000;
+        padding: 4pt;
+    }
+    
+    a {
+        text-decoration: underline !important;
+    }
+    
+    a[href]::after {
+        content: " (" attr(href) ")";
+        font-size: 8pt;
+        color: #666;
+    }
+}
+
+/* 38. 深色模式增強 */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --light-color: #2d3748;
+        --dark-color: #f7fafc;
+    }
+    
+    body {
+        background-color: #1a202c;
+        color: #e2e8f0;
+    }
+    
+    .card {
+        background-color: #2d3748;
+        border-color: #4a5568;
+    }
+    
+    .card-header {
+        background-color: #2d3748;
+        border-bottom-color: #4a5568;
+    }
+    
+    .table {
+        color: #e2e8f0;
+        border-color: #4a5568;
+    }
+    
+    .table th {
+        background-color: #4a5568;
+        border-color: #718096;
+    }
+    
+    .table td {
+        border-color: #4a5568;
+    }
+    
+    .form-control,
+    .form-select {
+        background-color: #2d3748;
+        border-color: #4a5568;
+        color: #e2e8f0;
+    }
+    
+    .form-control:focus,
+    .form-select:focus {
+        background-color: #2d3748;
+        border-color: #4299e1;
+        color: #e2e8f0;
+    }
+    
+    .alert {
+        background-color: rgba(0, 0, 0, 0.3);
+    }
+    
+    .text-muted {
+        color: #a0aec0 !important;
+    }
+}
+
+/* 39. 效能優化 */
+@media (prefers-reduced-motion: no-preference) {
+    .smooth-scroll {
+        scroll-behavior: smooth;
+    }
+}
+
+/* 40. 最終檢查和清理 */
+*:focus {
+    outline: 2px solid var(--secondary-color);
+    outline-offset: 2px;
+}
+
+*:focus:not(:focus-visible) {
+    outline: none;
+}
+
+/* 確保圖片不會超出容器 */
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* 改善長文字換行 */
+.long-text {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+}
+
+/* 響應式嵌入內容 */
+.embed-responsive {
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 比例 */
+    height: 0;
+    overflow: hidden;
+}
+
+.embed-responsive iframe,
+.embed-responsive object,
+.embed-responsive embed {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+/* 行動裝置橫向模式優化 */
+@media (max-height: 500px) and (orientation: landscape) {
+    .navbar {
+        position: static;
+    }
+    
+    .main-content {
+        padding-top: 1rem !important;
+    }
+    
+    .card {
+        margin-bottom: 0.5rem;
+    }
+}
+
+/* 超大螢幕優化 */
+@media (min-width: 1400px) {
+    .container-fluid {
+        padding-left: 2rem;
+        padding-right: 2rem;
+    }
+    
+    .main-content {
+        padding: 2rem;
+    }
+}
+
+/* 最終版本標記 */
+/* 公司資產管理系統 CSS - 美化版 v2.0 */
+/* 最後更新: 2026年4月9日 */
+/* 優化: 響應式設計、UI/UX、可訪問性、效能 */

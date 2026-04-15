@@ -1,0 +1,91 @@
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0"><i class="fas fa-edit me-2"></i>編輯資產</h4>
+            </div>
+            <div class="card-body">
+                <form action="/assets/<%= asset.id %>?_method=PUT" method="POST">
+                    <div class="row g-4">
+                        <div class="col-12 col-md-6">
+                            <div class="mb-3">
+                                <label for="name" class="form-label">資產名稱 <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="name" name="name" value="<%= asset.name %>" required>
+                                <div class="form-text">請輸入資產的詳細名稱</div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="category" class="form-label">類別 <span class="text-danger">*</span></label>
+                                <select class="form-select" id="category" name="category" required>
+                                    <option value="">請選擇類別</option>
+                                    <option value="電子設備" <%= asset.category === '電子設備' ? 'selected' : '' %>>電子設備</option>
+                                    <option value="辦公家具" <%= asset.category === '辦公家具' ? 'selected' : '' %>>辦公家具</option>
+                                    <option value="會議設備" <%= asset.category === '會議設備' ? 'selected' : '' %>>會議設備</option>
+                                    <option value="網路設備" <%= asset.category === '網路設備' ? 'selected' : '' %>>網路設備</option>
+                                    <option value="軟體授權" <%= asset.category === '軟體授權' ? 'selected' : '' %>>軟體授權</option>
+                                    <option value="其他" <%= asset.category === '其他' ? 'selected' : '' %>>其他</option>
+                                </select>
+                                <div class="form-text">選擇資產所屬類別</div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="department_id" class="form-label">所屬部門 <span class="text-danger">*</span></label>
+                                <select class="form-select" id="department_id" name="department_id" required>
+                                    <option value="">請選擇部門</option>
+                                    <% departments.forEach(dept => { %>
+                                        <option value="<%= dept.id %>" <%= asset.department_id === dept.id ? 'selected' : '' %>><%= dept.name %></option>
+                                    <% }); %>
+                                </select>
+                                <div class="form-text">選擇資產所屬部門</div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-12 col-md-6">
+                            <div class="mb-3">
+                                <label for="status" class="form-label">狀態 <span class="text-danger">*</span></label>
+                                <select class="form-select" id="status" name="status" required>
+                                    <option value="active" <%= asset.status === 'active' ? 'selected' : '' %>>使用中</option>
+                                    <option value="inactive" <%= asset.status === 'inactive' ? 'selected' : '' %>>閒置</option>
+                                    <option value="maintenance" <%= asset.status === 'maintenance' ? 'selected' : '' %>>維修中</option>
+                                    <option value="retired" <%= asset.status === 'retired' ? 'selected' : '' %>>已報廢</option>
+                                </select>
+                                <div class="form-text">選擇資產目前狀態</div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="description" class="form-label">備註說明</label>
+                                <textarea class="form-control" id="description" name="description" rows="3"><%= asset.description || '' %></textarea>
+                                <div class="form-text">可選：輸入資產的詳細說明</div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="serial_number" class="form-label">序號/編號</label>
+                                <input type="text" class="form-control" id="serial_number" name="serial_number" value="<%= asset.serial_number || '' %>">
+                                <div class="form-text">可選：輸入資產的序號或內部編號</div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="purchase_date" class="form-label">購買日期</label>
+                                <input type="date" class="form-control" id="purchase_date" name="purchase_date" value="<%= asset.purchase_date ? new Date(asset.purchase_date).toISOString().split('T')[0] : '' %>">
+                                <div class="form-text">可選：輸入資產購買日期</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <div class="d-flex flex-column flex-md-row justify-content-md-between gap-2">
+                                <a href="/assets/<%= asset.id %>" class="btn btn-outline-secondary order-md-1">
+                                    <i class="fas fa-arrow-left me-2"></i>取消編輯
+                                </a>
+                                <button type="submit" class="btn btn-primary order-md-2">
+                                    <i class="fas fa-save me-2"></i>儲存變更
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

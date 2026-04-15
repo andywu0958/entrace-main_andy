@@ -1,0 +1,27 @@
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white pb-0 border-bottom-0 pt-4 px-4">
+                <h4 class="mb-0"><i class="fas fa-plus-circle me-2 text-primary"></i>新增部門</h4>
+            </div>
+            <div class="card-body p-4">
+                <form action="/departments" method="POST">
+                    <div class="mb-4">
+                        <label for="name" class="form-label text-muted">部門名稱 <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control form-control-lg" id="name" name="name" required placeholder="例如：資訊部" autofocus>
+                        <div class="form-text">請輸入要新增的部門名稱</div>
+                    </div>
+                    
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                        <a href="/departments" class="btn btn-outline-secondary me-md-2">
+                            <i class="fas fa-times me-1"></i>取消
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-1"></i>新增部門
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

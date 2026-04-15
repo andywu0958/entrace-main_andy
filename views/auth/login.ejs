@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登入 | 公司資產管理系統</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- 公司資產管理系統美化版 CSS -->
+    <link rel="stylesheet" href="/css/style.css?v=3.0">
+    
+</head>
+<body>
+<div class="row justify-content-center align-items-center min-vh-80">
+    <div class="col-lg-8">
+        <div class="row g-4 flex-column flex-md-row">
+            <!-- 左側：登入表單 -->
+            <div class="col-12 col-md-6 order-md-1">
+                <div class="card border-0 shadow-lg">
+                    <div class="card-body p-4 p-md-5">
+                        <!-- Logo 和標題 -->
+                        <div class="text-center mb-4">
+                            <div class="bg-primary rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                                <i class="fas fa-boxes fa-2x text-white"></i>
+                            </div>
+                            <h2 class="fw-bold text-primary">資產管理系統</h2>
+                            <p class="text-muted">請登入以存取您的帳戶</p>
+                        </div>
+                        
+                        <!-- Flash 訊息 -->
+                        <% if (error_msg && error_msg.length > 0) { %>
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                <i class="fas fa-exclamation-circle me-2"></i><%= error_msg %>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+                        <% } %>
+                        
+                        <!-- 登入表單 -->
+                        <form action="/auth/login" method="POST">
+                            <div class="mb-4">
+                                <label for="username" class="form-label fw-semibold">
+                                    <i class="fas fa-user me-2 text-primary"></i>使用者名稱
+                                </label>
+                                <div class="input-group input-group-lg">
+                                    <span class="input-group-text bg-light border-end-0">
+                                        <i class="fas fa-user text-muted"></i>
+                                    </span>
+                                    <input type="text" 
+                                           class="form-control border-start-0 ps-0" 
+                                           id="username" 
+                                           name="username" 
+                                           placeholder="輸入您的使用者名稱"
+                                           required 
+                                           autofocus>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label for="password" class="form-label fw-semibold">
+                                    <i class="fas fa-lock me-2 text-primary"></i>密碼
+                                </label>
+                                <div class="input-group input-group-lg">
+                                    <span class="input-group-text bg-light border-end-0">
+                                        <i class="fas fa-lock text-muted"></i>
+                                    </span>
+                                    <input type="password" 
+                                           class="form-control border-start-0 ps-0" 
+                                           id="password" 
+                                           name="password" 
+                                           placeholder="輸入您的密碼"
+                                           required>
+                                    <button class="btn btn-outline-secondary border-start-0" type="button" id="togglePassword">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary btn-lg fw-semibold py-3">
+                                    <i class="fas fa-sign-in-alt me-2"></i>登入系統
+                                </button>
+                            </div>
+                        </form>
+                        
+                        <!-- 預設帳號資訊 -->
+                        <div class="mt-4 pt-3 border-top">
+                            <div class="alert alert-light border">
+                                <div class="d-flex align-items-center">
+                                    <div class="flex-shrink-0">
+                                        <i class="fas fa-info-circle text-primary fa-lg"></i>
+                                    </div>
+                                    <div class="flex-grow-1 ms-3">
+                                        <h6 class="alert-heading mb-1">預設管理員帳號</h6>
+                                        <div class="row g-2">
+                                            <div class="col-6">
+                                                <small class="text-muted">使用者名稱</small>
+                                                <div class="fw-semibold">admin</div>
+                                            </div>
+                                            <div class="col-6">
+                                                <small class="text-muted">密碼</small>
+                                                <div class="fw-semibold">admin123</div>
+                                            </div>
+                                        </div>
+                                        <small class="text-muted d-block mt-2">請在首次登入後立即變更密碼</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 頁尾 -->
+                    <div class="card-footer bg-transparent border-0 text-center py-4">
+                        <small class="text-muted">
+                            <i class="fas fa-copyright me-1"></i>公司資產管理系統 &copy; <%= new Date().getFullYear() %>
+                        </small>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 右側：系統特色 -->
+            <div class="col-12 col-md-6 order-md-2 d-none d-md-block">
+                <div class="card border-0 shadow-lg h-100">
+                    <div class="card-body p-5 d-flex flex-column">
+                        <h3 class="fw-bold text-center mb-4">系統特色</h3>
+                        
+                        <div class="row g-4 mt-2">
+                            <!-- 特色 1 -->
+                            <div class="col-6">
+                                <div class="feature-card text-center p-4 rounded-3 border h-100">
+                                    <div class="feature-icon mb-3">
+                                        <div class="bg-primary bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 70px; height: 70px;">
+                                            <i class="fas fa-shield-alt fa-2x text-primary"></i>
+                                        </div>
+                                    </div>
+                                    <h5 class="fw-semibold mb-2">安全認證</h5>
+                                    <p class="text-muted small mb-0">多重安全防護，保障資料安全</p>
+                                </div>
+                            </div>
+                            
+                            <!-- 特色 2 -->
+                            <div class="col-6">
+                                <div class="feature-card text-center p-4 rounded-3 border h-100">
+                                    <div class="feature-icon mb-3">
+                                        <div class="bg-success bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 70px; height: 70px;">
+                                            <i class="fas fa-qrcode fa-2x text-success"></i>
+                                        </div>
+                                    </div>
+                                    <h5 class="fw-semibold mb-2">QR Code 管理</h5>
+                                    <p class="text-muted small mb-0">快速掃描，即時資產追蹤</p>
+                                </div>
+                            </div>
+                            
+                            <!-- 特色 3 -->
+                            <div class="col-6">
+                                <div class="feature-card text-center p-4 rounded-3 border h-100">
+                                    <div class="feature-icon mb-3">
+                                        <div class="bg-warning bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 70px; height: 70px;">
+                                            <i class="fas fa-chart-bar fa-2x text-warning"></i>
+                                        </div>
+                                    </div>
+                                    <h5 class="fw-semibold mb-2">數據統計</h5>
+                                    <p class="text-muted small mb-0">視覺化報表，決策更精準</p>
+                                </div>
+                            </div>
+                            
+                            <!-- 特色 4 -->
+                            <div class="col-6">
+                                <div class="feature-card text-center p-4 rounded-3 border h-100">
+                                    <div class="feature-icon mb-3">
+                                        <div class="bg-info bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 70px; height: 70px;">
+                                            <i class="fas fa-mobile-alt fa-2x text-info"></i>
+                                        </div>
+                                    </div>
+                                    <h5 class="fw-semibold mb-2">行動友善</h5>
+                                    <p class="text-muted small mb-0">響應式設計，隨時隨地管理</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 額外特色 -->
+                        <div class="mt-4 pt-3 border-top">
+                            <h5 class="fw-semibold mb-3">更多功能</h5>
+                            <div class="row g-2">
+                                <div class="col-6">
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas fa-check-circle text-success me-2"></i>
+                                        <small>角色權限控制</small>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas fa-check-circle text-success me-2"></i>
+                                        <small>部門管理</small>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas fa-check-circle text-success me-2"></i>
+                                        <small>資料匯出</small>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas fa-check-circle text-success me-2"></i>
+                                        <small>即時搜尋</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 行動呼籲 -->
+                        <div class="mt-auto pt-4">
+                            <div class="bg-light rounded-3 p-4 text-center">
+                                <h6 class="fw-semibold mb-2">還沒有帳號？</h6>
+                                <p class="text-muted small mb-3">請聯繫系統管理員申請帳號</p>
+                                <a href="/about" class="btn btn-outline-primary btn-sm">
+                                    <i class="fas fa-info-circle me-1"></i>了解更多
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 自訂樣式 (保留必要的行動裝置樣式) -->
+<style>
+    .min-vh-80 {
+        min-height: 80vh;
+    }
+    
+    .feature-card {
+        transition: all 0.3s ease;
+        background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    }
+    
+    .feature-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1) !important;
+        border-color: #3498db !important;
+    }
+    
+    .feature-icon {
+        transition: transform 0.3s ease;
+    }
+    
+    .feature-card:hover .feature-icon {
+        transform: scale(1.1);
+    }
+    
+    /* 移除重複的樣式，因為它們已經在 style.css 中定義了 */
+    
+    @media (max-width: 767px) {
+        .card-body {
+            padding: 2rem !important;
+        }
+        
+        .input-group-lg .form-control {
+            font-size: 1.5rem !important;
+            height: 4rem !important;
+            padding: 1.25rem !important;
+        }
+        
+        .btn-lg {
+            font-size: 1.5rem !important;
+            padding: 1.5rem !important;
+        }
+        
+        h2 {
+            font-size: 2rem !important;
+        }
+        
+        .input-group-text {
+            padding: 0 2rem !important;
+            font-size: 1.5rem !important;
+        }
+        
+        .feature-card {
+            margin-bottom: 1.5rem !important;
+        }
+        
+        .alert {
+            font-size: 1.25rem !important;
+            padding: 1.25rem !important;
+        }
+        
+        .form-label {
+            font-size: 1.25rem !important;
+        }
+        
+        input[type="text"], input[type="password"] {
+            font-size: 1.5rem !important;
+        }
+        
+        .d-grid button {
+            height: 4.5rem !important;
+        }
+        
+        .col-lg-8 {
+            padding: 0 1rem !important;
+        }
+        
+        .min-vh-80 {
+            min-height: 100vh !important;
+            padding-top: 2rem !important;
+            padding-bottom: 2rem !important;
+        }
+    }
+</style>
+
+<!-- JavaScript 功能 -->
+<script>
+    // 切換密碼可見性
+    document.getElementById('togglePassword').addEventListener('click', function () {
+        const passwordInput = document.getElementById('password');
+        const icon = this.querySelector('i');
+        
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
+            this.setAttribute('title', '隱藏密碼');
+        } else {
+            passwordInput.type = 'password';
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
+            this.setAttribute('title', '顯示密碼');
+        }
+    });
+    
+    // 自動聚焦使用者名稱欄位
+    document.addEventListener('DOMContentLoaded', function() {
+        const usernameInput = document.getElementById('username');
+        if (usernameInput) {
+            usernameInput.focus();
+        }
+    });
+</script>
+
+<!-- Bootstrap 5 JS Bundle with Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

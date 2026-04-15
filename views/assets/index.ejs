@@ -1,0 +1,215 @@
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h4 class="mb-0"><i class="fas fa-boxes me-2"></i>資產管理</h4>
+                <a href="/assets/create" class="btn btn-primary btn-sm">
+                    <i class="fas fa-plus me-2"></i>新增資產
+                </a>
+            </div>
+            
+            <!-- 篩選表單 -->
+            <div class="card-body border-bottom">
+                <form method="GET" action="/assets" class="row g-3">
+                    <div class="col-6 col-md-3">
+                        <label for="department" class="form-label">部門篩選</label>
+                        <select class="form-select" id="department" name="department">
+                            <option value="">全部部門</option>
+                            <% departments.forEach(dept => { %>
+                                <option value="<%= dept.id %>" <%= (filters && filters.department_id && filters.department_id == dept.id) ? 'selected' : '' %>>
+                                    <%= dept.name %>
+                                </option>
+                            <% }); %>
+                        </select>
+                    </div>
+                    
+                    <div class="col-6 col-md-3">
+                        <label for="category" class="form-label">類別篩選</label>
+                        <select class="form-select" id="category" name="category">
+                            <option value="">全部類別</option>
+                            <% categories.forEach(cat => { %>
+                                <option value="<%= cat %>" <%= (filters && filters.category && filters.category == cat) ? 'selected' : '' %>>
+                                    <%= cat %>
+                                </option>
+                            <% }); %>
+                        </select>
+                    </div>
+                    
+                    <div class="col-6 col-md-3">
+                        <label for="status" class="form-label">狀態篩選</label>
+                        <select class="form-select" id="status" name="status">
+                            <option value="">全部狀態</option>
+                            <option value="active" <%= (filters && filters.status && filters.status == 'active') ? 'selected' : '' %>>使用中</option>
+                            <option value="inactive" <%= (filters && filters.status && filters.status == 'inactive') ? 'selected' : '' %>>閒置</option>
+                            <option value="maintenance" <%= (filters && filters.status && filters.status == 'maintenance') ? 'selected' : '' %>>維修中</option>
+                            <option value="retired" <%= (filters && filters.status && filters.status == 'retired') ? 'selected' : '' %>>已報廢</option>
+                        </select>
+                    </div>
+                    
+                    <div class="col-6 col-md-3 d-flex align-items-end">
+                        <div class="d-grid w-100">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-filter me-2"></i>篩選
+                            </button>
+                        </div>
+                    </div>
+                </form>
+                
+                <!-- 搜尋表單 -->
+                <form method="GET" action="/assets" class="row g-3 mt-3">
+                    <div class="col-12 col-md-8">
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-search"></i></span>
+                            <input type="text" class="form-control" name="search" placeholder="搜尋資產名稱..." value="<%= (filters && filters.search) ? filters.search : '' %>">
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-4 d-flex align-items-end">
+                        <div class="d-grid w-100">
+                            <button type="submit" class="btn btn-outline-secondary">
+                                <i class="fas fa-search me-2"></i>搜尋
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- 資產列表 -->
+            <div class="card-body p-0">
+                <% if (assets && assets.length > 0) { %>
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th width="50">ID</th>
+                                    <th>資產名稱</th>
+                                    <th>類別</th>
+                                    <th>部門</th>
+                                    <th>狀態</th>
+                                    <th>建立日期</th>
+                                    <th width="150" class="text-center">操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% assets.forEach(asset => { %>
+                                    <tr>
+                                        <td class="fw-semibold">#<%= asset.id %></td>
+                                        <td>
+                                            <a href="/assets/<%= asset.id %>" class="text-decoration-none">
+                                                <%= asset.name %>
+                                            </a>
+                                            <% if (asset.serial_number) { %>
+                                                <br>
+                                                <small class="text-muted">序號: <%= asset.serial_number %></small>
+                                            <% } %>
+                                        </td>
+                                        <td class="d-none d-md-table-cell">
+                                            <span class="badge bg-info bg-opacity-10 text-info border border-info border-opacity-25">
+                                                <%= asset.category %>
+                                            </span>
+                                        </td>
+                                        <td class="d-none d-md-table-cell"><%= asset.department_name %></td>
+                                        <td>
+                                            <% if (asset.status === 'active') { %>
+                                                <span class="badge bg-success">使用中</span>
+                                            <% } else if (asset.status === 'inactive') { %>
+                                                <span class="badge bg-secondary">閒置</span>
+                                            <% } else if (asset.status === 'maintenance') { %>
+                                                <span class="badge bg-warning">維修中</span>
+                                            <% } else if (asset.status === 'retired') { %>
+                                                <span class="badge bg-danger">已報廢</span>
+                                            <% } %>
+                                        </td>
+                                        <td class="d-none d-md-table-cell">
+                                            <small class="text-muted">
+                                                <%= new Date(asset.created_at).toLocaleDateString('zh-TW') %>
+                                            </small>
+                                        </td>
+                                        <td class="text-center">
+                                            <div class="btn-group btn-group-sm" role="group">
+                                                <a href="/assets/<%= asset.id %>" class="btn btn-outline-primary" title="檢視">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+                                                <a href="/assets/<%= asset.id %>/edit" class="btn btn-outline-warning" title="編輯">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                                <form action="/assets/<%= asset.id %>?_method=DELETE" method="POST" class="d-inline" onsubmit="return confirm('確定要刪除此資產嗎？此操作無法復原。');">
+                                                    <button type="submit" class="btn btn-outline-danger" title="刪除">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                <% }); %>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- 分頁 -->
+                    <% if (totalPages > 1) { %>
+                        <div class="card-footer">
+                            <nav aria-label="資產分頁">
+                                <ul class="pagination justify-content-center mb-0">
+                                    <% if (currentPage > 1) { %>
+                                        <li class="page-item">
+                                            <a class="page-link" href="?page=<%= currentPage - 1 %><%= queryString %>" aria-label="上一頁">
+                                                <span aria-hidden="true">&laquo;</span>
+                                            </a>
+                                        </li>
+                                    <% } %>
+                                    
+                                    <% for (let i = 1; i <= totalPages; i++) { %>
+                                        <li class="page-item <%= (i === currentPage) ? 'active' : '' %>">
+                                            <a class="page-link" href="?page=<%= i %><%= queryString %>"><%= i %></a>
+                                        </li>
+                                    <% } %>
+                                    
+                                    <% if (currentPage < totalPages) { %>
+                                        <li class="page-item">
+                                            <a class="page-link" href="?page=<%= currentPage + 1 %><%= queryString %>" aria-label="下一頁">
+                                                <span aria-hidden="true">&raquo;</span>
+                                            </a>
+                                        </li>
+                                    <% } %>
+                                </ul>
+                            </nav>
+                        </div>
+                    <% } %>
+                <% } else { %>
+                    <div class="text-center py-5">
+                        <div class="mb-3">
+                            <i class="fas fa-box-open fa-3x text-muted"></i>
+                        </div>
+                        <h5 class="text-muted">暫無資產資料</h5>
+                        <p class="text-muted mb-4">尚未建立任何資產，請點擊「新增資產」開始建立。</p>
+                        <a href="/assets/create" class="btn btn-primary">
+                            <i class="fas fa-plus me-2"></i>新增第一筆資產
+                        </a>
+                    </div>
+                <% } %>
+            </div>
+            
+            <!-- 統計資訊 -->
+            <div class="card-footer">
+                <div class="row align-items-center">
+                    <div class="col-12 col-md-6 mb-2 mb-md-0">
+                        <small class="text-muted">
+                            顯示第 <%= ((currentPage - 1) * limit) + 1 %> 到 
+                            <%= Math.min(currentPage * limit, total) %> 筆，共 <%= total %> 筆資產
+                        </small>
+                    </div>
+                    <div class="col-12 col-md-6 text-md-end">
+                        <a href="/assets/stats" class="btn btn-outline-info btn-sm mb-1 mb-md-0">
+                            <i class="fas fa-chart-bar me-1"></i>查看統計
+                        </a>
+                        <% if (user.role === 'admin') { %>
+                            <a href="/api/assets/export" class="btn btn-outline-success btn-sm ms-2 mb-1 mb-md-0"></a>
+                                <i class="fas fa-download me-1"></i>匯出 CSV
+                            </a>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
