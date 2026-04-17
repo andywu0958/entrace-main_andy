@@ -28,8 +28,8 @@
                         <select class="form-select" id="category" name="category">
                             <option value="">全部類別</option>
                             <% categories.forEach(cat => { %>
-                                <option value="<%= cat %>" <%= (filters && filters.category && filters.category == cat) ? 'selected' : '' %>>
-                                    <%= cat %>
+                                <option value="<%= cat.category %>" <%= (filters && filters.category && filters.category == cat.category) ? 'selected' : '' %>>
+                                    <%= cat.category %>
                                 </option>
                             <% }); %>
                         </select>
