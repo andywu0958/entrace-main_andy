@@ -284,15 +284,24 @@ const assetController = {
   // 取得資產統計資料
   stats: async (req, res) => {
     try {
-      const departmentStats = await Asset.getDepartmentStats();
-      const categoryStats = await Asset.getCategoryStats();
-      const recentAssets = await Asset.getRecentAssets(5);
+      const user = req.session.user;
+      let departmentId = null;
+      
+      // 如果是部門管理員，只顯示自己部門的統計
+      if (user.role === 'dept_manager') {
+        departmentId = user.department_id;
+      }
+      
+      const departmentStats = await Asset.getDepartmentStats(departmentId);
+      const categoryStats = await Asset.getCategoryStats(departmentId);
+      const recentAssets = await Asset.getRecentAssets(5, departmentId);
       
       res.render('assets/stats', {
         title: '資產統計',
         departmentStats,
         categoryStats,
-        recentAssets
+        recentAssets,
+        user
       });
     } catch (error) {
       console.error('Assets stats error:', error);

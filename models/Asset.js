@@ -186,8 +186,8 @@ class Asset {
   }
 
   // 取得部門資產統計
-  static async getDepartmentStats() {
-    const sql = `
+  static async getDepartmentStats(departmentId = null) {
+    let sql = `
       SELECT 
         d.id as department_id,
         d.name as department_name,
@@ -197,24 +197,42 @@ class Asset {
         SUM(CASE WHEN a.status = 'maintenance' THEN 1 ELSE 0 END) as maintenance_assets
       FROM departments d
       LEFT JOIN assets a ON d.id = a.department_id
-      GROUP BY d.id, d.name
-      ORDER BY d.name
+      WHERE 1=1
     `;
-    return await query(sql);
+    
+    const params = {};
+    
+    if (departmentId) {
+      sql += ' AND d.id = @departmentId';
+      params.departmentId = departmentId;
+    }
+    
+    sql += ' GROUP BY d.id, d.name ORDER BY d.name';
+    
+    return await query(sql, params);
   }
 
   // 取得類別統計
-  static async getCategoryStats() {
-    const sql = `
+  static async getCategoryStats(departmentId = null) {
+    let sql = `
       SELECT 
         category,
         COUNT(*) as count,
         SUM(CASE WHEN status = 'active' THEN 1 ELSE 0 END) as active_count
       FROM assets
-      GROUP BY category
-      ORDER BY count DESC
+      WHERE 1=1
     `;
-    return await query(sql);
+    
+    const params = {};
+    
+    if (departmentId) {
+      sql += ' AND department_id = @departmentId';
+      params.departmentId = departmentId;
+    }
+    
+    sql += ' GROUP BY category ORDER BY count DESC';
+    
+    return await query(sql, params);
   }
 
   // 檢查資產是否屬於部門
@@ -225,14 +243,24 @@ class Asset {
   }
 
   // 取得最近新增的資產
-  static async getRecentAssets(limit = 10) {
-    const sql = `
+  static async getRecentAssets(limit = 10, departmentId = null) {
+    let sql = `
       SELECT TOP ${limit} a.*, d.name as department_name 
       FROM assets a 
       LEFT JOIN departments d ON a.department_id = d.id 
-      ORDER BY a.created_at DESC
+      WHERE 1=1
     `;
-    return await query(sql);
+    
+    const params = {};
+    
+    if (departmentId) {
+      sql += ' AND a.department_id = @departmentId';
+      params.departmentId = departmentId;
+    }
+    
+    sql += ' ORDER BY a.created_at DESC';
+    
+    return await query(sql, params);
   }
 }
 
