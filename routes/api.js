@@ -4,6 +4,7 @@ const Asset = require('../models/Asset');
 const Department = require('../models/Department');
 const User = require('../models/User');
 const { isAuthenticated, isAdmin } = require('../middleware/auth');
+const { query } = require('../config/database');
 
 // API 路由需要登入
 router.use(isAuthenticated);
@@ -231,26 +232,43 @@ router.get('/users', isAdmin, async (req, res) => {
 // 匯出資產資料 (API，僅管理員可用)
 router.get('/export/assets', isAdmin, async (req, res) => {
   try {
-    const assets = await Asset.findAll({ limit: 1000 }); // 限制匯出數量
+    // 自訂查詢（無排序）
+    const sql = `
+      SELECT a.*, d.name as department_name 
+      FROM assets a 
+      LEFT JOIN departments d ON a.department_id = d.id
+    `;
+    const assets = await query(sql, {});
     
-    // 設定 CSV 標頭
-    res.setHeader('Content-Type', 'text/csv');
+    // 設定 CSV 標頭，包含 UTF-8 BOM 以便 Excel 正確識別
+    res.setHeader('Content-Type', 'text/csv; charset=utf-8');
     res.setHeader('Content-Disposition', 'attachment; filename=assets_export.csv');
+    
+    // 寫入 UTF-8 BOM（Excel 需要）
+    res.write('\uFEFF');
     
     // CSV 標題列
     const headers = ['ID', '名稱', '類別', '部門', '狀態', '建立時間', '更新時間'];
     res.write(headers.join(',') + '\n');
     
     // 資料列
+    const statusMap = {
+      'active': '使用中',
+      'inactive': '閒置',
+      'maintenance': '維修中',
+      'retired': '已報廢'
+    };
+    
     assets.forEach(asset => {
+      const statusChinese = statusMap[asset.status] || asset.status;
       const row = [
         asset.id,
         `"${asset.name.replace(/"/g, '""')}"`, // 處理引號
         `"${asset.category}"`,
         `"${asset.department_name || ''}"`,
-        `"${asset.status}"`,
-        `"${new Date(asset.created_at).toLocaleString('zh-TW')}"`,
-        `"${new Date(asset.updated_at).toLocaleString('zh-TW')}"`
+        `"${statusChinese}"`,
+        `"${new Date(asset.created_at).toISOString().replace('T', ' ').substring(0, 19)}"`, 
+        `"${new Date(asset.updated_at).toISOString().replace('T', ' ').substring(0, 19)}"` 
       ];
       res.write(row.join(',') + '\n');
     });
