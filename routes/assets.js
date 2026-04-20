@@ -15,6 +15,9 @@ router.get('/create', isManagerOrAdmin, assetController.create);
 // 儲存新資產
 router.post('/', isManagerOrAdmin, assetController.store);
 
+// 資產統計
+router.get('/stats', assetController.stats);
+
 // 顯示單一資產
 router.get('/:id', assetController.show);
 
@@ -32,8 +35,5 @@ router.get('/:id/view', assetController.view);
 
 // 重新生成 QR Code
 router.post('/:id/regenerate-qr', checkAssetPermission, assetController.regenerateQR);
-
-// 資產統計
-router.get('/stats', assetController.stats);
 
 module.exports = router;
