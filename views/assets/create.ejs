@@ -19,11 +19,16 @@
                                 <select class="form-select" id="category" name="category" required>
                                     <option value="">請選擇類別</option>
                                     <option value="電子設備">電子設備</option>
-                                    <option value="辦公家具">辦公家具</option>
+                                    <option value="辦公設備">辦公設備</option>
                                     <option value="會議設備">會議設備</option>
+                                    <option value="資訊設備">資訊設備</option>
                                     <option value="網路設備">網路設備</option>
                                     <option value="軟體授權">軟體授權</option>
-                                    <option value="其他">其他</option>
+                                    <option value="房屋建築及設備">房屋建築及設備</option>
+                                    <option value="機械設備">機械設備</option>
+                                    <option value="運輸設備">運輸設備</option>
+                                    <option value="餐飲設備">餐飲設備</option>
+                                    <option value="雜項購置">雜項購置</option>
                                 </select>
                                 <div class="form-text">選擇資產所屬類別</div>
                             </div>
@@ -51,13 +56,7 @@
                                 </select>
                                 <div class="form-text">選擇資產目前狀態</div>
                             </div>
-                            
-                            <div class="mb-3">
-                                <label for="description" class="form-label">備註說明</label>
-                                <textarea class="form-control" id="description" name="description" rows="3" placeholder="可選：輸入資產的詳細說明或特殊注意事項"></textarea>
-                                <div class="form-text">可選：輸入資產的詳細說明</div>
-                            </div>
-                            
+                                                                                    
                             <div class="mb-3">
                                 <label for="serial_number" class="form-label">序號/編號</label>
                                 <input type="text" class="form-control" id="serial_number" name="serial_number" placeholder="例如：SN-2024-001">
@@ -68,6 +67,12 @@
                                 <label for="purchase_date" class="form-label">購買日期</label>
                                 <input type="date" class="form-control" id="purchase_date" name="purchase_date">
                                 <div class="form-text">可選：輸入資產購買日期</div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="description" class="form-label">備註說明</label>
+                                <textarea class="form-control" id="description" name="description" rows="3" placeholder="可選：輸入資產的詳細說明或特殊注意事項"></textarea>
+                                <div class="form-text">可選：輸入資產的詳細說明</div>
                             </div>
                         </div>
                     </div>

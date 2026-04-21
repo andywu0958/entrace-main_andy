@@ -47,18 +47,27 @@ class Department {
   }
 
   // 取得部門及其資產統計
-  static async getWithStats() {
-    const sql = `
+  static async getWithStats(departmentId = null) {
+    let sql = `
       SELECT 
         d.*,
         COUNT(a.id) as asset_count,
         SUM(CASE WHEN a.status = 'active' THEN 1 ELSE 0 END) as active_assets
       FROM departments d
       LEFT JOIN assets a ON d.id = a.department_id
-      GROUP BY d.id, d.name, d.created_at
-      ORDER BY d.name
+      WHERE 1=1
     `;
-    return await query(sql);
+    
+    const params = {};
+    
+    if (departmentId) {
+      sql += ' AND d.id = @departmentId';
+      params.departmentId = departmentId;
+    }
+    
+    sql += ' GROUP BY d.id, d.name, d.created_at ORDER BY d.name';
+    
+    return await query(sql, params);
   }
 
   // 取得部門的資產

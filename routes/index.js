@@ -7,16 +7,19 @@ const Department = require('../models/Department');
 // 首頁
 router.get('/', isAuthenticated, async (req, res) => {
   try {
-    const recentAssets = await Asset.getRecentAssets(5);
-    const departmentStats = await Asset.getDepartmentStats();
-    const categoryStats = await Asset.getCategoryStats();
+    const user = req.session.user;
+    const departmentId = user.role === 'admin' ? null : user.department_id;
+    
+    const recentAssets = await Asset.getRecentAssets(5, departmentId);
+    const departmentStats = await Asset.getDepartmentStats(departmentId);
+    const categoryStats = await Asset.getCategoryStats(departmentId);
     
     res.render('index', {
       title: '資產管理系統',
       recentAssets,
       departmentStats,
       categoryStats,
-      user: req.session.user
+      user
     });
   } catch (error) {
     console.error('Home page error:', error);
@@ -35,24 +38,23 @@ router.get('/', isAuthenticated, async (req, res) => {
 router.get('/dashboard', isAuthenticated, async (req, res) => {
   try {
     const user = req.session.user;
+    const departmentId = user.role === 'admin' ? null : user.department_id;
     
     // 根據使用者角色取得不同的資料
     let assets, departments;
     
     if (user.role === 'admin') {
       assets = await Asset.findAll({ limit: 10 });
-      departments = await Department.getWithStats();
+      departments = await Department.getWithStats(); // null 表示所有部門
     } else if (user.role === 'dept_manager') {
       assets = await Asset.findAll({ 
         departmentId: user.department_id,
         limit: 10 
       });
-      departments = await Department.getWithStats();
-      // 部門管理員只能看到自己的部門
-      departments = departments.filter(dept => dept.id === user.department_id);
+      departments = await Department.getWithStats(user.department_id);
     }
     
-    const categoryStats = await Asset.getCategoryStats();
+    const categoryStats = await Asset.getCategoryStats(departmentId);
     
     res.render('dashboard', {
       title: '儀表板',
