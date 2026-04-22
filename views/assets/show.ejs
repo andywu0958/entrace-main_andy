@@ -73,22 +73,22 @@
                                 </div>
                             </div>
                             
-                            <% if (asset.serial_number) { %>
+                            <% if (asset.serialno) { %>
                                 <div class="col-12 col-md-6">
                                     <label class="form-label text-muted">序號/編號</label>
                                     <div class="form-control-plaintext">
                                         <i class="fas fa-barcode me-2 text-muted"></i>
-                                        <%= asset.serial_number %>
+                                        <%= asset.serialno %>
                                     </div>
                                 </div>
                             <% } %>
                             
-                            <% if (asset.purchase_date) { %>
+                            <% if (asset.purchased_at) { %>
                                 <div class="col-12 col-md-6">
                                     <label class="form-label text-muted">購買日期</label>
                                     <div class="form-control-plaintext">
                                         <i class="fas fa-calendar-alt me-2 text-muted"></i>
-                                        <%= new Date(asset.purchase_date).toLocaleDateString('zh-TW') %>
+                                        <%= new Date(asset.purchased_at).toLocaleDateString('zh-TW') %>
                                     </div>
                                 </div>
                             <% } %>
@@ -109,11 +109,11 @@
                                 </div>
                             </div>
                             
-                            <% if (asset.description) { %>
+                            <% if (asset.remark) { %>
                                 <div class="col-12">
                                     <label class="form-label text-muted">備註說明</label>
                                     <div class="form-control-plaintext bg-light rounded p-3">
-                                        <%= asset.description %>
+                                        <%= asset.remark %>
                                     </div>
                                 </div>
                             <% } %>

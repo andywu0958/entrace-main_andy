@@ -13,7 +13,7 @@
                 <form method="GET" action="/assets" class="row g-3">
                     <div class="col-6 col-md-3">
                         <label for="department" class="form-label">部門篩選</label>
-                        <select class="form-select" id="department" name="department">
+                        <select class="form-select" id="department" name="department_id">
                             <option value="">全部部門</option>
                             <% departments.forEach(dept => { %>
                                 <option value="<%= dept.id %>" <%= (filters && filters.department_id && filters.department_id == dept.id) ? 'selected' : '' %>>

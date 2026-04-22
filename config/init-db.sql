@@ -57,6 +57,9 @@ BEGIN
         department_id INT NOT NULL,
         status NVARCHAR(50) NOT NULL DEFAULT 'active' CHECK (status IN ('active', 'inactive', 'maintenance', 'retired')),
         qr_code_url NVARCHAR(500),
+        serialno NVARCHAR(100),
+        purchased_at DATETIME,
+        remark NVARCHAR(500),
         created_at DATETIME DEFAULT GETDATE(),
         updated_at DATETIME DEFAULT GETDATE(),
         FOREIGN KEY (department_id) REFERENCES departments(id) ON DELETE CASCADE
@@ -78,6 +81,39 @@ BEGIN
     BEGIN
         ALTER TABLE assets ADD model NVARCHAR(200);
         PRINT 'Column model added to assets table.';
+    END
+END
+GO
+
+-- 如果 assets 表已存在但缺少 serialno 列，則添加
+IF EXISTS (SELECT * FROM sysobjects WHERE name='assets' AND xtype='U')
+BEGIN
+    IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('assets') AND name = 'serialno')
+    BEGIN
+        ALTER TABLE assets ADD serialno NVARCHAR(100);
+        PRINT 'Column serialno added to assets table.';
+    END
+END
+GO
+
+-- 如果 assets 表已存在但缺少 purchased_at 列，則添加
+IF EXISTS (SELECT * FROM sysobjects WHERE name='assets' AND xtype='U')
+BEGIN
+    IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('assets') AND name = 'purchased_at')
+    BEGIN
+        ALTER TABLE assets ADD purchased_at DATETIME;
+        PRINT 'Column purchased_at added to assets table.';
+    END
+END
+GO
+
+-- 如果 assets 表已存在但缺少 remark 列，則添加
+IF EXISTS (SELECT * FROM sysobjects WHERE name='assets' AND xtype='U')
+BEGIN
+    IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('assets') AND name = 'remark')
+    BEGIN
+        ALTER TABLE assets ADD remark NVARCHAR(500);
+        PRINT 'Column remark added to assets table.';
     END
 END
 GO
@@ -127,6 +163,9 @@ BEGIN
         d.name AS department_name,
         a.status,
         a.qr_code_url,
+        a.serialno,
+        a.purchased_at,
+        a.remark,
         a.created_at,
         a.updated_at
     FROM assets a
@@ -150,6 +189,9 @@ BEGIN
         d.name AS department_name,
         a.status,
         a.qr_code_url,
+        a.serialno,
+        a.purchased_at,
+        a.remark,
         a.created_at,
         a.updated_at
     FROM assets a

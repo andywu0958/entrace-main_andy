@@ -64,20 +64,20 @@
                             </div>
                                                                                     
                             <div class="mb-3">
-                                <label for="serial_number" class="form-label">序號/編號</label>
-                                <input type="text" class="form-control" id="serial_number" name="serial_number" placeholder="例如：SN-2024-001">
+                                <label for="serialno" class="form-label">序號/編號</label>
+                                <input type="text" class="form-control" id="serialno" name="serialno" placeholder="例如：SN-2024-001">
                                 <div class="form-text">可選：輸入資產的序號或內部編號</div>
                             </div>
                             
                             <div class="mb-3">
-                                <label for="purchase_date" class="form-label">購買日期</label>
-                                <input type="date" class="form-control" id="purchase_date" name="purchase_date">
+                                <label for="purchased_at" class="form-label">購買日期</label>
+                                <input type="date" class="form-control" id="purchased_at" name="purchased_at">
                                 <div class="form-text">可選：輸入資產購買日期</div>
                             </div>
 
                             <div class="mb-3">
-                                <label for="description" class="form-label">備註說明</label>
-                                <textarea class="form-control" id="description" name="description" rows="3" placeholder="可選：輸入資產的詳細說明或特殊注意事項"></textarea>
+                                <label for="remark" class="form-label">備註說明</label>
+                                <textarea class="form-control" id="remark" name="remark" rows="3" placeholder="可選：輸入資產的詳細說明或特殊注意事項"></textarea>
                                 <div class="form-text">可選：輸入資產的詳細說明</div>
                             </div>
                         </div>
@@ -121,7 +121,7 @@
     // 設定購買日期的預設值為今天
     document.addEventListener('DOMContentLoaded', function() {
         const today = new Date().toISOString().split('T')[0];
-        const purchaseDateInput = document.getElementById('purchase_date');
+        const purchaseDateInput = document.getElementById('purchased_at');
         if (purchaseDateInput && !purchaseDateInput.value) {
             purchaseDateInput.value = today;
         }

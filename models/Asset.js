@@ -4,11 +4,11 @@ const QRCode = require('qrcode');
 class Asset {
   // 建立資產
   static async create(data) {
-    const { name, model, category, departmentId, status = 'active' } = data;
+    const { name, model, category, departmentId, status = 'active', serialno, purchased_at, remark } = data;
     
     const sql = `
-      INSERT INTO assets (name, model, category, department_id, status) 
-      VALUES (@name, @model, @category, @departmentId, @status);
+      INSERT INTO assets (name, model, category, department_id, status, serialno, purchased_at, remark) 
+      VALUES (@name, @model, @category, @departmentId, @status, @serialno, @purchased_at, @remark);
       SELECT SCOPE_IDENTITY() as id;
     `;
     
@@ -17,7 +17,10 @@ class Asset {
       model: model || null,
       category,
       departmentId,
-      status
+      status,
+      serialno: serialno || null,
+      purchased_at: purchased_at || null,
+      remark: remark || null
     };
     
     const result = await query(sql, params);
@@ -154,12 +157,13 @@ class Asset {
 
   // 更新資產
   static async update(id, data) {
-    const { name, model, category, departmentId, status } = data;
+    const { name, model, category, departmentId, status, serialno, purchased_at, remark } = data;
     
     const sql = `
       UPDATE assets 
       SET name = @name, model = @model, category = @category, 
-          department_id = @departmentId, status = @status 
+          department_id = @departmentId, status = @status,
+          serialno = @serialno, purchased_at = @purchased_at, remark = @remark
       WHERE id = @id
     `;
     
@@ -169,7 +173,10 @@ class Asset {
       model: model || null,
       category,
       departmentId,
-      status
+      status,
+      serialno: serialno || null,
+      purchased_at: purchased_at || null,
+      remark: remark || null
     };
     
     return await execute(sql, params);
