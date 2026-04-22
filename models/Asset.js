@@ -4,16 +4,17 @@ const QRCode = require('qrcode');
 class Asset {
   // 建立資產
   static async create(data) {
-    const { name, category, departmentId, status = 'active' } = data;
+    const { name, model, category, departmentId, status = 'active' } = data;
     
     const sql = `
-      INSERT INTO assets (name, category, department_id, status) 
-      VALUES (@name, @category, @departmentId, @status);
+      INSERT INTO assets (name, model, category, department_id, status) 
+      VALUES (@name, @model, @category, @departmentId, @status);
       SELECT SCOPE_IDENTITY() as id;
     `;
     
     const params = {
       name,
+      model: model || null,
       category,
       departmentId,
       status
@@ -106,7 +107,7 @@ class Asset {
     
     // 搜尋關鍵字
     if (filters.search) {
-      sql += ' AND (a.name LIKE @search OR a.category LIKE @search)';
+      sql += ' AND (a.name LIKE @search OR a.category LIKE @search OR a.model LIKE @search)';
       params.search = `%${filters.search}%`;
     }
     
@@ -143,7 +144,7 @@ class Asset {
     }
     
     if (filters.search) {
-      sql += ' AND (name LIKE @search OR category LIKE @search)';
+      sql += ' AND (name LIKE @search OR category LIKE @search OR model LIKE @search)';
       params.search = `%${filters.search}%`;
     }
     
@@ -153,11 +154,11 @@ class Asset {
 
   // 更新資產
   static async update(id, data) {
-    const { name, category, departmentId, status } = data;
+    const { name, model, category, departmentId, status } = data;
     
     const sql = `
       UPDATE assets 
-      SET name = @name, category = @category, 
+      SET name = @name, model = @model, category = @category, 
           department_id = @departmentId, status = @status 
       WHERE id = @id
     `;
@@ -165,6 +166,7 @@ class Asset {
     const params = {
       id,
       name,
+      model: model || null,
       category,
       departmentId,
       status

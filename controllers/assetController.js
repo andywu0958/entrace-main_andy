@@ -92,7 +92,7 @@ const assetController = {
   // 儲存新資產
   store: async (req, res) => {
     try {
-      const { name, category, department_id, status } = req.body;
+      const { name, model, category, department_id, status } = req.body;
       
       // 驗證輸入
       if (!name || !category || !department_id) {
@@ -110,6 +110,7 @@ const assetController = {
       
       const assetData = {
         name,
+        model,
         category,
         departmentId: department_id,
         status: status || 'active'
@@ -185,7 +186,7 @@ const assetController = {
   // 更新資產
   update: async (req, res) => {
     try {
-      const { name, category, department_id, status } = req.body;
+      const { name, model, category, department_id, status } = req.body;
       const assetId = req.params.id;
       
       // 驗證輸入
@@ -204,6 +205,7 @@ const assetController = {
       
       const assetData = {
         name,
+        model,
         category,
         departmentId: department_id,
         status: status || 'active'

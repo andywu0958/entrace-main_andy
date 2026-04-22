@@ -52,6 +52,7 @@ BEGIN
     CREATE TABLE assets (
         id INT IDENTITY(1,1) PRIMARY KEY,
         name NVARCHAR(200) NOT NULL,
+        model NVARCHAR(200),
         category NVARCHAR(100) NOT NULL,
         department_id INT NOT NULL,
         status NVARCHAR(50) NOT NULL DEFAULT 'active' CHECK (status IN ('active', 'inactive', 'maintenance', 'retired')),
@@ -67,6 +68,17 @@ BEGIN
     CREATE INDEX idx_assets_category ON assets(category);
     CREATE INDEX idx_assets_status ON assets(status);
     PRINT 'Indexes created for assets table.';
+END
+GO
+
+-- 如果 assets 表已存在但缺少 model 列，則添加
+IF EXISTS (SELECT * FROM sysobjects WHERE name='assets' AND xtype='U')
+BEGIN
+    IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('assets') AND name = 'model')
+    BEGIN
+        ALTER TABLE assets ADD model NVARCHAR(200);
+        PRINT 'Column model added to assets table.';
+    END
 END
 GO
 
@@ -109,6 +121,7 @@ BEGIN
     SELECT 
         a.id,
         a.name,
+        a.model,
         a.category,
         a.department_id,
         d.name AS department_name,
@@ -120,6 +133,29 @@ BEGIN
     LEFT JOIN departments d ON a.department_id = d.id
     ');
     PRINT 'View vw_asset_details created.';
+END
+GO
+
+-- 如果視圖已存在，則更新以包含 model 列
+IF EXISTS (SELECT * FROM sysobjects WHERE name='vw_asset_details' AND xtype='V')
+BEGIN
+    EXEC('
+    ALTER VIEW vw_asset_details AS
+    SELECT 
+        a.id,
+        a.name,
+        a.model,
+        a.category,
+        a.department_id,
+        d.name AS department_name,
+        a.status,
+        a.qr_code_url,
+        a.created_at,
+        a.updated_at
+    FROM assets a
+    LEFT JOIN departments d ON a.department_id = d.id
+    ');
+    PRINT 'View vw_asset_details updated to include model column.';
 END
 GO
 

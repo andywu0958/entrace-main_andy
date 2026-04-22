@@ -90,17 +90,17 @@
                             <tbody>
                                 <% recentAssets.forEach(asset => { %>
                                     <tr>
-                                        <td class="fw-semibold"><%= asset.name %></td>
+                                        <td class="fw-semibold"><%= asset.name %><br><%= asset.model %></td>
                                         <td><span class="badge bg-info"><%= asset.category %></span></td>
                                         <td><%= asset.department_name %></td>
                                         <td>
                                             <% 
-                                            let statusClass = 'bg-secondary';
+                                            let statusClass = 'bg-danger';
                                             if (asset.status === 'active') statusClass = 'bg-success';
-                                            if (asset.status === 'inactive') statusClass = 'bg-danger';
+                                            if (asset.status === 'inactive') statusClass = 'bg-secondary';
                                             if (asset.status === 'maintenance') statusClass = 'bg-warning';
                                             %>
-                                            <span class="badge <%= statusClass %>"><%= asset.status === 'active' ? '使用中' : asset.status === 'inactive' ? '停用' : asset.status === 'maintenance' ? '維修中' : '已報廢' %></span>
+                                            <span class="badge <%= statusClass %>"><%= asset.status === 'active' ? '使用中' : asset.status === 'inactive' ? '閒置' : asset.status === 'maintenance' ? '維修中' : '已報廢' %></span>
                                         </td>
                                         <td class="text-muted small"><%= new Date(asset.created_at).toLocaleDateString('zh-TW') %></td>
                                     </tr>

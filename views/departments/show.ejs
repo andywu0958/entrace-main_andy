@@ -71,12 +71,12 @@
                                         <td><span class="badge bg-info"><%= asset.category %></span></td>
                                         <td>
                                             <% 
-                                            let statusClass = 'bg-secondary';
+                                            let statusClass = 'bg-danger';
                                             if (asset.status === 'active') statusClass = 'bg-success';
-                                            if (asset.status === 'inactive') statusClass = 'bg-danger';
+                                            if (asset.status === 'inactive') statusClass = 'bg-secondary';
                                             if (asset.status === 'maintenance') statusClass = 'bg-warning';
                                             %>
-                                            <span class="badge <%= statusClass %>"><%= asset.status === 'active' ? '使用中' : asset.status === 'inactive' ? '停用' : asset.status === 'maintenance' ? '維修中' : '已報廢' %></span>
+                                            <span class="badge <%= statusClass %>"><%= asset.status === 'active' ? '使用中' : asset.status === 'inactive' ? '閒置' : asset.status === 'maintenance' ? '維修中' : '已報廢' %></span>
                                         </td>
                                         <td class="text-center">
                                             <a href="/assets/<%= asset.id %>" class="btn btn-sm btn-outline-primary">
