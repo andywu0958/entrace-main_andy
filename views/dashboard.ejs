@@ -10,8 +10,18 @@
                     <div class="col-6 col-md-3">
                         <div class="stat-card" style="background: linear-gradient(135deg, #3498db, #2980b9);">
                             <i class="fas fa-box"></i>
-                            <div class="count"><%= assets.length %></div>
-                            <div class="label">資產數量</div>
+                            <div class="count">
+                                <% 
+                                let totalAssets = 0;
+                                if (departments && departments.length > 0) {
+                                    departments.forEach(dept => {
+                                        totalAssets += parseInt(dept.total_assets || 0);
+                                    });
+                                }
+                                %>
+                                <%= totalAssets %>
+                            </div>
+                            <div class="label">總資產數量</div>
                         </div>
                     </div>
                     <div class="col-6 col-md-3">
@@ -20,9 +30,11 @@
                             <div class="count">
                                 <% 
                                 let activeAssets = 0;
-                                assets.forEach(a => {
-                                    if(a.status === 'active') activeAssets++;
-                                });
+                                if (departments && departments.length > 0) {
+                                    departments.forEach(dept => {
+                                        activeAssets += parseInt(dept.active_assets || 0);
+                                    });
+                                }
                                 %>
                                 <%= activeAssets %>
                             </div>
@@ -53,7 +65,7 @@
     <div class="col-lg-12">
         <div class="card h-100">
             <div class="card-header">
-                <h5 class="mb-0"><i class="fas fa-list me-2"></i>資產列表</h5>
+                <h5 class="mb-0"><i class="fas fa-list me-2"></i>資產列表(只列出10筆)</h5>
             </div>
             <div class="card-body">
                 <% if (assets && assets.length > 0) { %>

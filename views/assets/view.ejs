@@ -103,111 +103,89 @@
                     <div class="asset-info">
                         <h5 class="mb-3"><i class="fas fa-info-circle me-2 text-primary"></i>資產基本資訊</h5>
                         
-                        <div class="info-item">
-                            <div class="row">
-                                <div class="col-4 fw-semibold">資產名稱</div>
-                                <div class="col-8"><%= asset.name %></div>
-                            </div>
-                        </div>
-                        
-                        <div class="info-item">
-                            <div class="row">
-                                <div class="col-4 fw-semibold">資產編號</div>
-                                <div class="col-8">#<%= asset.id %></div>
-                            </div>
-                        </div>
-                        
-                        <% if (asset.serial_number) { %>
-                        <div class="info-item">
-                            <div class="row">
-                                <div class="col-4 fw-semibold">序號/編號</div>
-                                <div class="col-8"><%= asset.serial_number %></div>
-                            </div>
-                        </div>
-                        <% } %>
-                        
-                        <div class="info-item">
-                    <div class="row g-3">
-                        <div class="col-12 col-md-6">
-                            <label class="form-label text-muted">資產名稱</label>
-                            <div class="form-control-plaintext fw-semibold"><%= asset.name %></div>
-                        </div>
-                        
-                        <div class="col-12 col-md-6">
-                            <label class="form-label text-muted">類別</label>
-                            <div>
-                                <span class="badge bg-info"><%= asset.category %></span>
-                            </div>
-                        </div>
-                        
-                        <div class="col-12 col-md-6">
-                            <label class="form-label text-muted">所屬部門</label>
-                            <div class="form-control-plaintext">
-                                <i class="fas fa-building me-2 text-muted"></i>
-                                <%= asset.department_name %>
-                            </div>
-                        </div>
-                        
-                        <div class="col-12 col-md-6">
-                            <label class="form-label text-muted">狀態</label>
-                            <div>
-                                <% if (asset.status === 'active') { %>
-                                    <span class="badge bg-success">使用中</span>
-                                <% } else if (asset.status === 'inactive') { %>
-                                    <span class="badge bg-secondary">閒置</span>
-                                <% } else if (asset.status === 'maintenance') { %>
-                                    <span class="badge bg-warning">維修中</span>
-                                <% } else if (asset.status === 'retired') { %>
-                                    <span class="badge bg-danger">已報廢</span>
-                                <% } %>
-                            </div>
-                        </div>
-                        
-                        <% if (asset.serial_number) { %>
+                        <div class="row g-3">
                             <div class="col-12 col-md-6">
-                                <label class="form-label text-muted">序號/編號</label>
-                                <div class="form-control-plaintext">
-                                    <i class="fas fa-barcode me-2 text-muted"></i>
-                                    <%= asset.serial_number %>
-                                </div>
+                                <label class="form-label text-muted">資產名稱</label>
+                                <div class="form-control-plaintext fw-semibold"><%= asset.name %></div>
                             </div>
-                        <% } %>
-                        
-                        <% if (asset.purchase_date) { %>
+                            
                             <div class="col-12 col-md-6">
-                                <label class="form-label text-muted">購買日期</label>
-                                <div class="form-control-plaintext">
-                                    <i class="fas fa-calendar-alt me-2 text-muted"></i>
-                                    <%= new Date(asset.purchase_date).toLocaleDateString('zh-TW') %>
+                                <label class="form-label text-muted">類別</label>
+                                <div>
+                                    <span class="badge bg-info"><%= asset.category %></span>
                                 </div>
                             </div>
-                        <% } %>
-                        
-                        <div class="col-12 col-md-6">
-                            <label class="form-label text-muted">建立時間</label>
-                            <div class="form-control-plaintext">
-                                <i class="fas fa-clock me-2 text-muted"></i>
-                                <%= new Date(asset.created_at).toISOString().replace('T', ' ').substring(0, 19) %>
-                            </div>
-                        </div>
-                        
-                        <div class="col-12 col-md-6">
-                            <label class="form-label text-muted">最後更新</label>
-                            <div class="form-control-plaintext">
-                                <i class="fas fa-sync-alt me-2 text-muted"></i>
-                                <%= new Date(asset.updated_at).toISOString().replace('T', ' ').substring(0, 19) %>
-                            </div>
-                        </div>
-                        
-                        <% if (asset.description) { %>
-                            <div class="col-12">
-                                <label class="form-label text-muted">備註說明</label>
-                                <div class="form-control-plaintext bg-light rounded p-3">
-                                    <%= asset.description %>
+                            
+                            <div class="col-12 col-md-6">
+                                <label class="form-label text-muted">所屬部門</label>
+                                <div class="form-control-plaintext fw-semibold">
+                                    <i class="fas fa-building me-2 text-muted"></i>
+                                    <%= asset.department_name %>
                                 </div>
                             </div>
-                        <% } %>
+                            
+                            <div class="col-12 col-md-6">
+                                <label class="form-label text-muted">狀態</label>
+                                <div>
+                                    <% if (asset.status === 'active') { %>
+                                        <span class="badge bg-success">使用中</span>
+                                    <% } else if (asset.status === 'inactive') { %>
+                                        <span class="badge bg-secondary">閒置</span>
+                                    <% } else if (asset.status === 'maintenance') { %>
+                                        <span class="badge bg-warning">維修中</span>
+                                    <% } else if (asset.status === 'retired') { %>
+                                        <span class="badge bg-danger">已報廢</span>
+                                    <% } %>
+                                </div>
+                            </div>
+                            
+                            <% if (asset.serialno) { %>
+                                <div class="col-12 col-md-6">
+                                    <label class="form-label text-muted">序號/編號</label>
+                                    <div class="form-control-plaintext fw-semibold">
+                                        <i class="fas fa-barcode me-2 text-muted"></i>
+                                        <%= asset.serialno %>
+                                    </div>
+                                </div>
+                            <% } %>
+                            
+                            <% if (asset.purchased_at) { %>
+                                <div class="col-12 col-md-6">
+                                    <label class="form-label text-muted">購買日期</label>
+                                    <div class="form-control-plaintext fw-semibold">
+                                        <i class="fas fa-calendar-alt me-2 text-muted"></i>
+                                        <%= new Date(asset.purchased_at).toLocaleDateString('zh-TW') %>
+                                    </div>
+                                </div>
+                            <% } %>
+                            
+                            <div class="col-12 col-md-6">
+                                <label class="form-label text-muted">建立時間</label>
+                                <div class="form-control-plaintext fw-semibold">
+                                    <i class="fas fa-clock me-2 text-muted"></i>
+                                    <%= new Date(asset.created_at).toISOString().replace('T', ' ').substring(0, 19) %>
+                                </div>
+                            </div>
+                            
+                            <div class="col-12 col-md-6">
+                                <label class="form-label text-muted">最後更新</label>
+                                <div class="form-control-plaintext fw-semibold">
+                                    <i class="fas fa-sync-alt me-2 text-muted"></i>
+                                    <%= new Date(asset.updated_at).toISOString().replace('T', ' ').substring(0, 19) %>
+                                </div>
+                            </div>
+                            
+                            <% if (asset.remark) { %>
+                                <div class="col-12">
+                                    <label class="form-label text-muted">備註說明</label>
+                                    <div class="form-control-plaintext bg-light rounded p-3">
+                                        <%= asset.remark %>
+                                    </div>
+                                </div>
+                            <% } %>
+                        </div>
                     </div>
+                </div>
                 
                 <div class="card-footer text-center bg-transparent border-0">
                     <div class="footer">

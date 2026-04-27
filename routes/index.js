@@ -45,13 +45,13 @@ router.get('/dashboard', isAuthenticated, async (req, res) => {
     
     if (user.role === 'admin') {
       assets = await Asset.findAll({ limit: 10 });
-      departments = await Department.getWithStats(); // null 表示所有部門
+      departments = await Asset.getDepartmentStats(); // 使用與系統概覽相同的統計方法
     } else if (user.role === 'dept_manager') {
       assets = await Asset.findAll({ 
         departmentId: user.department_id,
         limit: 10 
       });
-      departments = await Department.getWithStats(user.department_id);
+      departments = await Asset.getDepartmentStats(user.department_id);
     }
     
     const categoryStats = await Asset.getCategoryStats(departmentId);
