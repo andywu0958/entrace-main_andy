@@ -25,20 +25,41 @@
                         </div>
                     </div>
                     <div class="col-6 col-md-3">
-                        <div class="stat-card" style="background: linear-gradient(135deg, #27ae60, #219653);">
-                            <i class="fas fa-check-circle"></i>
-                            <div class="count">
-                                <% 
+                        <div class="stat-card" style="background: linear-gradient(135deg, #27ae60, #219653); padding: 1.2rem;">
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; height: 100%;">
+                                <%
                                 let activeAssets = 0;
+                                let inactiveAssets = 0;
+                                let maintenanceAssets = 0;
+                                let totalDeptAssets = 0;
                                 if (departments && departments.length > 0) {
                                     departments.forEach(dept => {
                                         activeAssets += parseInt(dept.active_assets || 0);
+                                        inactiveAssets += parseInt(dept.inactive_assets || 0);
+                                        maintenanceAssets += parseInt(dept.maintenance_assets || 0);
+                                        totalDeptAssets += parseInt(dept.total_assets || 0);
                                     });
                                 }
+                                let scrappedAssets = totalDeptAssets - activeAssets - inactiveAssets - maintenanceAssets;
                                 %>
-                                <%= activeAssets %>
+                                <div style="text-align: center;">
+                                    <div style="font-size: 22px; font-weight: bold; color: #fff;"><%= activeAssets %></div>
+                                    <div style="font-size: 13px; color: rgba(255,255,255,0.85);">使用中</div>
+                                </div>
+                                <div style="text-align: center;">
+                                    <div style="font-size: 22px; font-weight: bold; color: #fff;"><%= inactiveAssets %></div>
+                                    <div style="font-size: 13px; color: rgba(255,255,255,0.85);">閒置</div>
+                                </div>
+                                <div style="text-align: center;">
+                                    <div style="font-size: 22px; font-weight: bold; color: #fff;"><%= maintenanceAssets %></div>
+                                    <div style="font-size: 13px; color: rgba(255,255,255,0.85);">維修中</div>
+                                </div>
+                                <div style="text-align: center;">
+                                    <div style="font-size: 22px; font-weight: bold; color: #fff;"><%= scrappedAssets %></div>
+                                    <div style="font-size: 13px; color: rgba(255,255,255,0.85);">已報廢</div>
+                                </div>
                             </div>
-                            <div class="label">使用中資產</div>
+                            <div style="font-size: 13px; color: rgba(255,255,255,0.85); text-align: center; margin-top: 6px; font-weight: 500; letter-spacing: 1px;">使用資產狀態</div>
                         </div>
                     </div>
                     <div class="col-6 col-md-3">
