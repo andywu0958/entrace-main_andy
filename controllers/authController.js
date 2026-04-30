@@ -35,6 +35,7 @@ const authController = {
       req.session.user = {
         id: user.id,
         username: user.username,
+        name: user.name,
         role: user.role,
         department_id: user.department_id
       };

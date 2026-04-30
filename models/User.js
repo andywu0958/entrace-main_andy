@@ -99,6 +99,17 @@ class User {
     return await query(sql, { departmentId });
   }
 
+  // 根據部門 ID 取得使用者
+  static async findByDepartmentId(departmentId) {
+    const sql = `
+      SELECT id, username, name, role, department_id 
+      FROM users 
+      WHERE department_id = @departmentId 
+      ORDER BY username ASC
+    `;
+    return await query(sql, { departmentId });
+  }
+
   // 更新密碼
   static async updatePassword(id, newPassword) {
     const hashedPassword = await bcrypt.hash(newPassword, 10);

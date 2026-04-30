@@ -1,5 +1,6 @@
 const Asset = require('../models/Asset');
 const Department = require('../models/Department');
+const User = require('../models/User');
 
 const assetController = {
   // 顯示所有資產
@@ -77,10 +78,18 @@ const assetController = {
         );
       }
       
+      // 取得同部門的人員列表（用於保管人下拉選單）
+      let departmentUsers = [];
+      if (req.session.user.department_id) {
+        departmentUsers = await User.findByDepartmentId(req.session.user.department_id);
+      }
+      
       res.render('assets/create', {
         title: '新增資產',
         departments: availableDepartments,
-        categories
+        categories,
+        user: req.session.user,
+        departmentUsers
       });
     } catch (error) {
       console.error('Create asset form error:', error);
@@ -173,11 +182,19 @@ const assetController = {
         );
       }
       
+      // 取得同部門的人員列表（用於保管人下拉選單）
+      let departmentUsers = [];
+      if (asset.department_id) {
+        departmentUsers = await User.findByDepartmentId(asset.department_id);
+      }
+      
       res.render('assets/edit', {
         title: `編輯資產: ${asset.name}`,
         asset,
         departments: availableDepartments,
-        categories
+        categories,
+        user: req.session.user,
+        departmentUsers
       });
     } catch (error) {
       console.error('Edit asset form error:', error);

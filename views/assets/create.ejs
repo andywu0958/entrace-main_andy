@@ -6,83 +6,288 @@
             </div>
             <div class="card-body">
                 <form action="/assets" method="POST">
-                    <div class="row g-4">
-                        <div class="col-12 col-md-6">
-                            <div class="mb-3">
-                                <label for="name" class="form-label">資產名稱 <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="name" name="name" required placeholder="例如：筆記型電腦 Dell XPS 15">
-                                <div class="form-text">請輸入資產的詳細名稱</div>
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label for="model" class="form-label">品牌規格</label>
-                                <input type="text" class="form-control" id="model" name="model" placeholder="例如：Dell XPS 15 2024">
-                                <div class="form-text">可選：輸入品牌、型號或規格</div>
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label for="category" class="form-label">類別 <span class="text-danger">*</span></label>
-                                <select class="form-select" id="category" name="category" required>
-                                    <option value="">請選擇類別</option>
-                                    <option value="電子設備">電子設備</option>
-                                    <option value="辦公設備">辦公設備</option>
-                                    <option value="會議設備">會議設備</option>
-                                    <option value="資訊設備">資訊設備</option>
-                                    <option value="網路設備">網路設備</option>
-                                    <option value="軟體授權">軟體授權</option>
-                                    <option value="房屋建築及設備">房屋建築及設備</option>
-                                    <option value="機械設備">機械設備</option>
-                                    <option value="運輸設備">運輸設備</option>
-                                    <option value="餐飲設備">餐飲設備</option>
-                                    <option value="雜項購置">雜項購置</option>
-                                </select>
-                                <div class="form-text">選擇資產所屬類別</div>
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label for="department_id" class="form-label">所屬部門 <span class="text-danger">*</span></label>
-                                <select class="form-select" id="department_id" name="department_id" required>
-                                    <option value="">請選擇部門</option>
-                                    <% departments.forEach(dept => { %>
-                                        <option value="<%= dept.id %>"><%= dept.name %></option>
-                                    <% }); %>
-                                </select>
-                                <div class="form-text">選擇資產所屬部門</div>
+                    
+                    <!-- ===== 區塊 1：基本資料 ===== -->
+                    <div class="card mb-4 border-purple" style="border-color: #b39ddb !important;">
+                        <div class="card-header py-2" style="background-color: #d1c4e9; color: #4a148c;">
+                            <h5 class="mb-0"><i class="fas fa-info-circle me-2"></i>1. 基本資料</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-12 col-md-6">
+                                    <div class="mb-3">
+                                        <label for="name" class="form-label">資產名稱 <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" id="name" name="name" required placeholder="例如：筆記型電腦 Dell XPS 15">
+                                        <div class="form-text">請輸入資產的詳細名稱</div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <div class="mb-3">
+                                        <label for="model" class="form-label">品牌規格</label>
+                                        <input type="text" class="form-control" id="model" name="model" placeholder="例如：Dell XPS 15 2024">
+                                        <div class="form-text">可選：輸入品牌、型號或規格</div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <div class="mb-3">
+                                        <label for="category" class="form-label">類別 <span class="text-danger">*</span></label>
+                                        <select class="form-select" id="category" name="category" required>
+                                            <option value="">請選擇類別</option>
+                                            <option value="電子設備">電子設備</option>
+                                            <option value="辦公設備">辦公設備</option>
+                                            <option value="會議設備">會議設備</option>
+                                            <option value="資訊設備">資訊設備</option>
+                                            <option value="網路設備">網路設備</option>
+                                            <option value="軟體授權">軟體授權</option>
+                                            <option value="房屋建築及設備">房屋建築及設備</option>
+                                            <option value="機械設備">機械設備</option>
+                                            <option value="運輸設備">運輸設備</option>
+                                            <option value="餐飲設備">餐飲設備</option>
+                                            <option value="雜項購置">雜項購置</option>
+                                        </select>
+                                        <div class="form-text">選擇資產所屬類別</div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <div class="mb-3">
+                                        <label for="status" class="form-label">狀態 <span class="text-danger">*</span></label>
+                                        <select class="form-select" id="status" name="status" required>
+                                            <option value="active" selected>使用中</option>
+                                            <option value="inactive">閒置</option>
+                                            <option value="maintenance">維修中</option>
+                                            <option value="retired">已報廢</option>
+                                        </select>
+                                        <div class="form-text">選擇資產目前狀態</div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <div class="mb-3">
+                                        <label for="serialno" class="form-label">序號/編號</label>
+                                        <input type="text" class="form-control" id="serialno" name="serialno" placeholder="例如：SN-2024-001">
+                                        <div class="form-text">可選：輸入資產的序號或內部編號</div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        
-                        <div class="col-12 col-md-6">
-                            <div class="mb-3">
-                                <label for="status" class="form-label">狀態 <span class="text-danger">*</span></label>
-                                <select class="form-select" id="status" name="status" required>
-                                    <option value="active" selected>使用中</option>
-                                    <option value="inactive">閒置</option>
-                                    <option value="maintenance">維修中</option>
-                                    <option value="retired">已報廢</option>
-                                </select>
-                                <div class="form-text">選擇資產目前狀態</div>
-                            </div>
-                                                                                    
-                            <div class="mb-3">
-                                <label for="serialno" class="form-label">序號/編號</label>
-                                <input type="text" class="form-control" id="serialno" name="serialno" placeholder="例如：SN-2024-001">
-                                <div class="form-text">可選：輸入資產的序號或內部編號</div>
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label for="purchased_at" class="form-label">購買日期</label>
-                                <input type="date" class="form-control" id="purchased_at" name="purchased_at">
-                                <div class="form-text">可選：輸入資產購買日期</div>
-                            </div>
+                    </div>
 
-                            <div class="mb-3">
-                                <label for="remark" class="form-label">備註說明</label>
-                                <textarea class="form-control" id="remark" name="remark" rows="3" placeholder="可選：輸入資產的詳細說明或特殊注意事項"></textarea>
-                                <div class="form-text">可選：輸入資產的詳細說明</div>
+                    <!-- ===== 區塊 2：資產取得 ===== -->
+                    <div class="card mb-4 border-purple" style="border-color: #b39ddb !important;">
+                        <div class="card-header py-2" style="background-color: #d1c4e9; color: #4a148c;">
+                            <h5 class="mb-0"><i class="fas fa-shopping-cart me-2"></i>2. 資產取得</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-12 col-md-6">
+                                    <div class="mb-3">
+                                        <label for="purchased_at" class="form-label">購買日期</label>
+                                        <input type="date" class="form-control" id="purchased_at" name="purchased_at">
+                                        <div class="form-text">可選：輸入資產購買日期</div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <div class="mb-3">
+                                        <label for="department_id" class="form-label">取得部門 <span class="text-danger">*</span></label>
+                                        <select class="form-select" id="department_id" name="department_id" required>
+                                            <option value="">請選擇部門</option>
+                                            <% departments.forEach(dept => { %>
+                                                <option value="<%= dept.id %>"><%= dept.name %></option>
+                                            <% }); %>
+                                        </select>
+                                        <div class="form-text">選擇資產取得時所屬部門</div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <div class="mb-3">
+                                        <label for="supplier" class="form-label">供應廠商</label>
+                                        <input type="text" class="form-control" id="supplier" name="supplier" placeholder="例如：某某科技股份有限公司">
+                                        <div class="form-text">可選：輸入資產供應商或廠商名稱</div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-3">
+                                    <div class="mb-3">
+                                        <label for="quantity" class="form-label">數量</label>
+                                        <input type="number" class="form-control" id="quantity" name="quantity" min="1" value="1" placeholder="1">
+                                        <div class="form-text">可選：輸入資產數量</div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-3">
+                                    <div class="mb-3">
+                                        <label for="unit" class="form-label">單位</label>
+                                        <select class="form-select" id="unit" name="unit">
+                                            <option value="">請選擇單位</option>
+                                            <option value="台">台</option>
+                                            <option value="輛">輛</option>
+                                            <option value="組">組</option>
+                                            <option value="張">張</option>
+                                            <option value="式">式</option>
+                                            <option value="批">批</option>
+                                        </select>
+                                        <div class="form-text">可選：選擇資產計量單位</div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-3">
+                                    <div class="mb-3">
+                                        <label for="cost" class="form-label">成本</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">$</span>
+                                            <input type="number" class="form-control" id="cost" name="cost" min="0" step="0.01" placeholder="0.00">
+                                        </div>
+                                        <div class="form-text">可選：輸入資產取得成本</div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-3">
+                                    <div class="mb-3">
+                                        <label for="warranty" class="form-label">保固年限</label>
+                                        <div class="input-group">
+                                            <input type="number" class="form-control" id="warranty" name="warranty" min="0" step="1" placeholder="0">
+                                            <span class="input-group-text">年</span>
+                                        </div>
+                                        <div class="form-text">可選：輸入資產保固年限</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ===== 區塊 3：折舊 ===== -->
+                    <div class="card mb-4 border-purple" style="border-color: #b39ddb !important;">
+                        <div class="card-header py-2" style="background-color: #d1c4e9; color: #4a148c;">
+                            <h5 class="mb-0"><i class="fas fa-chart-line me-2"></i>3. 折舊</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-12 col-md-6">
+                                    <div class="mb-3">
+                                        <label for="dep_meth" class="form-label">折舊方法</label>
+                                        <select class="form-select" id="dep_meth" name="dep_meth">
+                                            <option value="">請選擇折舊方法</option>
+                                            <option value="平均法">平均法</option>
+                                            <option value="定率遞減法">定率遞減法</option>
+                                            <option value="不提折舊">不提折舊</option>
+                                        </select>
+                                        <div class="form-text">可選：選擇資產折舊計算方式</div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <div class="mb-3">
+                                        <label for="useful_mo" class="form-label">耐用月數(折舊月數)</label>
+                                        <div class="input-group">
+                                            <input type="number" class="form-control" id="useful_mo" name="useful_mo" min="1" step="1" placeholder="例如：24">
+                                            <span class="input-group-text">月</span>
+                                        </div>
+                                        <div class="form-text">可選：輸入資產預計耐用月數</div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <div class="mb-3">
+                                        <label for="residual" class="form-label">預留殘值</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">$</span>
+                                            <input type="number" class="form-control" id="residual" name="residual" min="0" step="0.01" placeholder="0.00" style="background-color: #fff9c4;" readonly>
+                                        </div>
+                                        <div class="form-text">系統自動計算：平均法 = 總成本/(耐用月數+12)*12；定率遞減法 = 總成本/10</div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <div class="mb-3">
+                                        <label for="dep_start" class="form-label">提列年月</label>
+                                        <input type="month" class="form-control" id="dep_start" name="dep_start" style="background-color: #fff9c4;" readonly>
+                                        <div class="form-text">系統自動根據購買日期計算：前半月(1~15日)=當月，後半月(16~月底)=下月</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ===== 區塊 4：開帳資料 ===== -->
+                    <div class="card mb-4 border-purple" style="border-color: #b39ddb !important;">
+                        <div class="card-header py-2" style="background-color: #d1c4e9; color: #4a148c;">
+                            <h5 class="mb-0"><i class="fas fa-book-open me-2"></i>4. 開帳資料</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-12 col-md-4">
+                                    <div class="mb-3">
+                                        <label for="unamortized_mo" class="form-label">未攤月數</label>
+                                        <div class="input-group">
+                                            <input type="number" class="form-control" id="unamortized_mo" name="unamortized_mo" min="0" step="1" placeholder="0" style="background-color: #fff9c4;" readonly>
+                                            <span class="input-group-text">月</span>
+                                        </div>
+                                        <div class="form-text">系統自動跟隨耐用月數</div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-4">
+                                    <div class="mb-3">
+                                        <label for="avg_dep" class="form-label">平均法月折舊額</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">$</span>
+                                            <input type="number" class="form-control" id="avg_dep" name="avg_dep" min="0" step="0.01" placeholder="0.00" style="background-color: #fff9c4;" readonly>
+                                        </div>
+                                        <div class="form-text">可選：輸入平均法計算之每月折舊金額</div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-4">
+                                    <div class="mb-3">
+                                        <label for="accumulated" class="form-label">累積折舊</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">$</span>
+                                            <input type="number" class="form-control" id="accumulated" name="accumulated" min="0" step="0.01" placeholder="0.00">
+                                        </div>
+                                        <div class="form-text">可選：輸入截至目前的累積折舊金額</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ===== 區塊 5：部門保管 ===== -->
+                    <div class="card mb-4 border-purple" style="border-color: #b39ddb !important;">
+                        <div class="card-header py-2" style="background-color: #d1c4e9; color: #4a148c;">
+                            <h5 class="mb-0"><i class="fas fa-users me-2"></i>5. 部門保管</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-12 col-md-6">
+                                    <div class="mb-3">
+                                        <label for="custodian" class="form-label">保管人</label>
+                                        <select class="form-select" id="custodian" name="custodian" style="background-color: #fff9c4;">
+                                            <option value="">請選擇保管人</option>
+                                            <% if (typeof departmentUsers !== 'undefined' && departmentUsers.length > 0) { %>
+                                                <% let userFound = false; %>
+                                                <% departmentUsers.forEach(u => { %>
+                                                    <% if (user && user.name === u.name) { userFound = true; } %>
+                                                    <option value="<%= u.name %>" <%= (user && user.name === u.name) ? 'selected' : '' %>><%= u.name %></option>
+                                                <% }); %>
+                                                <% if (!userFound && user) { %>
+                                                    <option value="<%= user.name %>" selected><%= user.name %></option>
+                                                <% } %>
+                                            <% } else { %>
+                                                <option value="<%= user ? user.name : '' %>" selected><%= user ? user.name : '' %></option>
+                                            <% } %>
+                                        </select>
+                                        <div class="form-text">選擇資產保管人員</div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <div class="mb-3">
+                                        <label for="location" class="form-label">保管地點</label>
+                                        <input type="text" class="form-control" id="location" name="location" placeholder="例如：3樓辦公室A區">
+                                        <div class="form-text">可選：輸入資產存放或保管位置</div>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="mb-3">
+                                        <label for="remark" class="form-label">備註說明</label>
+                                        <textarea class="form-control" id="remark" name="remark" rows="3" placeholder="可選：輸入資產的詳細說明或特殊注意事項"></textarea>
+                                        <div class="form-text">可選：輸入資產的保管注意事項或補充說明</div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                     
+                    <!-- ===== 提示訊息 ===== -->
                     <div class="row mt-4">
                         <div class="col-12">
                             <div class="alert alert-info">
@@ -92,6 +297,7 @@
                         </div>
                     </div>
                     
+                    <!-- ===== 按鈕區 ===== -->
                     <div class="row mt-4">
                         <div class="col-12">
                             <div class="d-flex flex-column flex-md-row justify-content-md-between gap-2">
@@ -122,8 +328,35 @@
     document.addEventListener('DOMContentLoaded', function() {
         const today = new Date().toISOString().split('T')[0];
         const purchaseDateInput = document.getElementById('purchased_at');
+        const depreciationStartInput = document.getElementById('dep_start');
+        
         if (purchaseDateInput && !purchaseDateInput.value) {
             purchaseDateInput.value = today;
+        }
+        
+        // 提列年月預設規則：
+        //   前半月(1~15日) → 當月開始提列
+        //   後半月(16~月底) → 下月開始提列
+        function setDepreciationStartFromPurchaseDate() {
+            if (purchaseDateInput && purchaseDateInput.value && depreciationStartInput) {
+                const purchaseDate = new Date(purchaseDateInput.value + 'T00:00:00');
+                const day = purchaseDate.getDate();
+                // 後半月(16日以後)才加1個月
+                if (day >= 16) {
+                    purchaseDate.setMonth(purchaseDate.getMonth() + 1);
+                }
+                const year = purchaseDate.getFullYear();
+                const month = String(purchaseDate.getMonth() + 1).padStart(2, '0');
+                depreciationStartInput.value = `${year}-${month}`;
+            }
+        }
+        setDepreciationStartFromPurchaseDate();
+        
+        // 當購買日期變更時，同步更新提列年月
+        if (purchaseDateInput) {
+            purchaseDateInput.addEventListener('change', function() {
+                setDepreciationStartFromPurchaseDate();
+            });
         }
         
         // 自動聚焦第一個輸入欄位
@@ -131,5 +364,125 @@
         if (nameInput) {
             nameInput.focus();
         }
+
+        // === 未攤月數自動跟隨耐用月數 ===
+        function syncUnamortizedMonths() {
+            const months = parseInt(usefulMoInput.value);
+            if (!isNaN(months) && months > 0) {
+                unamortizedMoInput.value = months;
+            } else {
+                unamortizedMoInput.value = '';
+            }
+        }
+
+        // === 預留殘值自動計算（平均法）===
+        const costInput = document.getElementById('cost');
+        const quantityInput = document.getElementById('quantity');
+        const usefulMoInput = document.getElementById('useful_mo');
+        const residualInput = document.getElementById('residual');
+        const depMethSelect = document.getElementById('dep_meth');
+        const unamortizedMoInput = document.getElementById('unamortized_mo');
+        const avgDepInput = document.getElementById('avg_dep');
+
+        function calcResidualValue() {
+            const method = depMethSelect.value;
+            if (method !== '平均法' && method !== '定率遞減法') return;
+
+            const cost = parseFloat(costInput.value);
+            const quantity = parseInt(quantityInput.value) || 1;
+            const months = parseInt(usefulMoInput.value);
+
+            if (isNaN(cost) || cost <= 0) return;
+
+            const totalCost = cost * quantity;
+            let residual;
+
+            if (method === '平均法') {
+                // 平均法：預留殘值 = (成本 × 數量) / (耐用月數 + 12) * 12，四捨五入
+                if (isNaN(months) || months <= 0) return;
+                residual = Math.round(totalCost / (months + 12) * 12);
+            } else if (method === '定率遞減法') {
+                // 定率遞減法：預留殘值 = (成本 × 數量) / 10，四捨五入
+                residual = Math.round(totalCost / 10);
+            }
+
+            residualInput.value = residual.toFixed(2);
+        }
+
+        // === 平均法月折舊額自動計算 ===
+        // 公式：(總成本 - 總殘值) / 未攤月數，四捨五入
+        // 總成本 = 成本 × 數量
+        // 總殘值 = 預留殘值（已由 calcResidualValue 計算為總殘值）
+        function calcMonthlyDepreciation() {
+            const method = depMethSelect.value;
+            if (method === '定率遞減法') {
+                avgDepInput.value = '';
+                unamortizedMoInput.value = '';
+                avgDepInput.disabled = true;
+                return;
+            }
+            if (method !== '平均法') {
+                avgDepInput.value = '';
+                avgDepInput.placeholder = '0.00';
+                avgDepInput.disabled = false;
+                return;
+            }
+
+            // 從定率遞減法切換回平均法時，將耐用月數帶回未攤月數
+            const usefulMonths = parseInt(usefulMoInput.value);
+            if (usefulMonths > 0 && !unamortizedMoInput.value) {
+                unamortizedMoInput.value = usefulMonths;
+            }
+
+            const cost = parseFloat(costInput.value);
+            const quantity = parseInt(quantityInput.value) || 1;
+            const residual = parseFloat(residualInput.value);
+            const months = parseInt(unamortizedMoInput.value);
+
+            if (isNaN(cost) || cost <= 0) return;
+            if (isNaN(months) || months <= 0) return;
+
+            const totalCost = cost * quantity;
+            // residualInput 已經是 calcResidualValue 計算出的總殘值，無需再乘以數量
+            const totalResidual = isNaN(residual) ? 0 : residual;
+            const depreciation = Math.round((totalCost - totalResidual) / months);
+
+            avgDepInput.value = depreciation.toFixed(2);
+        }
+
+        // 當成本、數量、預留殘值、未攤月數、折舊方法任一變動時重新計算月折舊額
+        costInput.addEventListener('input', function() {
+            calcResidualValue();
+            calcMonthlyDepreciation();
+        });
+        quantityInput.addEventListener('input', function() {
+            calcResidualValue();
+            calcMonthlyDepreciation();
+        });
+        usefulMoInput.addEventListener('input', function() {
+            calcResidualValue();
+            syncUnamortizedMonths();
+            calcMonthlyDepreciation();
+        });
+        depMethSelect.addEventListener('change', function() {
+            const method = depMethSelect.value;
+            
+            // 當選擇「不提折舊」時，清空相關欄位
+            if (method === '不提折舊') {
+                usefulMoInput.value = '';
+                residualInput.value = '';
+                unamortizedMoInput.value = '';
+                avgDepInput.value = '';
+                return;
+            }
+            
+            // 從定率遞減法切換回平均法時，先將耐用月數同步到未攤月數
+            if (method === '平均法') {
+                syncUnamortizedMonths();
+            }
+            
+            calcResidualValue();
+            calcMonthlyDepreciation();
+        });
     });
 </script>
