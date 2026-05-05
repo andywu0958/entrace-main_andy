@@ -185,6 +185,97 @@
                             <% } %>
                         </div>
                     </div>
+
+                    <!-- 財務資訊區塊 -->
+                    <div class="asset-info mt-3">
+                        <h5 class="mb-3"><i class="fas fa-coins me-2 text-primary"></i>財務資訊</h5>
+                        <div class="row g-3">
+                            <% if (asset.supplier) { %>
+                            <div class="col-12 col-md-6">
+                                <label class="form-label text-muted">供應廠商</label>
+                                <div class="form-control-plaintext fw-semibold"><%= asset.supplier %></div>
+                            </div>
+                            <% } %>
+                            <% if (asset.quantity) { %>
+                            <div class="col-12 col-md-6">
+                                <label class="form-label text-muted">數量</label>
+                                <div class="form-control-plaintext fw-semibold"><%= asset.quantity %></div>
+                            </div>
+                            <% } %>
+                            <% if (asset.unit) { %>
+                            <div class="col-12 col-md-6">
+                                <label class="form-label text-muted">單位</label>
+                                <div class="form-control-plaintext fw-semibold"><%= asset.unit %></div>
+                            </div>
+                            <% } %>
+                            <% if (asset.cost) { %>
+                            <div class="col-12 col-md-6">
+                                <label class="form-label text-muted">成本</label>
+                                <div class="form-control-plaintext fw-semibold"><%= Number(asset.cost).toLocaleString('zh-TW', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) %></div>
+                            </div>
+                            <% } %>
+                            <% if (asset.warranty) { %>
+                            <div class="col-12 col-md-6">
+                                <label class="form-label text-muted">保固年限</label>
+                                <div class="form-control-plaintext fw-semibold"><%= asset.warranty %> 年</div>
+                            </div>
+                            <% } %>
+                            <% if (asset.dep_meth) { %>
+                            <div class="col-12 col-md-6">
+                                <label class="form-label text-muted">折舊方法</label>
+                                <div class="form-control-plaintext fw-semibold"><%= asset.dep_meth %></div>
+                            </div>
+                            <% } %>
+                            <% if (asset.useful_mo) { %>
+                            <div class="col-12 col-md-6">
+                                <label class="form-label text-muted">耐用月數</label>
+                                <div class="form-control-plaintext fw-semibold"><%= asset.useful_mo %> 個月</div>
+                            </div>
+                            <% } %>
+                            <% if (asset.residual) { %>
+                            <div class="col-12 col-md-6">
+                                <label class="form-label text-muted">預留殘值</label>
+                                <div class="form-control-plaintext fw-semibold"><%= Number(asset.residual).toLocaleString('zh-TW', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) %></div>
+                            </div>
+                            <% } %>
+                            <% if (asset.dep_start) { %>
+                            <div class="col-12 col-md-6">
+                                <label class="form-label text-muted">提列年月</label>
+                                <div class="form-control-plaintext fw-semibold"><%= asset.dep_start.substring(0, 7) %></div>
+                            </div>
+                            <% } %>
+                            <% if (asset.unamortized_mo) { %>
+                            <div class="col-12 col-md-6">
+                                <label class="form-label text-muted">未攤月數</label>
+                                <div class="form-control-plaintext fw-semibold"><%= asset.unamortized_mo %> 個月</div>
+                            </div>
+                            <% } %>
+                            <% if (asset.avg_dep) { %>
+                            <div class="col-12 col-md-6">
+                                <label class="form-label text-muted">平均法月折舊額</label>
+                                <div class="form-control-plaintext fw-semibold"><%= Number(asset.avg_dep).toLocaleString('zh-TW', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) %></div>
+                            </div>
+                            <% } %>
+                            <% if (asset.accumulated) { %>
+                            <div class="col-12 col-md-6">
+                                <label class="form-label text-muted">累積折舊</label>
+                                <div class="form-control-plaintext fw-semibold"><%= Number(asset.accumulated).toLocaleString('zh-TW', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) %></div>
+                            </div>
+                            <% } %>
+                            <% if (asset.custodian) { %>
+                            <div class="col-12 col-md-6">
+                                <label class="form-label text-muted">保管人</label>
+                                <div class="form-control-plaintext fw-semibold"><%= asset.custodian %></div>
+                            </div>
+                            <% } %>
+                            <% if (asset.location) { %>
+                            <div class="col-12 col-md-6">
+                                <label class="form-label text-muted">保管地點</label>
+                                <div class="form-control-plaintext fw-semibold"><%= asset.location %></div>
+                            </div>
+                            <% } %>
+                        </div>
+                    </div>
                 </div>
                 
                 <div class="card-footer text-center bg-transparent border-0">

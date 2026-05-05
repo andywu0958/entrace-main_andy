@@ -60,6 +60,21 @@ BEGIN
         serialno NVARCHAR(100),
         purchased_at DATETIME,
         remark NVARCHAR(500),
+        -- 14個新欄位
+        supplier NVARCHAR(200),
+        quantity INT,
+        unit NVARCHAR(50),
+        cost DECIMAL(18,2),
+        warranty INT,
+        dep_meth NVARCHAR(50),
+        useful_mo INT,
+        residual DECIMAL(18,2),
+        dep_start nvarchar(6),
+        unamortized_mo INT,
+        avg_dep DECIMAL(18,2),
+        accumulated DECIMAL(18,2),
+        custodian NVARCHAR(100),
+        location NVARCHAR(200),
         created_at DATETIME DEFAULT GETDATE(),
         updated_at DATETIME DEFAULT GETDATE(),
         FOREIGN KEY (department_id) REFERENCES departments(id) ON DELETE CASCADE
@@ -175,7 +190,7 @@ BEGIN
 END
 GO
 
--- 如果視圖已存在，則更新以包含 model 列
+-- 如果視圖已存在，則更新以包含所有新欄位
 IF EXISTS (SELECT * FROM sysobjects WHERE name='vw_asset_details' AND xtype='V')
 BEGIN
     EXEC('
@@ -192,12 +207,26 @@ BEGIN
         a.serialno,
         a.purchased_at,
         a.remark,
+        a.supplier,
+        a.quantity,
+        a.unit,
+        a.cost,
+        a.warranty,
+        a.dep_meth,
+        a.useful_mo,
+        a.residual,
+        a.dep_start,
+        a.unamortized_mo,
+        a.avg_dep,
+        a.accumulated,
+        a.custodian,
+        a.location,
         a.created_at,
         a.updated_at
     FROM assets a
     LEFT JOIN departments d ON a.department_id = d.id
     ');
-    PRINT 'View vw_asset_details updated to include model column.';
+    PRINT 'View vw_asset_details updated to include all new financial columns.';
 END
 GO
 

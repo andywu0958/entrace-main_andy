@@ -101,7 +101,7 @@ const assetController = {
   // 儲存新資產
   store: async (req, res) => {
     try {
-      const { name, model, category, department_id, status, serialno, purchased_at, remark } = req.body;
+      const { name, model, category, department_id, status, serialno, purchased_at, remark, supplier, quantity, unit, cost, warranty, dep_meth, useful_mo, residual, dep_start, unamortized_mo, avg_dep, accumulated, custodian, location } = req.body;
       
       // 驗證輸入
       if (!name || !category || !department_id) {
@@ -125,7 +125,21 @@ const assetController = {
         status: status || 'active',
         serialno,
         purchased_at,
-        remark
+        remark,
+        supplier,
+        quantity: quantity ? parseFloat(quantity) : null,
+        unit,
+        cost: cost ? parseFloat(cost) : null,
+        warranty: warranty ? parseInt(warranty) : null,
+        dep_meth,
+        useful_mo: useful_mo ? parseInt(useful_mo) : null,
+        residual: residual ? parseFloat(residual) : null,
+        dep_start,
+        unamortized_mo: unamortized_mo ? parseInt(unamortized_mo) : null,
+        avg_dep: avg_dep ? parseFloat(avg_dep) : null,
+        accumulated: accumulated ? parseFloat(accumulated) : null,
+        custodian,
+        location
       };
       
       const result = await Asset.create(assetData);
@@ -206,7 +220,7 @@ const assetController = {
   // 更新資產
   update: async (req, res) => {
     try {
-      const { name, model, category, department_id, status, serialno, purchased_at, remark } = req.body;
+      const { name, model, category, department_id, status, serialno, purchased_at, remark, supplier, quantity, unit, cost, warranty, dep_meth, useful_mo, residual, dep_start, unamortized_mo, avg_dep, accumulated, custodian, location } = req.body;
       const assetId = req.params.id;
       
       // 驗證輸入
@@ -231,7 +245,21 @@ const assetController = {
         status: status || 'active',
         serialno,
         purchased_at,
-        remark
+        remark,
+        supplier,
+        quantity: quantity ? parseFloat(quantity) : null,
+        unit,
+        cost: cost ? parseFloat(cost) : null,
+        warranty: warranty ? parseInt(warranty) : null,
+        dep_meth,
+        useful_mo: useful_mo ? parseInt(useful_mo) : null,
+        residual: residual ? parseFloat(residual) : null,
+        dep_start,
+        unamortized_mo: unamortized_mo ? parseInt(unamortized_mo) : null,
+        avg_dep: avg_dep ? parseFloat(avg_dep) : null,
+        accumulated: accumulated ? parseFloat(accumulated) : null,
+        custodian,
+        location
       };
       
       await Asset.update(assetId, assetData);
