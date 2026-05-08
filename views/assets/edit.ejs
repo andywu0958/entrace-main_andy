@@ -211,7 +211,7 @@
                                     <div class="mb-3">
                                         <label for="unamortized_mo" class="form-label">未攤月數</label>
                                         <div class="input-group">
-                                            <input type="number" class="form-control" id="unamortized_mo" name="unamortized_mo" value="<%= asset.unamortized_mo || '' %>" min="0" step="1" placeholder="0" style="background-color: #fff9c4;" readonly>
+                                            <input type="text" class="form-control" id="unamortized_mo" name="unamortized_mo" value="<%= asset.unamortized_mo || '' %>" min="0" step="1" placeholder="0" style="background-color: #fff9c4;">
                                             <span class="input-group-text">月</span>
                                         </div>
                                         <div class="form-text">系統自動跟隨耐用月數</div>
@@ -224,7 +224,7 @@
                                             <span class="input-group-text">$</span>
                                             <input type="number" class="form-control" id="avg_dep" name="avg_dep" value="<%= asset.avg_dep || '' %>" min="0" step="0.01" placeholder="0.00" style="background-color: #fff9c4;" readonly>
                                         </div>
-                                        <div class="form-text">系統自動計算：(總成本 - 總殘值) / 未攤月數</div>
+                                        <div class="form-text">系統自動計算：(總成本 - 總殘值) / 耐用月數(折舊月數)</div>
                                     </div>
                                 </div>
                                 <div class="col-12 col-md-4">
@@ -232,9 +232,32 @@
                                         <label for="accumulated" class="form-label">累積折舊</label>
                                         <div class="input-group">
                                             <span class="input-group-text">$</span>
-                                            <input type="number" class="form-control" id="accumulated" name="accumulated" value="<%= asset.accumulated || '' %>" min="0" step="0.01" placeholder="0.00">
+                                            <input type="number" class="form-control" id="accumulated" name="accumulated" value="<%= asset.accumulated || '' %>" min="0" step="0.01" placeholder="0.00" style="background-color: #fff9c4;" readonly>
                                         </div>
-                                        <div class="form-text">可選：輸入截至目前的累積折舊金額</div>
+                                        <div class="form-text">平均法下系統自動計算：已折舊月數 × 月折舊額</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- 定率遞減法專屬欄位 -->
+                            <div class="row g-3" id="decliningRateFields" style="display: none;">
+                                <div class="col-12 col-md-6">
+                                    <div class="mb-3">
+                                        <label for="rate_dep" class="form-label">定率年折舊率</label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" id="rate_dep" name="rate_dep" value="<%= asset.rate_dep || '' %>" min="0" max="100" step="0.01" placeholder="例如：20" style="background-color: #d4edda;">
+                                            <span class="input-group-text">%</span>
+                                        </div>
+                                        <div class="form-text">定率遞減法之年折舊率百分比</div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <div class="mb-3">
+                                        <label for="annual_dep" class="form-label">定率年折舊額</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">$</span>
+                                            <input type="number" class="form-control" id="annual_dep" name="annual_dep" value="<%= asset.annual_dep || '' %>" min="0" step="0.01" placeholder="0.00" style="background-color: #d4edda;" readonly>
+                                        </div>
+                                        <div class="form-text">定率遞減法之年折舊金額</div>
                                     </div>
                                 </div>
                             </div>
@@ -332,12 +355,16 @@
                 const purchaseDate = new Date(purchaseDateInput.value + 'T00:00:00');
                 const day = purchaseDate.getDate();
                 // 後半月(16日以後)才加1個月
+                let year = purchaseDate.getFullYear();
+                let month = purchaseDate.getMonth();
                 if (day >= 16) {
-                    purchaseDate.setMonth(purchaseDate.getMonth() + 1);
+                    month += 1;
+                    if (month > 11) {
+                        month = 0;
+                        year += 1;
+                    }
                 }
-                const year = purchaseDate.getFullYear();
-                const month = String(purchaseDate.getMonth() + 1).padStart(2, '0');
-                depreciationStartInput.value = `${year}-${month}`;
+                depreciationStartInput.value = `${year}-${String(month + 1).padStart(2, '0')}`;
             }
         }
         setDepreciationStartFromPurchaseDate();
@@ -346,6 +373,11 @@
         if (purchaseDateInput) {
             purchaseDateInput.addEventListener('change', function() {
                 setDepreciationStartFromPurchaseDate();
+                syncUnamortizedMonths();
+                calcAccumulatedDepreciation();
+                calcRateDepreciation();
+                calcDecliningAccumulated();
+                calcAnnualDepreciation();
             });
         }
         
@@ -359,13 +391,41 @@
         function syncUnamortizedMonths() {
             const months = parseInt(usefulMoInput.value);
             if (!isNaN(months) && months > 0) {
-                unamortizedMoInput.value = months;
+                let result = months;
+                const method = depMethSelect.value;
+                if (method === '平均法' && depreciationStartInput && depreciationStartInput.value) {
+                    const now = new Date();
+                    const currentYearMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+                    
+                    if (depreciationStartInput.value <= currentYearMonth) {
+                        // 1. 初始減1：提列年月已開始，先減1個月
+                        let deductMonths = 1;
+                        
+                        // 2. 每月1日再減1：計算從提列年月到當前年月經過的月數
+                        const startParts = depreciationStartInput.value.split('-');
+                        const startYear = parseInt(startParts[0]);
+                        const startMonth = parseInt(startParts[1]);
+                        const currentYear = now.getFullYear();
+                        const currentMonth = now.getMonth() + 1;
+                        
+                        // 經過的月數 = (當前年 - 提列年) * 12 + (當前月 - 提列月)
+                        const elapsedMonths = (currentYear - startYear) * 12 + (currentMonth - startMonth);
+                        
+                        // 每月1日再減1，但初始減1已經算了一個月，所以從第2個月開始算
+                        if (elapsedMonths > 0) {
+                            deductMonths += elapsedMonths;
+                        }
+                        
+                        result = Math.max(0, months - deductMonths);
+                    }
+                }
+                unamortizedMoInput.value = result;
             } else {
                 unamortizedMoInput.value = '';
             }
         }
 
-        // === 預留殘值自動計算（平均法）===
+        // === 預留殘值自動計算（平均法 & 定率遞減法）===
         const costInput = document.getElementById('cost');
         const quantityInput = document.getElementById('quantity');
         const usefulMoInput = document.getElementById('useful_mo');
@@ -373,6 +433,9 @@
         const depMethSelect = document.getElementById('dep_meth');
         const unamortizedMoInput = document.getElementById('unamortized_mo');
         const avgDepInput = document.getElementById('avg_dep');
+        const rateDepInput = document.getElementById('rate_dep');
+        const annualDepInput = document.getElementById('annual_dep');
+        const decliningRateFields = document.getElementById('decliningRateFields');
 
         function calcResidualValue() {
             const method = depMethSelect.value;
@@ -400,7 +463,7 @@
         }
 
         // === 平均法月折舊額自動計算 ===
-        // 公式：(總成本 - 總殘值) / 未攤月數，四捨五入
+        // 公式：(總成本 - 總殘值) / 耐用月數(折舊月數)，四捨五入
         // 總成本 = 成本 × 數量
         // 總殘值 = 預留殘值（已由 calcResidualValue 計算為總殘值）
         function calcMonthlyDepreciation() {
@@ -418,7 +481,7 @@
                 return;
             }
 
-            // 從定率遞減法切換回平均法時，將耐用月數帶回未攤月數
+            // 從定率遞減法切換回平均法時，先將耐用月數同步到未攤月數
             const usefulMonths = parseInt(usefulMoInput.value);
             if (usefulMonths > 0 && !unamortizedMoInput.value) {
                 unamortizedMoInput.value = usefulMonths;
@@ -427,7 +490,8 @@
             const cost = parseFloat(costInput.value);
             const quantity = parseInt(quantityInput.value) || 1;
             const residual = parseFloat(residualInput.value);
-            const months = parseInt(unamortizedMoInput.value);
+            // 使用耐用月數(折舊月數)作為計算基準
+            const months = parseInt(usefulMoInput.value);
 
             if (isNaN(cost) || cost <= 0) return;
             if (isNaN(months) || months <= 0) return;
@@ -440,22 +504,216 @@
             avgDepInput.value = depreciation.toFixed(2);
         }
 
+        // === 累積折舊自動計算 ===
+        // 當折舊方法=平均法，且未攤月數開始倒扣時，將平均法月折舊額自動累加到累積折舊
+        function calcAccumulatedDepreciation() {
+            const method = depMethSelect.value;
+            if (method !== '平均法') {
+                // 非平均法時不清空累積折舊，讓使用者自行輸入
+                return;
+            }
+
+            const avgDep = parseFloat(avgDepInput.value);
+            const usefulMonths = parseInt(usefulMoInput.value);
+            const unamortizedMo = parseInt(unamortizedMoInput.value);
+
+            if (isNaN(avgDep) || avgDep <= 0) return;
+            if (isNaN(usefulMonths) || usefulMonths <= 0) return;
+            if (isNaN(unamortizedMo) || unamortizedMo < 0) return;
+
+            // 若未攤月數還不需減1時（未攤月數 = 耐用月數），累積折舊為0
+            if (unamortizedMo === usefulMonths) {
+                accumulatedInput.value = '0.00';
+                return;
+            }
+
+            // 若有減1（未攤月數 < 耐用月數），才開始累積計算
+            // 已折舊月數 = 耐用月數 - 未攤月數
+            // 累積折舊 = 已折舊月數 × 平均法月折舊額
+            const depreciatedMonths = usefulMonths - unamortizedMo;
+            if (depreciatedMonths > 0) {
+                const accumulated = Math.round(depreciatedMonths * avgDep);
+                accumulatedInput.value = accumulated.toFixed(2);
+            } else {
+                accumulatedInput.value = '0.00';
+            }
+        }
+
+        // === 定率遞減法相關功能 ===
+        function toggleDecliningRateFields() {
+            const method = depMethSelect.value;
+            if (method === '定率遞減法') {
+                decliningRateFields.style.display = 'flex';
+            } else {
+                decliningRateFields.style.display = 'none';
+            }
+        }
+
+        // === 定率年折舊率自動計算 ===
+        // 公式：年折舊率 = 1 - (預留殘值 / 總成本)^(12 / 耐用月數)
+        // 結果轉換為百分比
+        function calcRateDepreciation() {
+            const method = depMethSelect.value;
+            if (method !== '定率遞減法') {
+                rateDepInput.value = '';
+                return;
+            }
+
+            const cost = parseFloat(costInput.value);
+            const quantity = parseInt(quantityInput.value) || 1;
+            const residual = parseFloat(residualInput.value);
+            const months = parseInt(usefulMoInput.value);
+
+            if (isNaN(cost) || cost <= 0) return;
+            if (isNaN(residual) || residual <= 0) return;
+            if (isNaN(months) || months <= 0) return;
+
+            const totalCost = cost * quantity;
+            
+            // 年折舊率 = 1 - (預留殘值 / 總成本)^(12 / 耐用月數)
+            const rateDecimal = 1 - Math.pow(residual / totalCost, 12 / months);
+            
+            // 轉換為百分比，保留2位小數
+            const ratePercent = Math.round(rateDecimal * 10000) / 100;
+            
+            rateDepInput.value = ratePercent.toFixed(2);
+            
+            // 計算完年折舊率後，自動計算累積折舊和年折舊額
+            calcDecliningAccumulated();
+            calcAnnualDepreciation();
+        }
+
+        // === 定率遞減法累積折舊自動計算 ===
+        // 從提列年月到當前年月，計算經過的完整年數，逐年計算累積折舊
+        // 公式 A（不扣殘值）：年折舊額 = 年初帳面價值 × 年折舊率
+        // 年初帳面價值 = 總成本 - 累積折舊（不扣殘值）
+        // 但折舊後的帳面價值不得低於預留殘值
+        function calcDecliningAccumulated() {
+            const method = depMethSelect.value;
+            if (method !== '定率遞減法') return;
+
+            const cost = parseFloat(costInput.value);
+            const quantity = parseInt(quantityInput.value) || 1;
+            const residual = parseFloat(residualInput.value);
+            const rate = parseFloat(rateDepInput.value);
+            const depStart = depreciationStartInput ? depreciationStartInput.value : '';
+
+            if (isNaN(cost) || cost <= 0) return;
+            if (isNaN(rate) || rate <= 0) return;
+            if (!depStart) return;
+
+            const totalCost = cost * quantity;
+            const totalResidual = isNaN(residual) ? 0 : residual;
+
+            // 計算從提列年月到當前年月經過的完整年數
+            const now = new Date();
+            const startParts = depStart.split('-');
+            const startYear = parseInt(startParts[0]);
+            const startMonth = parseInt(startParts[1]);
+            const currentYear = now.getFullYear();
+            const currentMonth = now.getMonth() + 1;
+
+            // 經過的月數
+            const elapsedMonths = (currentYear - startYear) * 12 + (currentMonth - startMonth);
+            // 完整年數（無條件捨去）
+            const fullYears = Math.floor(elapsedMonths / 12);
+
+            if (fullYears <= 0) {
+                accumulatedInput.value = '0.00';
+                return;
+            }
+
+            // 逐年計算累積折舊（公式 A：不扣殘值）
+            // 年初帳面價值 = 總成本 - 累積折舊（不扣殘值）
+            let accumulated = 0;
+            let bookValue = totalCost; // 年初帳面價值
+
+            for (let y = 0; y < fullYears; y++) {
+                // 年折舊額 = 年初帳面價值 × 年折舊率
+                let yearDep = Math.round(bookValue * (rate / 100));
+                
+                // 確保折舊後的帳面價值不低於殘值
+                if (bookValue - yearDep < totalResidual) {
+                    yearDep = bookValue - totalResidual;
+                }
+                
+                accumulated += yearDep;
+                bookValue -= yearDep;
+            }
+
+            accumulatedInput.value = accumulated.toFixed(2);
+        }
+
+        // === 定率年折舊額自動計算 ===
+        // 公式 A（不扣殘值）：年折舊額 = (總成本 - 累積折舊) × 年折舊率
+        // 不扣殘值，但折舊後的帳面價值不得低於預留殘值
+        function calcAnnualDepreciation() {
+            const method = depMethSelect.value;
+            if (method !== '定率遞減法') {
+                annualDepInput.value = '';
+                return;
+            }
+
+            const cost = parseFloat(costInput.value);
+            const quantity = parseInt(quantityInput.value) || 1;
+            const residual = parseFloat(residualInput.value);
+            const rate = parseFloat(rateDepInput.value);
+            const accumulated = parseFloat(accumulatedInput.value);
+
+            if (isNaN(cost) || cost <= 0) return;
+            if (isNaN(rate) || rate <= 0) return;
+
+            const totalCost = cost * quantity;
+            const totalResidual = isNaN(residual) ? 0 : residual;
+            const totalAccumulated = isNaN(accumulated) ? 0 : accumulated;
+            
+            // 年初帳面價值 = 總成本 - 累積折舊（不扣殘值）
+            const bookValue = totalCost - totalAccumulated;
+            
+            // 年折舊額 = 年初帳面價值 × 年折舊率
+            let annualDep = Math.round(bookValue * (rate / 100));
+            
+            // 確保折舊後的帳面價值不低於殘值
+            if (bookValue - annualDep < totalResidual) {
+                annualDep = bookValue - totalResidual;
+            }
+            
+            annualDepInput.value = annualDep.toFixed(2);
+        }
+
+        const accumulatedInput = document.getElementById('accumulated');
+
         // 當成本、數量、預留殘值、未攤月數、折舊方法任一變動時重新計算月折舊額
         costInput.addEventListener('input', function() {
             calcResidualValue();
             calcMonthlyDepreciation();
+            calcAccumulatedDepreciation();
+            calcRateDepreciation();
+            calcDecliningAccumulated();
+            calcAnnualDepreciation();
         });
         quantityInput.addEventListener('input', function() {
             calcResidualValue();
             calcMonthlyDepreciation();
+            calcAccumulatedDepreciation();
+            calcRateDepreciation();
+            calcDecliningAccumulated();
+            calcAnnualDepreciation();
         });
         usefulMoInput.addEventListener('input', function() {
             calcResidualValue();
             syncUnamortizedMonths();
             calcMonthlyDepreciation();
+            calcAccumulatedDepreciation();
+            calcRateDepreciation();
+            calcDecliningAccumulated();
+            calcAnnualDepreciation();
         });
         depMethSelect.addEventListener('change', function() {
             const method = depMethSelect.value;
+            
+            // 顯示/隱藏定率遞減法專屬欄位
+            toggleDecliningRateFields();
             
             // 當選擇「不提折舊」時，清空相關欄位
             if (method === '不提折舊') {
@@ -466,6 +724,16 @@
                 return;
             }
             
+            // 當選擇「定率遞減法」時，清空平均法相關欄位
+            if (method === '定率遞減法') {
+                unamortizedMoInput.value = '';
+                avgDepInput.value = '';
+                calcResidualValue();
+                calcRateDepreciation();
+                calcDecliningAccumulated();
+                return;
+            }
+            
             // 從定率遞減法切換回平均法時，先將耐用月數同步到未攤月數
             if (method === '平均法') {
                 syncUnamortizedMonths();
@@ -473,6 +741,22 @@
             
             calcResidualValue();
             calcMonthlyDepreciation();
+            calcAccumulatedDepreciation();
+            calcAnnualDepreciation();
         });
+
+        // 當未攤月數變更時，重新計算累積折舊
+        unamortizedMoInput.addEventListener('input', function() {
+            calcAccumulatedDepreciation();
+        });
+
+        // 定率遞減法：當年折舊率變更時重新計算年折舊額
+        rateDepInput.addEventListener('input', function() {
+            calcAnnualDepreciation();
+        });
+
+        // 頁面載入時初始化定率遞減法欄位的顯示狀態
+        toggleDecliningRateFields();
+        calcAnnualDepreciation();
     });
 </script>
