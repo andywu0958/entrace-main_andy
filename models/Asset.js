@@ -4,11 +4,11 @@ const QRCode = require('qrcode');
 class Asset {
   // 建立資產
   static async create(data) {
-    const { name, model, category, departmentId, status = 'active', serialno, purchased_at, remark, supplier, quantity, unit, cost, warranty, dep_meth, useful_mo, residual, dep_start, unamortized_mo, avg_dep, accumulated, custodian, location } = data;
+    const { name, model, category, departmentId, status = 'active', serialno, purchased_at, remark, supplier, quantity, unit, cost, warranty, dep_meth, useful_mo, residual, dep_start, unamortized_mo, avg_dep, accumulated, custodian, location, dep_rate } = data;
     
     const sql = `
-      INSERT INTO assets (name, model, category, department_id, status, serialno, purchased_at, remark, supplier, quantity, unit, cost, warranty, dep_meth, useful_mo, residual, dep_start, unamortized_mo, avg_dep, accumulated, custodian, location) 
-      VALUES (@name, @model, @category, @departmentId, @status, @serialno, @purchased_at, @remark, @supplier, @quantity, @unit, @cost, @warranty, @dep_meth, @useful_mo, @residual, @dep_start, @unamortized_mo, @avg_dep, @accumulated, @custodian, @location);
+      INSERT INTO assets (name, model, category, department_id, status, serialno, purchased_at, remark, supplier, quantity, unit, cost, warranty, dep_meth, useful_mo, residual, dep_start, unamortized_mo, avg_dep, accumulated, custodian, location, dep_rate) 
+      VALUES (@name, @model, @category, @departmentId, @status, @serialno, @purchased_at, @remark, @supplier, @quantity, @unit, @cost, @warranty, @dep_meth, @useful_mo, @residual, @dep_start, @unamortized_mo, @avg_dep, @accumulated, @custodian, @location, @dep_rate);
       SELECT SCOPE_IDENTITY() as id;
     `;
     
@@ -34,7 +34,8 @@ class Asset {
       avg_dep: avg_dep || null,
       accumulated: accumulated || null,
       custodian: custodian || null,
-      location: location || null
+      location: location || null,
+      dep_rate: dep_rate || null
     };
     
     const result = await query(sql, params);
@@ -171,7 +172,7 @@ class Asset {
 
   // 更新資產
   static async update(id, data) {
-    const { name, model, category, departmentId, status, serialno, purchased_at, remark, supplier, quantity, unit, cost, warranty, dep_meth, useful_mo, residual, dep_start, unamortized_mo, avg_dep, accumulated, custodian, location } = data;
+    const { name, model, category, departmentId, status, serialno, purchased_at, remark, supplier, quantity, unit, cost, warranty, dep_meth, useful_mo, residual, dep_start, unamortized_mo, avg_dep, accumulated, custodian, location, dep_rate } = data;
     
     const sql = `
       UPDATE assets 
@@ -182,7 +183,7 @@ class Asset {
           warranty = @warranty, dep_meth = @dep_meth, useful_mo = @useful_mo,
           residual = @residual, dep_start = @dep_start, unamortized_mo = @unamortized_mo,
           avg_dep = @avg_dep, accumulated = @accumulated, custodian = @custodian,
-          location = @location
+          location = @location, dep_rate = @dep_rate
       WHERE id = @id
     `;
     
@@ -209,7 +210,8 @@ class Asset {
       avg_dep: avg_dep || null,
       accumulated: accumulated || null,
       custodian: custodian || null,
-      location: location || null
+      location: location || null,
+      dep_rate: dep_rate || null
     };
     
     return await execute(sql, params);
@@ -281,6 +283,20 @@ class Asset {
   static async belongsToDepartment(assetId, departmentId) {
     const sql = 'SELECT COUNT(*) as count FROM assets WHERE id = @assetId AND department_id = @departmentId';
     const result = await query(sql, { assetId, departmentId });
+    return result[0].count > 0;
+  }
+
+  // 根據序號/編號尋找資產
+  static async findBySerialno(serialno, excludeId = null) {
+    let sql = 'SELECT COUNT(*) as count FROM assets WHERE serialno = @serialno';
+    const params = { serialno };
+    
+    if (excludeId) {
+      sql += ' AND id != @excludeId';
+      params.excludeId = excludeId;
+    }
+    
+    const result = await query(sql, params);
     return result[0].count > 0;
   }
 

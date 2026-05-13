@@ -67,15 +67,12 @@ const assetController = {
   // 顯示新增資產表單
   create: async (req, res) => {
     try {
-      const departments = await Department.findAll();
       const categories = await Asset.getCategories();
       
-      // 如果是部門管理員，只能選擇自己的部門
-      let availableDepartments = departments;
-      if (req.session.user.role === 'dept_manager') {
-        availableDepartments = departments.filter(
-          dept => dept.id === req.session.user.department_id
-        );
+      // 取得登入者的部門資訊
+      let userDepartment = null;
+      if (req.session.user.department_id) {
+        userDepartment = await Department.findById(req.session.user.department_id);
       }
       
       // 取得同部門的人員列表（用於保管人下拉選單）
@@ -86,7 +83,7 @@ const assetController = {
       
       res.render('assets/create', {
         title: '新增資產',
-        departments: availableDepartments,
+        userDepartment,
         categories,
         user: req.session.user,
         departmentUsers
@@ -101,7 +98,7 @@ const assetController = {
   // 儲存新資產
   store: async (req, res) => {
     try {
-      const { name, model, category, department_id, status, serialno, purchased_at, remark, supplier, quantity, unit, cost, warranty, dep_meth, useful_mo, residual, dep_start, unamortized_mo, avg_dep, accumulated, custodian, location } = req.body;
+      const { name, model, category, department_id, status, serialno, purchased_at, remark, supplier, quantity, unit, cost, warranty, dep_meth, useful_mo, residual, dep_start, unamortized_mo, avg_dep, accumulated, custodian, location, rate_dep } = req.body;
       
       // 驗證輸入
       if (!name || !category || !department_id) {
@@ -113,6 +110,15 @@ const assetController = {
       if (req.session.user.role === 'dept_manager') {
         if (parseInt(department_id) !== req.session.user.department_id) {
           req.flash('error_msg', '您只能新增資產到自己的部門');
+          return res.redirect('/assets/create');
+        }
+      }
+      
+      // 檢查序號/編號是否重複
+      if (serialno) {
+        const serialnoExists = await Asset.findBySerialno(serialno);
+        if (serialnoExists) {
+          req.flash('error_msg', `序號/編號「${serialno}」已存在，請使用不同的序號/編號`);
           return res.redirect('/assets/create');
         }
       }
@@ -139,7 +145,8 @@ const assetController = {
         avg_dep: avg_dep ? parseFloat(avg_dep) : null,
         accumulated: accumulated ? parseFloat(accumulated) : null,
         custodian,
-        location
+        location,
+        dep_rate: rate_dep ? parseFloat(rate_dep) : null
       };
       
       const result = await Asset.create(assetData);
@@ -220,7 +227,7 @@ const assetController = {
   // 更新資產
   update: async (req, res) => {
     try {
-      const { name, model, category, department_id, status, serialno, purchased_at, remark, supplier, quantity, unit, cost, warranty, dep_meth, useful_mo, residual, dep_start, unamortized_mo, avg_dep, accumulated, custodian, location } = req.body;
+      const { name, model, category, department_id, status, serialno, purchased_at, remark, supplier, quantity, unit, cost, warranty, dep_meth, useful_mo, residual, dep_start, unamortized_mo, avg_dep, accumulated, custodian, location, rate_dep } = req.body;
       const assetId = req.params.id;
       
       // 驗證輸入
@@ -233,6 +240,15 @@ const assetController = {
       if (req.session.user.role === 'dept_manager') {
         if (parseInt(department_id) !== req.session.user.department_id) {
           req.flash('error_msg', '您只能將資產移動到自己的部門');
+          return res.redirect(`/assets/${assetId}/edit`);
+        }
+      }
+      
+      // 檢查序號/編號是否重複（排除自身）
+      if (serialno) {
+        const serialnoExists = await Asset.findBySerialno(serialno, assetId);
+        if (serialnoExists) {
+          req.flash('error_msg', `序號/編號「${serialno}」已存在，請使用不同的序號/編號`);
           return res.redirect(`/assets/${assetId}/edit`);
         }
       }
@@ -259,7 +275,8 @@ const assetController = {
         avg_dep: avg_dep ? parseFloat(avg_dep) : null,
         accumulated: accumulated ? parseFloat(accumulated) : null,
         custodian,
-        location
+        location,
+        dep_rate: rate_dep ? parseFloat(rate_dep) : null
       };
       
       await Asset.update(assetId, assetData);

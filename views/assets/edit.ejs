@@ -62,8 +62,8 @@
                                 </div>
                                 <div class="col-12 col-md-6">
                                     <div class="mb-3">
-                                        <label for="serialno" class="form-label">序號/編號</label>
-                                        <input type="text" class="form-control" id="serialno" name="serialno" value="<%= asset.serialno || '' %>" placeholder="例如：SN-2024-001">
+                                        <label for="serialno" class="form-label">序號/編號 <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" id="serialno" name="serialno" value="<%= asset.serialno || '' %>" required placeholder="例如：SN-2024-001">
                                         <div class="form-text">可選：輸入資產的序號或內部編號</div>
                                     </div>
                                 </div>
