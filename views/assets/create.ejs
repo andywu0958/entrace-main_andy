@@ -225,7 +225,13 @@
                                 </div>
                                 <div class="col-12 col-md-4">
                                     <div class="mb-3">
-                                        <label for="accumulated" class="form-label">累積折舊</label>
+                                        <label for="accumulated" class="form-label">
+                                            累積折舊
+                                            <i class="fas fa-table ms-1 text-success" 
+                                               id="avgScheduleIcon"
+                                               style="cursor: pointer;" 
+                                               title="查看平均法完整逐年計算表"></i>
+                                        </label>
                                         <div class="input-group">
                                             <span class="input-group-text">$</span>
                                             <input type="number" class="form-control" id="accumulated" name="accumulated" min="0" step="0.01" placeholder="0.00" style="background-color: #fff9c4;" readonly>
@@ -236,7 +242,7 @@
                             </div>
                             <!-- 定率遞減法專屬欄位 -->
                             <div class="row g-3" id="decliningRateFields" style="display: none;">
-                                <div class="col-12 col-md-6">
+                                <div class="col-12 col-md-4">
                                     <div class="mb-3">
                                         <label for="rate_dep" class="form-label">定率年折舊率</label>
                                         <div class="input-group">
@@ -246,7 +252,7 @@
                                         <div class="form-text">定率遞減法之年折舊率百分比</div>
                                     </div>
                                 </div>
-                                <div class="col-12 col-md-6">
+                                <div class="col-12 col-md-4">
                                     <div class="mb-3">
                                         <label for="annual_dep" class="form-label">定率年折舊額</label>
                                         <div class="input-group">
@@ -254,6 +260,22 @@
                                             <input type="number" class="form-control" id="annual_dep" name="annual_dep" min="0" step="0.01" placeholder="0.00" style="background-color: #d4edda;" readonly>
                                         </div>
                                         <div class="form-text">定率遞減法之年折舊金額</div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-4">
+                                    <div class="mb-3">
+                                        <label for="decl_accumulated" class="form-label">
+                                            定率累積折舊
+                                            <i class="fas fa-table ms-1 text-info" 
+                                               id="declScheduleIcon"
+                                               style="cursor: pointer;" 
+                                               title="查看完整逐年計算表"></i>
+                                        </label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">$</span>
+                                            <input type="number" class="form-control" id="decl_accumulated" min="0" step="0.01" placeholder="0.00" style="background-color: #d5f5e3;" readonly>
+                                        </div>
+                                        <div class="form-text">定率遞減法之累積折舊金額（僅供參考，不送出）</div>
                                     </div>
                                 </div>
                             </div>
@@ -342,6 +364,81 @@
     </div>
 </div>
 
+<!-- ===== 完整逐年計算表模態視窗 ===== -->
+<div class="modal fade" id="depreciationScheduleModal" tabindex="-1" aria-labelledby="depreciationScheduleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #d1c4e9; color: #4a148c;">
+                <h5 class="modal-title" id="depreciationScheduleModalLabel">
+                    <i class="fas fa-table me-2"></i>完整逐年計算表
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- 摘要資訊 -->
+                <div class="row mb-3" id="scheduleSummary">
+                    <div class="col-12 col-md-3 mb-2">
+                        <div class="card bg-light">
+                            <div class="card-body py-2 px-3">
+                                <small class="text-muted">資產名稱</small>
+                                <div class="fw-bold" id="schedAssetName">-</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-3 mb-2">
+                        <div class="card bg-light">
+                            <div class="card-body py-2 px-3">
+                                <small class="text-muted">總成本</small>
+                                <div class="fw-bold" id="schedTotalCost">-</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-3 mb-2">
+                        <div class="card bg-light">
+                            <div class="card-body py-2 px-3">
+                                <small class="text-muted">預留殘值</small>
+                                <div class="fw-bold" id="schedResidual">-</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-3 mb-2">
+                        <div class="card bg-light">
+                            <div class="card-body py-2 px-3">
+                                <small class="text-muted">年折舊率</small>
+                                <div class="fw-bold" id="schedRate">-</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 表格 -->
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover table-sm" id="scheduleTable">
+                        <thead class="table-secondary">
+                            <tr>
+                                <th class="text-center" style="width: 100px;" id="schedPeriodHeader">年度</th>
+                                <th class="text-end" style="width: 150px;" id="schedBeginHeader">年初帳面價值</th>
+                                <th class="text-end" style="width: 150px;" id="schedDepHeader">年折舊額</th>
+                                <th class="text-end" style="width: 150px;">累積折舊</th>
+                                <th class="text-end" style="width: 150px;" id="schedEndHeader">年底帳面價值</th>
+                            </tr>
+                        </thead>
+                        <tbody id="scheduleTableBody">
+                            <tr>
+                                <td colspan="5" class="text-center text-muted">請先輸入資產資料</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-1"></i>關閉
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     // 設定購買日期的預設值為今天
     document.addEventListener('DOMContentLoaded', function() {
@@ -379,11 +476,20 @@
         if (purchaseDateInput) {
             purchaseDateInput.addEventListener('change', function() {
                 setDepreciationStartFromPurchaseDate();
-                syncUnamortizedMonths();
-                calcAccumulatedDepreciation();
-                calcRateDepreciation();
-                calcDecliningAccumulated();
-                calcAnnualDepreciation();
+                const method = depMethSelect.value;
+                if (method === '定率遞減法') {
+                    // 定率遞減法不適用未攤月數，保持為空
+                    unamortizedMoInput.value = '';
+                    calcRateDepreciation();
+                    calcDecliningAccumulated();
+                    calcAnnualDepreciation();
+                } else {
+                    syncUnamortizedMonths();
+                    calcAccumulatedDepreciation();
+                    calcRateDepreciation();
+                    calcDecliningAccumulated();
+                    calcAnnualDepreciation();
+                }
             });
         }
         
@@ -563,7 +669,13 @@
         });
         usefulMoInput.addEventListener('input', function() {
             calcResidualValue();
-            syncUnamortizedMonths();
+            const method = depMethSelect.value;
+            if (method === '定率遞減法') {
+                // 定率遞減法不適用未攤月數，保持為空
+                unamortizedMoInput.value = '';
+            } else {
+                syncUnamortizedMonths();
+            }
             calcMonthlyDepreciation();
             calcAccumulatedDepreciation();
             calcRateDepreciation();
@@ -583,6 +695,7 @@
                 decliningRateFields.style.display = 'none';
                 rateDepInput.value = '';
                 annualDepInput.value = '';
+                declAccumulatedInput.value = '';
             }
         }
 
@@ -625,6 +738,7 @@
         // 公式 A（不扣殘值）：年折舊額 = 年初帳面價值 × 年折舊率
         // 年初帳面價值 = 總成本 - 累積折舊（不扣殘值）
         // 但折舊後的帳面價值不得低於預留殘值
+        const declAccumulatedInput = document.getElementById('decl_accumulated');
         function calcDecliningAccumulated() {
             const method = depMethSelect.value;
             if (method !== '定率遞減法') return;
@@ -656,7 +770,7 @@
             const fullYears = Math.floor(elapsedMonths / 12);
 
             if (fullYears <= 0) {
-                accumulatedInput.value = '0.00';
+                declAccumulatedInput.value = '0.00';
                 return;
             }
 
@@ -678,7 +792,7 @@
                 bookValue -= yearDep;
             }
 
-            accumulatedInput.value = accumulated.toFixed(2);
+            declAccumulatedInput.value = accumulated.toFixed(2);
         }
 
         // === 定率年折舊額自動計算 ===
@@ -738,6 +852,7 @@
             if (method === '定率遞減法') {
                 unamortizedMoInput.value = '';
                 avgDepInput.value = '';
+                accumulatedInput.value = '';
                 calcResidualValue();
                 calcRateDepreciation();
                 calcDecliningAccumulated();
@@ -766,5 +881,243 @@
         unamortizedMoInput.addEventListener('input', function() {
             calcAccumulatedDepreciation();
         });
+
+                // === 完整逐年計算表功能（平均法 - 按月顯示） ===
+        // 點擊平均法累積折舊旁的圖示時，動態生成平均法完整逐年計算表（以月為單位）
+        const avgScheduleIcon = document.getElementById('avgScheduleIcon');
+        if (avgScheduleIcon) {
+            avgScheduleIcon.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const method = depMethSelect.value;
+                if (method !== '平均法') {
+                    alert('請先選擇折舊方法為「平均法」');
+                    return;
+                }
+                
+                const cost = parseFloat(costInput.value);
+                const quantity = parseInt(quantityInput.value) || 1;
+                const residual = parseFloat(residualInput.value);
+                const months = parseInt(usefulMoInput.value);
+                const depStart = depreciationStartInput ? depreciationStartInput.value : '';
+                const assetName = document.getElementById('name') ? document.getElementById('name').value : '';
+                
+                if (isNaN(cost) || cost <= 0) {
+                    alert('請先輸入有效的成本');
+                    return;
+                }
+                if (isNaN(months) || months <= 0) {
+                    alert('請先輸入有效的耐用月數');
+                    return;
+                }
+                if (!depStart) {
+                    alert('請先輸入購買日期以產生提列年月');
+                    return;
+                }
+                
+                const totalCost = cost * quantity;
+                const totalResidual = isNaN(residual) ? 0 : residual;
+                const monthlyDep = Math.round((totalCost - totalResidual) / months);
+                
+                // 更新摘要資訊
+                document.getElementById('schedAssetName').textContent = assetName || '-';
+                document.getElementById('schedTotalCost').textContent = '$' + totalCost.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                document.getElementById('schedResidual').textContent = '$' + totalResidual.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                document.getElementById('schedRate').textContent = '平均法（月折舊額：$' + monthlyDep.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '）';
+                
+                // 更新表格標題（平均法以月為單位）
+                document.getElementById('schedPeriodHeader').textContent = '年度/月份';
+                document.getElementById('schedBeginHeader').textContent = '月初帳面價值';
+                document.getElementById('schedDepHeader').textContent = '月折舊額';
+                document.getElementById('schedEndHeader').textContent = '月底帳面價值';
+                
+                // 計算平均法完整逐年計算表（以月為單位）
+                // 從提列年月開始，逐月顯示到耐用月數結束
+                const startParts = depStart.split('-');
+                const startYear = parseInt(startParts[0]);
+                const startMonth = parseInt(startParts[1]);
+                
+                let bookValue = totalCost;
+                let accumulated = 0;
+                const rows = [];
+                
+                for (let m = 0; m < months; m++) {
+                    // 計算當前月份
+                    const currentYear = startYear + Math.floor((startMonth - 1 + m) / 12);
+                    const currentMonth = ((startMonth - 1 + m) % 12) + 1;
+                    const monthLabel = currentYear + '/' + String(currentMonth).padStart(2, '0');
+                    
+                    // 月初帳面價值
+                    const beginBookValue = bookValue;
+                    
+                    // 月折舊額
+                    let monthDep = monthlyDep;
+                    
+                    // 最後一個月：確保折舊後的帳面價值等於殘值
+                    if (m === months - 1) {
+                        monthDep = bookValue - totalResidual;
+                    }
+                    
+                    // 確保月折舊額不為負數
+                    if (monthDep < 0) monthDep = 0;
+                    
+                    accumulated += monthDep;
+                    bookValue -= monthDep;
+                    
+                    rows.push({
+                        monthLabel: monthLabel,
+                        beginBookValue: beginBookValue,
+                        monthDep: monthDep,
+                        accumulated: accumulated,
+                        endBookValue: bookValue
+                    });
+                }
+                
+                // 渲染表格
+                const tbody = document.getElementById('scheduleTableBody');
+                tbody.innerHTML = '';
+                
+                if (rows.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">無計算結果</td></tr>';
+                } else {
+                    rows.forEach(function(row) {
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td class="text-center">${row.monthLabel}</td>
+                            <td class="text-end">$${row.beginBookValue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                            <td class="text-end">$${row.monthDep.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                            <td class="text-end">$${row.accumulated.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                            <td class="text-end">$${row.endBookValue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                }
+                
+                // 手動顯示模態視窗
+                const modal = new bootstrap.Modal(document.getElementById('depreciationScheduleModal'));
+                modal.show();
+            });
+        }
+
+        // === 完整逐年計算表功能（定率遞減法） ===
+        // 點擊圖示時，動態生成定率遞減法完整逐年計算表
+        const declScheduleIcon = document.getElementById('declScheduleIcon');
+        if (declScheduleIcon) {
+            declScheduleIcon.addEventListener('click', function(e) {
+                // 阻止 Bootstrap 默認的 modal 行為，我們自己控制
+                e.preventDefault();
+                
+                const method = depMethSelect.value;
+                if (method !== '定率遞減法') {
+                    alert('請先選擇折舊方法為「定率遞減法」');
+                    return;
+                }
+                
+                const cost = parseFloat(costInput.value);
+                const quantity = parseInt(quantityInput.value) || 1;
+                const residual = parseFloat(residualInput.value);
+                const rate = parseFloat(rateDepInput.value);
+                const months = parseInt(usefulMoInput.value);
+                const depStart = depreciationStartInput ? depreciationStartInput.value : '';
+                const assetName = document.getElementById('name') ? document.getElementById('name').value : '';
+                
+                if (isNaN(cost) || cost <= 0) {
+                    alert('請先輸入有效的成本');
+                    return;
+                }
+                if (isNaN(rate) || rate <= 0) {
+                    alert('請先輸入有效的年折舊率');
+                    return;
+                }
+                if (isNaN(months) || months <= 0) {
+                    alert('請先輸入有效的耐用月數');
+                    return;
+                }
+                if (!depStart) {
+                    alert('請先輸入購買日期以產生提列年月');
+                    return;
+                }
+                
+                const totalCost = cost * quantity;
+                const totalResidual = isNaN(residual) ? 0 : residual;
+                
+                // 更新摘要資訊
+                document.getElementById('schedAssetName').textContent = assetName || '-';
+                document.getElementById('schedTotalCost').textContent = '$' + totalCost.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                document.getElementById('schedResidual').textContent = '$' + totalResidual.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                document.getElementById('schedRate').textContent = rate.toFixed(2) + '%';
+                
+                // 更新表格標題（定率遞減法以年為單位）
+                document.getElementById('schedPeriodHeader').textContent = '年度';
+                document.getElementById('schedBeginHeader').textContent = '年初帳面價值';
+                document.getElementById('schedDepHeader').textContent = '年折舊額';
+                document.getElementById('schedEndHeader').textContent = '年底帳面價值';
+                
+                // 計算完整逐年折舊表
+                // 從提列年月開始，到帳面價值低於殘值為止
+                const startParts = depStart.split('-');
+                const startYear = parseInt(startParts[0]);
+                const startMonth = parseInt(startParts[1]);
+                
+                let yearIndex = 0;
+                let bookValue = totalCost;
+                let accumulated = 0;
+                const rows = [];
+                
+                // 最多計算 50 年防止無限循環
+                while (bookValue > totalResidual && yearIndex < 50) {
+                    const currentYear = startYear + yearIndex;
+                    const yearLabel = '第 ' + (yearIndex + 1) + ' 年 (' + currentYear + '/' + String(startMonth).padStart(2, '0') + '~' + (currentYear + 1) + '/' + String(startMonth).padStart(2, '0') + ')';
+                    
+                    // 年初帳面價值
+                    const beginBookValue = bookValue;
+                    
+                    // 年折舊額 = 年初帳面價值 × 年折舊率
+                    let yearDep = Math.round(bookValue * (rate / 100));
+                    
+                    // 確保折舊後的帳面價值不低於殘值
+                    if (bookValue - yearDep < totalResidual) {
+                        yearDep = bookValue - totalResidual;
+                    }
+                    
+                    accumulated += yearDep;
+                    bookValue -= yearDep;
+                    
+                    rows.push({
+                        yearLabel: yearLabel,
+                        beginBookValue: beginBookValue,
+                        yearDep: yearDep,
+                        accumulated: accumulated,
+                        endBookValue: bookValue
+                    });
+                    
+                    yearIndex++;
+                }
+                
+                // 渲染表格
+                const tbody = document.getElementById('scheduleTableBody');
+                tbody.innerHTML = '';
+                
+                if (rows.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">無計算結果</td></tr>';
+                } else {
+                    rows.forEach(function(row) {
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td class="text-center">${row.yearLabel}</td>
+                            <td class="text-end">$${row.beginBookValue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                            <td class="text-end">$${row.yearDep.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                            <td class="text-end">$${row.accumulated.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                            <td class="text-end">$${row.endBookValue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                }
+                
+                // 手動顯示模態視窗
+                const modal = new bootstrap.Modal(document.getElementById('depreciationScheduleModal'));
+                modal.show();
+            });
+        }
     });
 </script>

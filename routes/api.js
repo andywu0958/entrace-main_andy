@@ -283,4 +283,101 @@ router.get('/export/assets', isAdmin, async (req, res) => {
   }
 });
 
+// 計算逐年折舊 (API)
+router.post('/calculate-depreciation', async (req, res) => {
+  try {
+    const { cost, salvage_value, useful_life, depreciation_rate, purchase_date } = req.body;
+    
+    // 驗證參數
+    if (!cost || !salvage_value || !useful_life || !depreciation_rate || !purchase_date) {
+      return res.status(400).json({
+        success: false,
+        message: '請提供完整的折舊計算參數'
+      });
+    }
+
+    const costNum = parseFloat(cost);
+    const salvageNum = parseFloat(salvage_value);
+    const lifeNum = parseInt(useful_life);
+    const rateNum = parseFloat(depreciation_rate) / 100;
+    const purchaseDate = new Date(purchase_date);
+    const currentYear = purchaseDate.getFullYear();
+
+    // 定率遞減法計算逐年折舊
+    const schedule = [];
+    let bookValue = costNum;
+    let totalDepreciation = 0;
+
+    for (let year = 1; year <= lifeNum; year++) {
+      const yearLabel = `${currentYear + year - 1}`;
+      
+      // 計算當年折舊
+      let depreciationAmount;
+      if (year === lifeNum) {
+        // 最後一年：折舊到殘值
+        depreciationAmount = bookValue - salvageNum;
+      } else {
+        depreciationAmount = bookValue * rateNum;
+      }
+
+      // 確保折舊後不低於殘值
+      if (bookValue - depreciationAmount < salvageNum && year !== lifeNum) {
+        depreciationAmount = bookValue - salvageNum;
+      }
+
+      // 確保折舊不為負數
+      depreciationAmount = Math.max(0, depreciationAmount);
+      
+      totalDepreciation += depreciationAmount;
+      bookValue -= depreciationAmount;
+
+      schedule.push({
+        year: year,
+        yearLabel: yearLabel,
+        beginningValue: Math.round((bookValue + depreciationAmount) * 100) / 100,
+        depreciationRate: (rateNum * 100).toFixed(2) + '%',
+        depreciationAmount: Math.round(depreciationAmount * 100) / 100,
+        accumulatedDepreciation: Math.round(totalDepreciation * 100) / 100,
+        endingValue: Math.round(Math.max(bookValue, salvageNum) * 100) / 100
+      });
+
+      // 如果已折舊到殘值，後續年度填0
+      if (bookValue <= salvageNum && year < lifeNum) {
+        for (let y = year + 1; y <= lifeNum; y++) {
+          schedule.push({
+            year: y,
+            yearLabel: `${currentYear + y - 1}`,
+            beginningValue: Math.round(salvageNum * 100) / 100,
+            depreciationRate: '0.00%',
+            depreciationAmount: 0,
+            accumulatedDepreciation: Math.round(totalDepreciation * 100) / 100,
+            endingValue: Math.round(salvageNum * 100) / 100
+          });
+        }
+        break;
+      }
+    }
+
+    res.json({
+      success: true,
+      data: {
+        cost: costNum,
+        salvageValue: salvageNum,
+        usefulLife: lifeNum,
+        depreciationRate: (rateNum * 100).toFixed(2) + '%',
+        purchaseDate: purchaseDate.toISOString().split('T')[0],
+        schedule: schedule,
+        totalDepreciation: Math.round(totalDepreciation * 100) / 100,
+        finalBookValue: Math.round(bookValue * 100) / 100
+      }
+    });
+  } catch (error) {
+    console.error('API calculate depreciation error:', error);
+    res.status(500).json({
+      success: false,
+      message: '計算折舊時發生錯誤'
+    });
+  }
+});
+
 module.exports = router;
