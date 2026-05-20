@@ -17,14 +17,14 @@
                                 <div class="col-12 col-md-6">
                                     <div class="mb-3">
                                         <label for="name" class="form-label">資產名稱 <span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control" id="name" name="name" required placeholder="例如：筆記型電腦 Dell XPS 15">
+                                        <input type="text" class="form-control" id="name" name="name" required placeholder="例如：筆記型電腦 Dell XPS 15" value="<%= typeof formData !== 'undefined' && formData.name ? formData.name : '' %>">
                                         <div class="form-text">請輸入資產的詳細名稱</div>
                                     </div>
                                 </div>
                                 <div class="col-12 col-md-6">
                                     <div class="mb-3">
                                         <label for="model" class="form-label">品牌規格</label>
-                                        <input type="text" class="form-control" id="model" name="model" placeholder="例如：Dell XPS 15 2024">
+                                        <input type="text" class="form-control" id="model" name="model" placeholder="例如：Dell XPS 15 2024" value="<%= typeof formData !== 'undefined' && formData.model ? formData.model : '' %>">
                                         <div class="form-text">可選：輸入品牌、型號或規格</div>
                                     </div>
                                 </div>
@@ -33,17 +33,17 @@
                                         <label for="category" class="form-label">類別 <span class="text-danger">*</span></label>
                                         <select class="form-select" id="category" name="category" required>
                                             <option value="">請選擇類別</option>
-                                            <option value="電子設備">電子設備</option>
-                                            <option value="辦公設備">辦公設備</option>
-                                            <option value="會議設備">會議設備</option>
-                                            <option value="資訊設備">資訊設備</option>
-                                            <option value="網路設備">網路設備</option>
-                                            <option value="軟體授權">軟體授權</option>
-                                            <option value="房屋建築及設備">房屋建築及設備</option>
-                                            <option value="機械設備">機械設備</option>
-                                            <option value="運輸設備">運輸設備</option>
-                                            <option value="餐飲設備">餐飲設備</option>
-                                            <option value="雜項購置">雜項購置</option>
+                                            <option value="電子設備" <%= (typeof formData !== 'undefined' && formData.category === '電子設備') ? 'selected' : '' %>>電子設備</option>
+                                            <option value="辦公設備" <%= (typeof formData !== 'undefined' && formData.category === '辦公設備') ? 'selected' : '' %>>辦公設備</option>
+                                            <option value="會議設備" <%= (typeof formData !== 'undefined' && formData.category === '會議設備') ? 'selected' : '' %>>會議設備</option>
+                                            <option value="資訊設備" <%= (typeof formData !== 'undefined' && formData.category === '資訊設備') ? 'selected' : '' %>>資訊設備</option>
+                                            <option value="網路設備" <%= (typeof formData !== 'undefined' && formData.category === '網路設備') ? 'selected' : '' %>>網路設備</option>
+                                            <option value="軟體授權" <%= (typeof formData !== 'undefined' && formData.category === '軟體授權') ? 'selected' : '' %>>軟體授權</option>
+                                            <option value="房屋建築及設備" <%= (typeof formData !== 'undefined' && formData.category === '房屋建築及設備') ? 'selected' : '' %>>房屋建築及設備</option>
+                                            <option value="機械設備" <%= (typeof formData !== 'undefined' && formData.category === '機械設備') ? 'selected' : '' %>>機械設備</option>
+                                            <option value="運輸設備" <%= (typeof formData !== 'undefined' && formData.category === '運輸設備') ? 'selected' : '' %>>運輸設備</option>
+                                            <option value="餐飲設備" <%= (typeof formData !== 'undefined' && formData.category === '餐飲設備') ? 'selected' : '' %>>餐飲設備</option>
+                                            <option value="雜項購置" <%= (typeof formData !== 'undefined' && formData.category === '雜項購置') ? 'selected' : '' %>>雜項購置</option>
                                         </select>
                                         <div class="form-text">選擇資產所屬類別</div>
                                     </div>
@@ -52,10 +52,10 @@
                                     <div class="mb-3">
                                         <label for="status" class="form-label">狀態 <span class="text-danger">*</span></label>
                                         <select class="form-select" id="status" name="status" required>
-                                            <option value="active" selected>使用中</option>
-                                            <option value="inactive">閒置</option>
-                                            <option value="maintenance">維修中</option>
-                                            <option value="retired">已報廢</option>
+                                            <option value="active" <%= (typeof formData !== 'undefined' && formData.status === 'active') ? 'selected' : '' %>>使用中</option>
+                                            <option value="inactive" <%= (typeof formData !== 'undefined' && formData.status === 'inactive') ? 'selected' : '' %>>閒置</option>
+                                            <option value="maintenance" <%= (typeof formData !== 'undefined' && formData.status === 'maintenance') ? 'selected' : '' %>>維修中</option>
+                                            <option value="retired" <%= (typeof formData !== 'undefined' && formData.status === 'retired') ? 'selected' : '' %>>已報廢</option>
                                         </select>
                                         <div class="form-text">選擇資產目前狀態</div>
                                     </div>
@@ -63,7 +63,7 @@
                                 <div class="col-12 col-md-6">
                                     <div class="mb-3">
                                         <label for="serialno" class="form-label">序號/編號 <span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control" id="serialno" name="serialno" required placeholder="例如：SN-2024-001">
+                                        <input type="text" class="form-control" id="serialno" name="serialno" required placeholder="例如：SN-2024-001" value="<%= typeof formData !== 'undefined' && formData.serialno ? formData.serialno : '' %>">
                                         <div class="form-text">可選：輸入資產的序號或內部編號</div>
                                     </div>
                                 </div>
@@ -81,7 +81,7 @@
                                 <div class="col-12 col-md-6">
                                     <div class="mb-3">
                                         <label for="purchased_at" class="form-label">購買日期</label>
-                                        <input type="date" class="form-control" id="purchased_at" name="purchased_at">
+                                        <input type="date" class="form-control" id="purchased_at" name="purchased_at" value="<%= typeof formData !== 'undefined' && formData.purchased_at ? formData.purchased_at : '' %>">
                                         <div class="form-text">可選：輸入資產購買日期</div>
                                     </div>
                                 </div>
@@ -96,14 +96,14 @@
                                 <div class="col-12 col-md-6">
                                     <div class="mb-3">
                                         <label for="supplier" class="form-label">供應廠商</label>
-                                        <input type="text" class="form-control" id="supplier" name="supplier" placeholder="例如：某某科技股份有限公司">
+                                        <input type="text" class="form-control" id="supplier" name="supplier" placeholder="例如：某某科技股份有限公司" value="<%= typeof formData !== 'undefined' && formData.supplier ? formData.supplier : '' %>">
                                         <div class="form-text">可選：輸入資產供應商或廠商名稱</div>
                                     </div>
                                 </div>
                                 <div class="col-12 col-md-3">
                                     <div class="mb-3">
                                         <label for="quantity" class="form-label">數量</label>
-                                        <input type="number" class="form-control" id="quantity" name="quantity" min="1" placeholder="1" value="1">
+                                        <input type="number" class="form-control" id="quantity" name="quantity" min="1" placeholder="1" value="<%= typeof formData !== 'undefined' && formData.quantity ? formData.quantity : '1' %>">
                                         <div class="form-text">可選：輸入資產數量</div>
                                     </div>
                                 </div>
@@ -112,12 +112,12 @@
                                         <label for="unit" class="form-label">單位</label>
                                         <select class="form-select" id="unit" name="unit">
                                             <option value="">請選擇單位</option>
-                                            <option value="台">台</option>
-                                            <option value="輛">輛</option>
-                                            <option value="組">組</option>
-                                            <option value="張">張</option>
-                                            <option value="式">式</option>
-                                            <option value="批">批</option>
+                                            <option value="台" <%= (typeof formData !== 'undefined' && formData.unit === '台') ? 'selected' : '' %>>台</option>
+                                            <option value="輛" <%= (typeof formData !== 'undefined' && formData.unit === '輛') ? 'selected' : '' %>>輛</option>
+                                            <option value="組" <%= (typeof formData !== 'undefined' && formData.unit === '組') ? 'selected' : '' %>>組</option>
+                                            <option value="張" <%= (typeof formData !== 'undefined' && formData.unit === '張') ? 'selected' : '' %>>張</option>
+                                            <option value="式" <%= (typeof formData !== 'undefined' && formData.unit === '式') ? 'selected' : '' %>>式</option>
+                                            <option value="批" <%= (typeof formData !== 'undefined' && formData.unit === '批') ? 'selected' : '' %>>批</option>
                                         </select>
                                         <div class="form-text">可選：選擇資產計量單位</div>
                                     </div>
@@ -127,7 +127,7 @@
                                         <label for="cost" class="form-label">成本</label>
                                         <div class="input-group">
                                             <span class="input-group-text">$</span>
-                                            <input type="number" class="form-control" id="cost" name="cost" min="0" step="0.01" placeholder="0.00">
+                                            <input type="number" class="form-control" id="cost" name="cost" min="0" step="0.01" placeholder="0.00" value="<%= typeof formData !== 'undefined' && formData.cost ? formData.cost : '' %>">
                                         </div>
                                         <div class="form-text">可選：輸入資產取得成本</div>
                                     </div>
@@ -136,7 +136,7 @@
                                     <div class="mb-3">
                                         <label for="warranty" class="form-label">保固年限</label>
                                         <div class="input-group">
-                                            <input type="number" class="form-control" id="warranty" name="warranty" min="0" step="1" placeholder="0">
+                                            <input type="number" class="form-control" id="warranty" name="warranty" min="0" step="1" placeholder="0" value="<%= typeof formData !== 'undefined' && formData.warranty ? formData.warranty : '' %>">
                                             <span class="input-group-text">年</span>
                                         </div>
                                         <div class="form-text">可選：輸入資產保固年限</div>
@@ -158,9 +158,9 @@
                                         <label for="dep_meth" class="form-label">折舊方法</label>
                                         <select class="form-select" id="dep_meth" name="dep_meth">
                                             <option value="">請選擇折舊方法</option>
-                                            <option value="平均法">平均法</option>
-                                            <option value="定率遞減法">定率遞減法</option>
-                                            <option value="不提折舊">不提折舊</option>
+                                            <option value="平均法" <%= (typeof formData !== 'undefined' && formData.dep_meth === '平均法') ? 'selected' : '' %>>平均法</option>
+                                            <option value="定率遞減法" <%= (typeof formData !== 'undefined' && formData.dep_meth === '定率遞減法') ? 'selected' : '' %>>定率遞減法</option>
+                                            <option value="不提折舊" <%= (typeof formData !== 'undefined' && formData.dep_meth === '不提折舊') ? 'selected' : '' %>>不提折舊</option>
                                         </select>
                                         <div class="form-text">可選：選擇資產折舊計算方式</div>
                                     </div>
@@ -169,7 +169,7 @@
                                     <div class="mb-3">
                                         <label for="useful_mo" class="form-label">耐用月數(折舊月數)</label>
                                         <div class="input-group">
-                                            <input type="number" class="form-control" id="useful_mo" name="useful_mo" min="1" step="1" placeholder="例如：24">
+                                            <input type="number" class="form-control" id="useful_mo" name="useful_mo" min="1" step="1" placeholder="例如：24" value="<%= typeof formData !== 'undefined' && formData.useful_mo ? formData.useful_mo : '' %>">
                                             <span class="input-group-text">月</span>
                                         </div>
                                         <div class="form-text">可選：輸入資產預計耐用月數</div>
@@ -180,7 +180,7 @@
                                         <label for="residual" class="form-label">預留殘值</label>
                                         <div class="input-group">
                                             <span class="input-group-text">$</span>
-                                            <input type="number" class="form-control" id="residual" name="residual" min="0" step="0.01" placeholder="0.00" style="background-color: #fff9c4;" readonly>
+                                            <input type="number" class="form-control" id="residual" name="residual" min="0" step="0.01" placeholder="0.00" style="background-color: #fff9c4;" readonly value="<%= typeof formData !== 'undefined' && formData.residual ? formData.residual : '' %>">
                                         </div>
                                         <div class="form-text">系統自動計算：平均法 = 總成本/(耐用月數+12)*12；定率遞減法 = 總成本/10</div>
                                     </div>
@@ -188,7 +188,7 @@
                                 <div class="col-12 col-md-6">
                                     <div class="mb-3">
                                         <label for="dep_start" class="form-label">提列年月</label>
-                                        <input type="month" class="form-control" id="dep_start" name="dep_start" style="background-color: #fff9c4;" readonly>
+                                        <input type="month" class="form-control" id="dep_start" name="dep_start" style="background-color: #fff9c4;" readonly value="<%= typeof formData !== 'undefined' && formData.dep_start ? formData.dep_start : '' %>">
                                         <div class="form-text">系統自動根據購買日期計算：前半月(1~15日)=當月，後半月(16~月底)=下月</div>
                                     </div>
                                 </div>
@@ -204,27 +204,27 @@
                         <div class="card-body">
                             <div class="row g-3">
                                 <div class="col-12 col-md-4">
-                                    <div class="mb-3">
+                                        <div class="mb-3">
                                         <label for="unamortized_mo" class="form-label">未攤月數</label>
                                         <div class="input-group">
-                                            <input type="text" class="form-control" id="unamortized_mo" name="unamortized_mo" min="0" step="1" placeholder="0" style="background-color: #fff9c4;">
+                                            <input type="text" class="form-control" id="unamortized_mo" name="unamortized_mo" min="0" step="1" placeholder="0" style="background-color: #fff9c4;" value="<%= typeof formData !== 'undefined' && formData.unamortized_mo ? formData.unamortized_mo : '' %>">
                                             <span class="input-group-text">月</span>
                                         </div>
                                         <div class="form-text">系統自動跟隨耐用月數</div>
                                     </div>
                                 </div>
                                 <div class="col-12 col-md-4">
-                                    <div class="mb-3">
+                                        <div class="mb-3">
                                         <label for="avg_dep" class="form-label">平均法月折舊額</label>
                                         <div class="input-group">
                                             <span class="input-group-text">$</span>
-                                            <input type="number" class="form-control" id="avg_dep" name="avg_dep" min="0" step="0.01" placeholder="0.00" style="background-color: #fff9c4;" readonly>
+                                            <input type="number" class="form-control" id="avg_dep" name="avg_dep" min="0" step="0.01" placeholder="0.00" style="background-color: #fff9c4;" readonly value="<%= typeof formData !== 'undefined' && formData.avg_dep ? formData.avg_dep : '' %>">
                                         </div>
                                         <div class="form-text">可選：輸入平均法計算之每月折舊金額</div>
                                     </div>
                                 </div>
                                 <div class="col-12 col-md-4">
-                                    <div class="mb-3">
+                                        <div class="mb-3">
                                         <label for="accumulated" class="form-label">
                                             累積折舊
                                             <i class="fas fa-table ms-1 text-success" 
@@ -234,7 +234,7 @@
                                         </label>
                                         <div class="input-group">
                                             <span class="input-group-text">$</span>
-                                            <input type="number" class="form-control" id="accumulated" name="accumulated" min="0" step="0.01" placeholder="0.00" style="background-color: #fff9c4;" readonly>
+                                            <input type="number" class="form-control" id="accumulated" name="accumulated" min="0" step="0.01" placeholder="0.00" style="background-color: #fff9c4;" readonly value="<%= typeof formData !== 'undefined' && formData.accumulated ? formData.accumulated : '' %>">
                                         </div>
                                         <div class="form-text">平均法下系統自動計算：已折舊月數 × 月折舊額</div>
                                     </div>
@@ -246,7 +246,7 @@
                                     <div class="mb-3">
                                         <label for="rate_dep" class="form-label">定率年折舊率</label>
                                         <div class="input-group">
-                                            <input type="text" class="form-control" id="rate_dep" name="rate_dep" min="0" max="100" step="0.01" placeholder="例如：20" style="background-color: #d4edda;">
+                                            <input type="text" class="form-control" id="rate_dep" name="rate_dep" min="0" max="100" step="0.01" placeholder="例如：20" style="background-color: #d4edda;" value="<%= typeof formData !== 'undefined' && formData.rate_dep ? formData.rate_dep : '' %>">
                                             <span class="input-group-text">%</span>
                                         </div>
                                         <div class="form-text">定率遞減法之年折舊率百分比</div>
@@ -257,7 +257,7 @@
                                         <label for="annual_dep" class="form-label">定率年折舊額</label>
                                         <div class="input-group">
                                             <span class="input-group-text">$</span>
-                                            <input type="number" class="form-control" id="annual_dep" name="annual_dep" min="0" step="0.01" placeholder="0.00" style="background-color: #d4edda;" readonly>
+                                            <input type="number" class="form-control" id="annual_dep" name="annual_dep" min="0" step="0.01" placeholder="0.00" style="background-color: #d4edda;" readonly value="<%= typeof formData !== 'undefined' && formData.annual_dep ? formData.annual_dep : '' %>">
                                         </div>
                                         <div class="form-text">定率遞減法之年折舊金額</div>
                                     </div>
@@ -273,9 +273,9 @@
                                         </label>
                                         <div class="input-group">
                                             <span class="input-group-text">$</span>
-                                            <input type="number" class="form-control" id="decl_accumulated" min="0" step="0.01" placeholder="0.00" style="background-color: #d5f5e3;" readonly>
+                                            <input type="number" class="form-control" id="decl_accumulated" min="0" step="0.01" placeholder="0.00" style="background-color: #d5f5e3;" readonly value="<%= typeof formData !== 'undefined' && formData.decl_accumulated ? formData.decl_accumulated : '' %>">
                                         </div>
-                                        <div class="form-text">定率遞減法之累積折舊金額（僅供參考，不送出）</div>
+                                        <div class="form-text">定率遞減法之累積折舊金額</div>
                                     </div>
                                 </div>
                             </div>
@@ -297,8 +297,13 @@
                                             <% if (typeof departmentUsers !== 'undefined' && departmentUsers.length > 0) { %>
                                                 <% let userFound = false; %>
                                                 <% departmentUsers.forEach(u => { %>
-                                                    <% if (user && user.name === u.name) { userFound = true; } %>
-                                                    <option value="<%= u.name %>" <%= (user && user.name === u.name) ? 'selected' : '' %>><%= u.name %></option>
+                                                    <% if (typeof formData !== 'undefined' && formData.custodian) { %>
+                                                        <% if (formData.custodian === u.name) { userFound = true; } %>
+                                                        <option value="<%= u.name %>" <%= (formData.custodian === u.name) ? 'selected' : '' %>><%= u.name %></option>
+                                                    <% } else { %>
+                                                        <% if (user && user.name === u.name) { userFound = true; } %>
+                                                        <option value="<%= u.name %>" <%= (user && user.name === u.name) ? 'selected' : '' %>><%= u.name %></option>
+                                                    <% } %>
                                                 <% }); %>
                                                 <% if (!userFound && user) { %>
                                                     <option value="<%= user.name %>" selected><%= user.name %></option>
@@ -313,14 +318,14 @@
                                 <div class="col-12 col-md-6">
                                     <div class="mb-3">
                                         <label for="location" class="form-label">保管地點</label>
-                                        <input type="text" class="form-control" id="location" name="location" placeholder="例如：3樓辦公室A區">
+                                        <input type="text" class="form-control" id="location" name="location" placeholder="例如：3樓辦公室A區" value="<%= typeof formData !== 'undefined' && formData.location ? formData.location : '' %>">
                                         <div class="form-text">可選：輸入資產存放或保管位置</div>
                                     </div>
                                 </div>
                                 <div class="col-12">
                                     <div class="mb-3">
                                         <label for="remark" class="form-label">備註說明</label>
-                                        <textarea class="form-control" id="remark" name="remark" rows="3" placeholder="可選：輸入資產的詳細說明或特殊注意事項"></textarea>
+                                        <textarea class="form-control" id="remark" name="remark" rows="3" placeholder="可選：輸入資產的詳細說明或特殊注意事項"><%= typeof formData !== 'undefined' && formData.remark ? formData.remark : '' %></textarea>
                                         <div class="form-text">可選：輸入資產的保管注意事項或補充說明</div>
                                     </div>
                                 </div>
@@ -439,6 +444,9 @@
     </div>
 </div>
 
+<!-- 隱藏資料屬性，用於傳遞 formData 是否存在（序號重複時回傳） -->
+<div id="formDataIndicator" data-has-form-data="<%= typeof formData !== 'undefined' && Object.keys(formData).length > 0 ? 'true' : 'false' %>" style="display:none;"></div>
+
 <script>
     // 設定購買日期的預設值為今天
     document.addEventListener('DOMContentLoaded', function() {
@@ -446,31 +454,36 @@
         const purchaseDateInput = document.getElementById('purchased_at');
         const depreciationStartInput = document.getElementById('dep_start');
         
-        if (purchaseDateInput && !purchaseDateInput.value) {
-            purchaseDateInput.value = today;
-        }
+        // 檢查是否有 formData（序號重複時回傳），若有則不覆蓋使用者輸入的值
+        const hasFormData = document.getElementById('formDataIndicator').getAttribute('data-has-form-data') === 'true';
         
-        // 提列年月預設規則：
-        //   前半月(1~15日) → 當月開始提列
-        //   後半月(16~月底) → 下月開始提列
-        function setDepreciationStartFromPurchaseDate() {
-            if (purchaseDateInput && purchaseDateInput.value && depreciationStartInput) {
-                const purchaseDate = new Date(purchaseDateInput.value + 'T00:00:00');
-                const day = purchaseDate.getDate();
-                // 後半月(16日以後)才加1個月
-                let year = purchaseDate.getFullYear();
-                let month = purchaseDate.getMonth();
-                if (day >= 16) {
-                    month += 1;
-                    if (month > 11) {
-                        month = 0;
-                        year += 1;
-                    }
-                }
-                depreciationStartInput.value = `${year}-${String(month + 1).padStart(2, '0')}`;
+        if (!hasFormData) {
+            if (purchaseDateInput && !purchaseDateInput.value) {
+                purchaseDateInput.value = today;
             }
+            
+            // 提列年月預設規則：
+            //   前半月(1~15日) → 當月開始提列
+            //   後半月(16~月底) → 下月開始提列
+            function setDepreciationStartFromPurchaseDate() {
+                if (purchaseDateInput && purchaseDateInput.value && depreciationStartInput) {
+                    const purchaseDate = new Date(purchaseDateInput.value + 'T00:00:00');
+                    const day = purchaseDate.getDate();
+                    // 後半月(16日以後)才加1個月
+                    let year = purchaseDate.getFullYear();
+                    let month = purchaseDate.getMonth();
+                    if (day >= 16) {
+                        month += 1;
+                        if (month > 11) {
+                            month = 0;
+                            year += 1;
+                        }
+                    }
+                    depreciationStartInput.value = `${year}-${String(month + 1).padStart(2, '0')}`;
+                }
+            }
+            setDepreciationStartFromPurchaseDate();
         }
-        setDepreciationStartFromPurchaseDate();
         
         // 當購買日期變更時，同步更新提列年月
         if (purchaseDateInput) {

@@ -81,12 +81,17 @@ const assetController = {
         departmentUsers = await User.findByDepartmentId(req.session.user.department_id);
       }
       
+      // 從 session 中取出暫存的表單資料（序號重複時保留使用者輸入）
+      const formData = req.session.formData || {};
+      delete req.session.formData; // 取出後清除，避免影響後續請求
+      
       res.render('assets/create', {
         title: '新增資產',
         userDepartment,
         categories,
         user: req.session.user,
-        departmentUsers
+        departmentUsers,
+        formData
       });
     } catch (error) {
       console.error('Create asset form error:', error);
@@ -118,6 +123,8 @@ const assetController = {
       if (serialno) {
         const serialnoExists = await Asset.findBySerialno(serialno);
         if (serialnoExists) {
+          // 序號重複時，將使用者輸入的資料存入 session，保留表單資料
+          req.session.formData = req.body;
           req.flash('error_msg', `序號/編號「${serialno}」已存在，請使用不同的序號/編號`);
           return res.redirect('/assets/create');
         }

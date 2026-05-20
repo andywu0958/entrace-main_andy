@@ -160,6 +160,12 @@
                                 <div class="form-control-plaintext fw-semibold"><%= asset.dep_meth %></div>
                             </div>
                             <% } %>
+                            <% if (asset.dep_rate) { %>
+                            <div class="col-12 col-md-6">
+                                <label class="form-label text-muted">定率年折舊率</label>
+                                <div class="form-control-plaintext fw-semibold"><%= Number(asset.dep_rate).toLocaleString('zh-TW', { minimumFractionDigits: 2, maximumFractionDigits: 4 }) %>%</div>
+                            </div>
+                            <% } %>
                             <% if (asset.useful_mo) { %>
                             <div class="col-12 col-md-6">
                                 <label class="form-label text-muted">耐用月數</label>

@@ -250,7 +250,7 @@
                                     <div class="mb-3">
                                         <label for="rate_dep" class="form-label">定率年折舊率</label>
                                         <div class="input-group">
-                                            <input type="text" class="form-control" id="rate_dep" name="rate_dep" value="<%= asset.rate_dep || '' %>" min="0" max="100" step="0.01" placeholder="例如：20" style="background-color: #d4edda;">
+                                            <input type="text" class="form-control" id="rate_dep" name="rate_dep" value="<%= asset.dep_rate || '' %>" min="0" max="100" step="0.01" placeholder="例如：20" style="background-color: #d4edda;">
                                             <span class="input-group-text">%</span>
                                         </div>
                                         <div class="form-text">定率遞減法之年折舊率百分比</div>
@@ -279,7 +279,7 @@
                                             <span class="input-group-text">$</span>
                                             <input type="number" class="form-control" id="decl_accumulated" min="0" step="0.01" placeholder="0.00" style="background-color: #d5f5e3;" readonly>
                                         </div>
-                                        <div class="form-text">定率遞減法之累積折舊金額（僅供參考，不送出）</div>
+                                        <div class="form-text">定率遞減法之累積折舊金額</div>
                                     </div>
                                 </div>
                             </div>
@@ -878,9 +878,13 @@
         // 頁面載入時，若為定率遞減法，未攤月數應為空白（不適用）
         if (depMethSelect.value === '定率遞減法') {
             unamortizedMoInput.value = '';
+            // 頁面載入時一併計算定率年折舊率、定率累積折舊和年折舊額
+            calcRateDepreciation();
+            calcDecliningAccumulated();
+            calcAnnualDepreciation();
+        } else {
+            calcAnnualDepreciation();
         }
-        
-        calcAnnualDepreciation();
 
         // === 完整逐年計算表功能（平均法 - 按月顯示） ===
         // 點擊平均法累積折舊旁的圖示時，動態生成平均法完整逐年計算表（以月為單位）
