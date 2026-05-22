@@ -247,8 +247,17 @@ router.get('/export/assets', isAdmin, async (req, res) => {
     // 寫入 UTF-8 BOM（Excel 需要）
     res.write('\uFEFF');
     
-    // CSV 標題列
-    const headers = ['ID', '名稱', '類別', '部門', '狀態', '建立時間', '更新時間'];
+    // CSV 標題列 - 完整欄位
+    const headers = [
+      'ID', '資產名稱', '型號', '類別', '部門', '狀態', 
+      '序號/編號', '購買日期',
+      '供應商', '數量', '單位', '成本', '保固(月)',
+      '折舊方法', '耐用月數', '殘值', '折舊起始(年月)', 
+      '未攤銷月數', '平均折舊', '累計折舊', '折舊率(%)',
+      '保管人', '存放地點',
+      '建立時間', '更新時間',
+      '備註'
+    ];
     res.write(headers.join(',') + '\n');
     
     // 資料列
@@ -259,16 +268,43 @@ router.get('/export/assets', isAdmin, async (req, res) => {
       'retired': '已報廢'
     };
     
+    const depMethMap = {
+      'straight_line': '直線法',
+      'declining_balance': '定率遞減法',
+      'sum_of_years': '年數合計法'
+    };
+    
     assets.forEach(asset => {
       const statusChinese = statusMap[asset.status] || asset.status;
+      const depMethChinese = depMethMap[asset.dep_meth] || asset.dep_meth || '';
+      
       const row = [
         asset.id,
-        `"${asset.name.replace(/"/g, '""')}"`, // 處理引號
-        `"${asset.category}"`,
-        `"${asset.department_name || ''}"`,
+        `"${(asset.name || '').replace(/"/g, '""')}"`,
+        `"${(asset.model || '').replace(/"/g, '""')}"`,
+        `"${(asset.category || '').replace(/"/g, '""')}"`,
+        `"${(asset.department_name || '').replace(/"/g, '""')}"`,
         `"${statusChinese}"`,
-        `"${new Date(asset.created_at).toISOString().replace('T', ' ').substring(0, 19)}"`, 
-        `"${new Date(asset.updated_at).toISOString().replace('T', ' ').substring(0, 19)}"` 
+        `"${(asset.serialno || '').replace(/"/g, '""')}"`,
+        asset.purchased_at ? `"${new Date(asset.purchased_at).toISOString().split('T')[0]}"` : '',
+        `"${(asset.supplier || '').replace(/"/g, '""')}"`,
+        asset.quantity != null ? asset.quantity : '',
+        `"${(asset.unit || '').replace(/"/g, '""')}"`,
+        asset.cost != null ? asset.cost : '',
+        asset.warranty != null ? asset.warranty : '',
+        `"${depMethChinese}"`,
+        asset.useful_mo != null ? asset.useful_mo : '',
+        asset.residual != null ? asset.residual : '',
+        `"${(asset.dep_start || '').replace(/"/g, '""')}"`,
+        asset.unamortized_mo != null ? asset.unamortized_mo : '',
+        asset.avg_dep != null ? asset.avg_dep : '',
+        asset.accumulated != null ? asset.accumulated : '',
+        asset.dep_rate != null ? asset.dep_rate : '',
+        `"${(asset.custodian || '').replace(/"/g, '""')}"`,
+        `"${(asset.location || '').replace(/"/g, '""')}"`,
+        asset.created_at ? `"${new Date(asset.created_at).toISOString().replace('T', ' ').substring(0, 19)}"` : '',
+        asset.updated_at ? `"${new Date(asset.updated_at).toISOString().replace('T', ' ').substring(0, 19)}"` : '',
+        `"${(asset.remark || '').replace(/"/g, '""')}"`
       ];
       res.write(row.join(',') + '\n');
     });

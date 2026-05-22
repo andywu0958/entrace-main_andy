@@ -883,6 +883,12 @@
             calcDecliningAccumulated();
             calcAnnualDepreciation();
         } else {
+            // === 方案 A：頁面載入時自動重新計算 ===
+            // 從資料庫讀出的未攤月數可能不是最新值（例如資料庫存的是60，但實際上已過1個月應為59）
+            // 因此頁面載入時強制重新計算未攤月數、月折舊額、累積折舊
+            syncUnamortizedMonths();
+            calcMonthlyDepreciation();
+            calcAccumulatedDepreciation();
             calcAnnualDepreciation();
         }
 
