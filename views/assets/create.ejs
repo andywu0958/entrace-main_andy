@@ -80,9 +80,9 @@
                             <div class="row g-3">
                                 <div class="col-12 col-md-6">
                                     <div class="mb-3">
-                                        <label for="purchased_at" class="form-label">購買日期</label>
-                                        <input type="date" class="form-control" id="purchased_at" name="purchased_at" value="<%= typeof formData !== 'undefined' && formData.purchased_at ? formData.purchased_at : '' %>">
-                                        <div class="form-text">可選：輸入資產購買日期</div>
+                                        <label for="purchased_at" class="form-label">購買日期 <span class="text-danger">*</span></label>
+                                        <input type="date" class="form-control" id="purchased_at" name="purchased_at" value="<%= typeof formData !== 'undefined' && formData.purchased_at ? formData.purchased_at : '' %>" required>
+                                        <div class="form-text">請輸入資產購買日期</div>
                                     </div>
                                 </div>
                                 <div class="col-12 col-md-6">
@@ -102,9 +102,9 @@
                                 </div>
                                 <div class="col-12 col-md-3">
                                     <div class="mb-3">
-                                        <label for="quantity" class="form-label">數量</label>
-                                        <input type="number" class="form-control" id="quantity" name="quantity" min="1" placeholder="1" value="<%= typeof formData !== 'undefined' && formData.quantity ? formData.quantity : '1' %>">
-                                        <div class="form-text">可選：輸入資產數量</div>
+                                        <label for="quantity" class="form-label">數量 <span class="text-danger">*</span></label>
+                                        <input type="number" class="form-control" id="quantity" name="quantity" min="1" placeholder="1" value="<%= typeof formData !== 'undefined' && formData.quantity ? formData.quantity : '1' %>" required>
+                                        <div class="form-text">請輸入資產數量</div>
                                     </div>
                                 </div>
                                 <div class="col-12 col-md-3">
@@ -124,12 +124,12 @@
                                 </div>
                                 <div class="col-12 col-md-3">
                                     <div class="mb-3">
-                                        <label for="cost" class="form-label">成本</label>
+                                        <label for="cost" class="form-label">成本 <span class="text-danger">*</span></label>
                                         <div class="input-group">
                                             <span class="input-group-text">$</span>
-                                            <input type="number" class="form-control" id="cost" name="cost" min="0" step="0.01" placeholder="0.00" value="<%= typeof formData !== 'undefined' && formData.cost ? formData.cost : '' %>">
+                                            <input type="number" class="form-control" id="cost" name="cost" min="0" step="1" placeholder="0" value="<%= typeof formData !== 'undefined' && formData.cost ? formData.cost : '' %>" required oninput="if(this.value.includes('.')) this.value=this.value.split('.')[0]">
                                         </div>
-                                        <div class="form-text">可選：輸入資產取得成本</div>
+                                        <div class="form-text">請輸入資產取得成本</div>
                                     </div>
                                 </div>
                                 <div class="col-12 col-md-3">
@@ -155,24 +155,24 @@
                             <div class="row g-3">
                                 <div class="col-12 col-md-6">
                                     <div class="mb-3">
-                                        <label for="dep_meth" class="form-label">折舊方法</label>
-                                        <select class="form-select" id="dep_meth" name="dep_meth">
+                                        <label for="dep_meth" class="form-label">折舊方法 <span class="text-danger">*</span></label>
+                                        <select class="form-select" id="dep_meth" name="dep_meth" required>
                                             <option value="">請選擇折舊方法</option>
                                             <option value="平均法" <%= (typeof formData !== 'undefined' && formData.dep_meth === '平均法') ? 'selected' : '' %>>平均法</option>
                                             <option value="定率遞減法" <%= (typeof formData !== 'undefined' && formData.dep_meth === '定率遞減法') ? 'selected' : '' %>>定率遞減法</option>
                                             <option value="不提折舊" <%= (typeof formData !== 'undefined' && formData.dep_meth === '不提折舊') ? 'selected' : '' %>>不提折舊</option>
                                         </select>
-                                        <div class="form-text">可選：選擇資產折舊計算方式</div>
+                                        <div class="form-text">請選擇資產折舊計算方式</div>
                                     </div>
                                 </div>
                                 <div class="col-12 col-md-6">
                                     <div class="mb-3">
-                                        <label for="useful_mo" class="form-label">耐用月數(折舊月數)</label>
+                                        <label for="useful_mo" class="form-label">耐用月數(折舊月數) <span class="text-danger">*</span></label>
                                         <div class="input-group">
-                                            <input type="number" class="form-control" id="useful_mo" name="useful_mo" min="1" step="1" placeholder="例如：24" value="<%= typeof formData !== 'undefined' && formData.useful_mo ? formData.useful_mo : '' %>">
+                                            <input type="number" class="form-control" id="useful_mo" name="useful_mo" min="1" step="1" placeholder="例如：24" value="<%= typeof formData !== 'undefined' && formData.useful_mo ? formData.useful_mo : '' %>" required>
                                             <span class="input-group-text">月</span>
                                         </div>
-                                        <div class="form-text">可選：輸入資產預計耐用月數</div>
+                                        <div class="form-text">請輸入資產預計耐用月數</div>
                                     </div>
                                 </div>
                                 <div class="col-12 col-md-6">
@@ -180,7 +180,7 @@
                                         <label for="residual" class="form-label">預留殘值</label>
                                         <div class="input-group">
                                             <span class="input-group-text">$</span>
-                                            <input type="number" class="form-control" id="residual" name="residual" min="0" step="0.01" placeholder="0.00" style="background-color: #fff9c4;" readonly value="<%= typeof formData !== 'undefined' && formData.residual ? formData.residual : '' %>">
+                                            <input type="number" class="form-control" id="residual" name="residual" min="0" step="1" placeholder="0" style="background-color: #fff9c4;" readonly value="<%= typeof formData !== 'undefined' && formData.residual ? formData.residual : '' %>">
                                         </div>
                                         <div class="form-text">系統自動計算：平均法 = 總成本/(耐用月數+12)*12；定率遞減法 = 總成本/10</div>
                                     </div>
@@ -218,7 +218,7 @@
                                         <label for="avg_dep" class="form-label">平均法月折舊額</label>
                                         <div class="input-group">
                                             <span class="input-group-text">$</span>
-                                            <input type="number" class="form-control" id="avg_dep" name="avg_dep" min="0" step="0.01" placeholder="0.00" style="background-color: #fff9c4;" readonly value="<%= typeof formData !== 'undefined' && formData.avg_dep ? formData.avg_dep : '' %>">
+                                            <input type="number" class="form-control" id="avg_dep" name="avg_dep" min="0" step="1" placeholder="0" style="background-color: #fff9c4;" readonly value="<%= typeof formData !== 'undefined' && formData.avg_dep ? formData.avg_dep : '' %>">
                                         </div>
                                         <div class="form-text">可選：輸入平均法計算之每月折舊金額</div>
                                     </div>
@@ -234,7 +234,7 @@
                                         </label>
                                         <div class="input-group">
                                             <span class="input-group-text">$</span>
-                                            <input type="number" class="form-control" id="accumulated" name="accumulated" min="0" step="0.01" placeholder="0.00" style="background-color: #fff9c4;" readonly value="<%= typeof formData !== 'undefined' && formData.accumulated ? formData.accumulated : '' %>">
+                                            <input type="number" class="form-control" id="accumulated" name="accumulated" min="0" step="1" placeholder="0" style="background-color: #fff9c4;" readonly value="<%= typeof formData !== 'undefined' && formData.accumulated ? formData.accumulated : '' %>">
                                         </div>
                                         <div class="form-text">平均法下系統自動計算：已折舊月數 × 月折舊額</div>
                                     </div>
@@ -257,7 +257,7 @@
                                         <label for="annual_dep" class="form-label">定率年折舊額</label>
                                         <div class="input-group">
                                             <span class="input-group-text">$</span>
-                                            <input type="number" class="form-control" id="annual_dep" name="annual_dep" min="0" step="0.01" placeholder="0.00" style="background-color: #d4edda;" readonly value="<%= typeof formData !== 'undefined' && formData.annual_dep ? formData.annual_dep : '' %>">
+                                            <input type="number" class="form-control" id="annual_dep" name="annual_dep" min="0" step="1" placeholder="0" style="background-color: #d4edda;" readonly value="<%= typeof formData !== 'undefined' && formData.annual_dep ? formData.annual_dep : '' %>">
                                         </div>
                                         <div class="form-text">定率遞減法之年折舊金額</div>
                                     </div>
@@ -273,7 +273,7 @@
                                         </label>
                                         <div class="input-group">
                                             <span class="input-group-text">$</span>
-                                            <input type="number" class="form-control" id="decl_accumulated" min="0" step="0.01" placeholder="0.00" style="background-color: #d5f5e3;" readonly value="<%= typeof formData !== 'undefined' && formData.decl_accumulated ? formData.decl_accumulated : '' %>">
+                                            <input type="number" class="form-control" id="decl_accumulated" min="0" step="1" placeholder="0" style="background-color: #d5f5e3;" readonly value="<%= typeof formData !== 'undefined' && formData.decl_accumulated ? formData.decl_accumulated : '' %>">
                                         </div>
                                         <div class="form-text">定率遞減法之累積折舊金額</div>
                                     </div>
@@ -581,7 +581,7 @@
                 residual = Math.round(totalCost / 10);
             }
 
-            residualInput.value = residual.toFixed(2);
+            residualInput.value = residual;
         }
 
         // === 平均法月折舊額自動計算 ===
@@ -598,7 +598,7 @@
             }
             if (method !== '平均法') {
                 avgDepInput.value = '';
-                avgDepInput.placeholder = '0.00';
+                avgDepInput.placeholder = '0';
                 avgDepInput.disabled = false;
                 return;
             }
@@ -623,7 +623,7 @@
             const totalResidual = isNaN(residual) ? 0 : residual;
             const depreciation = Math.round((totalCost - totalResidual) / months);
 
-            avgDepInput.value = depreciation.toFixed(2);
+            avgDepInput.value = depreciation;
         }
 
         // === 累積折舊自動計算 ===
@@ -645,7 +645,7 @@
 
             // 若未攤月數還不需減1時（未攤月數 = 耐用月數），累積折舊為0
             if (unamortizedMo === usefulMonths) {
-                accumulatedInput.value = '0.00';
+                accumulatedInput.value = '0';
                 return;
             }
 
@@ -655,9 +655,9 @@
             const depreciatedMonths = usefulMonths - unamortizedMo;
             if (depreciatedMonths > 0) {
                 const accumulated = Math.round(depreciatedMonths * avgDep);
-                accumulatedInput.value = accumulated.toFixed(2);
+                accumulatedInput.value = accumulated;
             } else {
-                accumulatedInput.value = '0.00';
+                accumulatedInput.value = '0';
             }
         }
 
@@ -783,7 +783,7 @@
             const fullYears = Math.floor(elapsedMonths / 12);
 
             if (fullYears <= 0) {
-                declAccumulatedInput.value = '0.00';
+                declAccumulatedInput.value = '0';
                 return;
             }
 
@@ -805,12 +805,13 @@
                 bookValue -= yearDep;
             }
 
-            declAccumulatedInput.value = accumulated.toFixed(2);
+            declAccumulatedInput.value = Math.round(accumulated);
         }
 
         // === 定率年折舊額自動計算 ===
-        // 公式 A（不扣殘值）：年折舊額 = (總成本 - 累積折舊) × 年折舊率
+        // 公式 A（不扣殘值）：年折舊額 = 年初帳面價值 × 年折舊率
         // 不扣殘值，但折舊後的帳面價值不得低於預留殘值
+        // 顯示最後一個完整年度的年折舊額
         function calcAnnualDepreciation() {
             const method = depMethSelect.value;
             if (method !== '定率遞減法') {
@@ -822,27 +823,56 @@
             const quantity = parseInt(quantityInput.value) || 1;
             const residual = parseFloat(residualInput.value);
             const rate = parseFloat(rateDepInput.value);
-            const accumulated = parseFloat(accumulatedInput.value);
+            const depStart = depreciationStartInput ? depreciationStartInput.value : '';
 
             if (isNaN(cost) || cost <= 0) return;
             if (isNaN(rate) || rate <= 0) return;
+            if (!depStart) return;
 
             const totalCost = cost * quantity;
             const totalResidual = isNaN(residual) ? 0 : residual;
-            const totalAccumulated = isNaN(accumulated) ? 0 : accumulated;
-            
-            // 年初帳面價值 = 總成本 - 累積折舊（不扣殘值）
-            const bookValue = totalCost - totalAccumulated;
-            
-            // 年折舊額 = 年初帳面價值 × 年折舊率
-            let annualDep = Math.round(bookValue * (rate / 100));
-            
-            // 確保折舊後的帳面價值不低於殘值
-            if (bookValue - annualDep < totalResidual) {
-                annualDep = bookValue - totalResidual;
+
+            // 計算從提列年月到當前年月經過的完整年數
+            const now = new Date();
+            const startParts = depStart.split('-');
+            const startYear = parseInt(startParts[0]);
+            const startMonth = parseInt(startParts[1]);
+            const currentYear = now.getFullYear();
+            const currentMonth = now.getMonth() + 1;
+
+            // 經過的月數
+            const elapsedMonths = (currentYear - startYear) * 12 + (currentMonth - startMonth);
+            // 完整年數（無條件捨去）
+            const fullYears = Math.floor(elapsedMonths / 12);
+
+            if (fullYears <= 0) {
+                // 尚未經過完整一年，顯示第1年的年折舊額
+                let yearDep = Math.round(totalCost * (rate / 100));
+                if (totalCost - yearDep < totalResidual) {
+                    yearDep = totalCost - totalResidual;
+                }
+                annualDepInput.value = Math.round(yearDep);
+                return;
             }
-            
-            annualDepInput.value = annualDep.toFixed(2);
+
+            // 逐年計算，記錄每年的折舊額
+            let bookValue = totalCost;
+            let lastYearDep = 0;
+
+            for (let y = 0; y < fullYears; y++) {
+                let yearDep = Math.round(bookValue * (rate / 100));
+                
+                // 確保折舊後的帳面價值不低於殘值
+                if (bookValue - yearDep < totalResidual) {
+                    yearDep = bookValue - totalResidual;
+                }
+                
+                lastYearDep = yearDep;
+                bookValue -= yearDep;
+            }
+
+            // 顯示最後一個完整年度的年折舊額
+            annualDepInput.value = Math.round(lastYearDep);
         }
 
         depMethSelect.addEventListener('change', function() {

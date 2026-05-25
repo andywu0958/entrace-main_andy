@@ -145,7 +145,7 @@
                             <% if (asset.cost) { %>
                             <div class="col-12 col-md-6">
                                 <label class="form-label text-muted">成本</label>
-                                <div class="form-control-plaintext fw-semibold"><%= Number(asset.cost).toLocaleString('zh-TW', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) %></div>
+                                <div class="form-control-plaintext fw-semibold"><%= Number(asset.cost).toLocaleString('zh-TW', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) %></div>
                             </div>
                             <% } %>
                             <% if (asset.warranty) { %>
@@ -175,7 +175,7 @@
                             <% if (asset.residual) { %>
                             <div class="col-12 col-md-6">
                                 <label class="form-label text-muted">預留殘值</label>
-                                <div class="form-control-plaintext fw-semibold"><%= Number(asset.residual).toLocaleString('zh-TW', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) %></div>
+                                <div class="form-control-plaintext fw-semibold"><%= Number(asset.residual).toLocaleString('zh-TW', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) %></div>
                             </div>
                             <% } %>
                             <% if (asset.dep_start) { %>
@@ -193,13 +193,13 @@
                             <% if (asset.avg_dep) { %>
                             <div class="col-12 col-md-6">
                                 <label class="form-label text-muted">平均法月折舊額</label>
-                                <div class="form-control-plaintext fw-semibold"><%= Number(asset.avg_dep).toLocaleString('zh-TW', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) %></div>
+                                <div class="form-control-plaintext fw-semibold"><%= Number(asset.avg_dep).toLocaleString('zh-TW', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) %></div>
                             </div>
                             <% } %>
                             <% if (asset.accumulated) { %>
                             <div class="col-12 col-md-6">
                                 <label class="form-label text-muted">累積折舊</label>
-                                <div class="form-control-plaintext fw-semibold"><%= Number(asset.accumulated).toLocaleString('zh-TW', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) %></div>
+                                <div class="form-control-plaintext fw-semibold"><%= Number(asset.accumulated).toLocaleString('zh-TW', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) %></div>
                             </div>
                             <% } %>
                             <% if (asset.custodian) { %>
