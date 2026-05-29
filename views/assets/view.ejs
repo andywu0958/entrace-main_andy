@@ -262,12 +262,30 @@
                                 <div class="form-control-plaintext fw-semibold"><%= Number(asset.avg_dep).toLocaleString('zh-TW', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) %></div>
                             </div>
                             <% } %>
-                            <% if (asset.accumulated) { %>
+                            <% if (asset.accumulated !== null && asset.accumulated !== undefined) { %>
                             <div class="col-12 col-md-6">
                                 <label class="form-label text-muted">累積折舊</label>
                                 <div class="form-control-plaintext fw-semibold"><%= Number(asset.accumulated).toLocaleString('zh-TW', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) %></div>
                             </div>
                             <% } %>
+            <!-- 定率法折舊計算（前端計算） -->
+            <% if (asset.dep_meth === 'declining' || (asset.cost && asset.dep_rate)) { %>
+            <div class="col-12 col-md-6">
+                <label class="form-label text-muted">定率年折舊額</label>
+                <div class="form-control-plaintext fw-semibold" id="view_annual_dep">計算中...</div>
+            </div>
+            <div class="col-12 col-md-6">
+                <label class="form-label text-muted">定率累積折舊</label>
+                <div class="form-control-plaintext fw-semibold" id="view_decl_accumulated">計算中...</div>
+            </div>
+            <% } %>
+            <!-- 折舊計算用隱藏資料 -->
+            <div id="dep_data" 
+                 data-cost="<%= asset.cost || 0 %>"
+                 data-dep-rate="<%= asset.dep_rate || 0 %>"
+                 data-dep-start="<%= asset.dep_start || '' %>"
+                 data-residual="<%= asset.residual || 0 %>"
+                 style="display:none;"></div>
                             <% if (asset.custodian) { %>
                             <div class="col-12 col-md-6">
                                 <label class="form-label text-muted">保管人</label>
@@ -313,6 +331,78 @@
                     this.parentElement.innerHTML = '<i class="fas fa-qrcode fa-5x text-muted"></i>';
                 });
             }
+
+            // 定率法折舊計算（前端計算）
+            (function() {
+                try {
+                    // 從 data-* 屬性讀取資料
+                    var depData = document.getElementById('dep_data');
+                    if (!depData) return;
+                    
+                    var cost = parseFloat(depData.getAttribute('data-cost')) || 0;
+                    var depRate = parseFloat(depData.getAttribute('data-dep-rate')) || 0;
+                    var depStart = depData.getAttribute('data-dep-start') || '';
+                    var residual = parseFloat(depData.getAttribute('data-residual')) || 0;
+
+                    if (cost > 0 && depRate > 0) {
+                        // 計算定率年折舊額（第一年）
+                        const annualDep = cost * (depRate / 100);
+                        
+                        let accumulatedDep = 0;
+                        
+                        if (depStart) {
+                            // 計算已提列月數
+                            const startParts = depStart.split('-');
+                            if (startParts.length >= 2) {
+                                const startYear = parseInt(startParts[0]);
+                                const startMonth = parseInt(startParts[1]) - 1; // JS月份從0開始
+                                const now = new Date();
+                                
+                                // 計算從提列年月到現在經過的完整月數
+                                let monthsElapsed = (now.getFullYear() - startYear) * 12 + (now.getMonth() - startMonth);
+                                if (monthsElapsed < 0) monthsElapsed = 0;
+                                
+                                // 定率法：年折舊率轉月折舊率
+                                const monthlyRate = 1 - Math.pow(1 - depRate / 100, 1/12);
+                                
+                                // 計算定率累積折舊
+                                let bookValue = cost;
+                                
+                                // 逐月計算折舊
+                                for (let m = 0; m < monthsElapsed; m++) {
+                                    const monthlyDep = bookValue * monthlyRate;
+                                    // 確保不折舊到低於殘值
+                                    if (bookValue - monthlyDep < residual) {
+                                        accumulatedDep += (bookValue - residual);
+                                        bookValue = residual;
+                                        break;
+                                    }
+                                    accumulatedDep += monthlyDep;
+                                    bookValue -= monthlyDep;
+                                }
+                            }
+                        }
+                        
+                        // 顯示結果
+                        const annualDepEl = document.getElementById('view_annual_dep');
+                        if (annualDepEl) {
+                            annualDepEl.textContent = 
+                                Math.round(annualDep).toLocaleString('zh-TW', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+                        }
+                        const accumDepEl = document.getElementById('view_decl_accumulated');
+                        if (accumDepEl) {
+                            accumDepEl.textContent = 
+                                Math.round(accumulatedDep).toLocaleString('zh-TW', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+                        }
+                    }
+                } catch (e) {
+                    console.error('定率法折舊計算錯誤:', e);
+                    const annualDepEl = document.getElementById('view_annual_dep');
+                    if (annualDepEl) annualDepEl.textContent = '計算錯誤';
+                    const accumDepEl = document.getElementById('view_decl_accumulated');
+                    if (accumDepEl) accumDepEl.textContent = '計算錯誤';
+                }
+            })();
         });
     </script>
 </body>

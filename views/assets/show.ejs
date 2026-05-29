@@ -52,13 +52,13 @@
 
                             <div class="col-12 col-md-6">
                                 <label class="form-label text-muted">資產名稱</label>
-                                <div class="form-control-plaintext fw-semibold"><%= asset.name %></div>
+                                <div class="form-control-static"><%= asset.name %></div>
                             </div>
                             
                             <% if (asset.model) { %>
                             <div class="col-12 col-md-6">
                                 <label class="form-label text-muted">品牌規格</label>
-                                <div class="form-control-plaintext fw-semibold">
+                                <div class="form-control-static">
                                     <i class="fas fa-tag me-2 text-muted"></i>
                                     <%= asset.model %>
                                 </div>
@@ -67,7 +67,7 @@
                         
                             <div class="col-12 col-md-6">
                                 <label class="form-label text-muted">所屬部門</label>
-                                <div class="form-control-plaintext fw-semibold">
+                                <div class="form-control-static">
                                     <i class="fas fa-building me-2 text-muted"></i>
                                     <%= asset.department_name %>
                                 </div>
@@ -76,7 +76,7 @@
                             <% if (asset.serialno) { %>
                                 <div class="col-12 col-md-6">
                                     <label class="form-label text-muted">序號/編號</label>
-                                    <div class="form-control-plaintext fw-semibold">
+                                    <div class="form-control-static">
                                         <i class="fas fa-barcode me-2 text-muted"></i>
                                         <%= asset.serialno %>
                                     </div>
@@ -86,7 +86,7 @@
                             <% if (asset.purchased_at) { %>
                                 <div class="col-12 col-md-6">
                                     <label class="form-label text-muted">購買日期</label>
-                                    <div class="form-control-plaintext fw-semibold">
+                                    <div class="form-control-static">
                                         <i class="fas fa-calendar-alt me-2 text-muted"></i>
                                         <%= new Date(asset.purchased_at).toLocaleDateString('zh-TW') %>
                                     </div>
@@ -95,7 +95,7 @@
                             
                             <div class="col-12 col-md-6">
                                 <label class="form-label text-muted">建立時間</label>
-                                <div class="form-control-plaintext fw-semibold">
+                                <div class="form-control-static">
                                     <i class="fas fa-clock me-2 text-muted"></i>
                                     <%= new Date(asset.created_at).toISOString().replace('T', ' ').substring(0, 19) %>
                                 </div>
@@ -103,7 +103,7 @@
                             
                             <div class="col-12 col-md-6">
                                 <label class="form-label text-muted">最後更新</label>
-                                <div class="form-control-plaintext fw-semibold">
+                                <div class="form-control-static">
                                     <i class="fas fa-sync-alt me-2 text-muted"></i>
                                     <%= new Date(asset.updated_at).toISOString().replace('T', ' ').substring(0, 19) %>
                                 </div>
@@ -127,91 +127,109 @@
                             <% if (asset.supplier) { %>
                             <div class="col-12 col-md-6">
                                 <label class="form-label text-muted">供應廠商</label>
-                                <div class="form-control-plaintext fw-semibold"><%= asset.supplier %></div>
+                                <div class="form-control-static"><%= asset.supplier %></div>
                             </div>
                             <% } %>
                             <% if (asset.quantity) { %>
                             <div class="col-12 col-md-6">
                                 <label class="form-label text-muted">數量</label>
-                                <div class="form-control-plaintext fw-semibold"><%= asset.quantity %></div>
+                                <div class="form-control-static"><%= asset.quantity %></div>
                             </div>
                             <% } %>
                             <% if (asset.unit) { %>
                             <div class="col-12 col-md-6">
                                 <label class="form-label text-muted">單位</label>
-                                <div class="form-control-plaintext fw-semibold"><%= asset.unit %></div>
+                                <div class="form-control-static"><%= asset.unit %></div>
                             </div>
                             <% } %>
                             <% if (asset.cost) { %>
                             <div class="col-12 col-md-6">
                                 <label class="form-label text-muted">成本</label>
-                                <div class="form-control-plaintext fw-semibold"><%= Number(asset.cost).toLocaleString('zh-TW', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) %></div>
+                                <div class="form-control-static"><%= Number(asset.cost).toLocaleString('zh-TW', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) %></div>
                             </div>
                             <% } %>
                             <% if (asset.warranty) { %>
                             <div class="col-12 col-md-6">
                                 <label class="form-label text-muted">保固年限</label>
-                                <div class="form-control-plaintext fw-semibold"><%= asset.warranty %> 年</div>
+                                <div class="form-control-static"><%= asset.warranty %> 年</div>
                             </div>
                             <% } %>
                             <% if (asset.dep_meth) { %>
                             <div class="col-12 col-md-6">
                                 <label class="form-label text-muted">折舊方法</label>
-                                <div class="form-control-plaintext fw-semibold"><%= asset.dep_meth %></div>
+                                <div class="form-control-static"><%= asset.dep_meth %></div>
                             </div>
                             <% } %>
                             <% if (asset.dep_rate) { %>
                             <div class="col-12 col-md-6">
                                 <label class="form-label text-muted">定率年折舊率</label>
-                                <div class="form-control-plaintext fw-semibold"><%= Number(asset.dep_rate).toLocaleString('zh-TW', { minimumFractionDigits: 2, maximumFractionDigits: 4 }) %>%</div>
+                                <div class="form-control-static"><%= Number(asset.dep_rate).toLocaleString('zh-TW', { minimumFractionDigits: 2, maximumFractionDigits: 4 }) %>%</div>
                             </div>
                             <% } %>
                             <% if (asset.useful_mo) { %>
                             <div class="col-12 col-md-6">
                                 <label class="form-label text-muted">耐用月數</label>
-                                <div class="form-control-plaintext fw-semibold"><%= asset.useful_mo %> 個月</div>
+                                <div class="form-control-static"><%= asset.useful_mo %> 個月</div>
                             </div>
                             <% } %>
                             <% if (asset.residual) { %>
                             <div class="col-12 col-md-6">
                                 <label class="form-label text-muted">預留殘值</label>
-                                <div class="form-control-plaintext fw-semibold"><%= Number(asset.residual).toLocaleString('zh-TW', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) %></div>
+                                <div class="form-control-static"><%= Number(asset.residual).toLocaleString('zh-TW', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) %></div>
                             </div>
                             <% } %>
                             <% if (asset.dep_start) { %>
                             <div class="col-12 col-md-6">
                                 <label class="form-label text-muted">提列年月</label>
-                                <div class="form-control-plaintext fw-semibold"><%= asset.dep_start.substring(0, 7) %></div>
+                                <div class="form-control-static"><%= asset.dep_start.substring(0, 7) %></div>
                             </div>
                             <% } %>
                             <% if (asset.unamortized_mo) { %>
                             <div class="col-12 col-md-6">
                                 <label class="form-label text-muted">未攤月數</label>
-                                <div class="form-control-plaintext fw-semibold"><%= asset.unamortized_mo %> 個月</div>
+                                <div class="form-control-static"><%= asset.unamortized_mo %> 個月</div>
                             </div>
                             <% } %>
                             <% if (asset.avg_dep) { %>
                             <div class="col-12 col-md-6">
                                 <label class="form-label text-muted">平均法月折舊額</label>
-                                <div class="form-control-plaintext fw-semibold"><%= Number(asset.avg_dep).toLocaleString('zh-TW', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) %></div>
+                                <div class="form-control-static"><%= Number(asset.avg_dep).toLocaleString('zh-TW', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) %></div>
                             </div>
                             <% } %>
-                            <% if (asset.accumulated) { %>
+                            <% if (asset.accumulated !== null && asset.accumulated !== undefined) { %>
                             <div class="col-12 col-md-6">
                                 <label class="form-label text-muted">累積折舊</label>
-                                <div class="form-control-plaintext fw-semibold"><%= Number(asset.accumulated).toLocaleString('zh-TW', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) %></div>
+                                <div class="form-control-static"><%= Number(asset.accumulated).toLocaleString('zh-TW', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) %></div>
                             </div>
                             <% } %>
+                            <!-- 定率法折舊計算（前端計算） -->
+                            <% if (asset.cost && asset.dep_rate && asset.dep_start) { %>
+                            <div class="col-12 col-md-6">
+                                <label class="form-label text-muted">定率年折舊額</label>
+                                <div class="form-control-static" id="show_annual_dep">計算中...</div>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <label class="form-label text-muted">定率累積折舊</label>
+                                <div class="form-control-static" id="show_decl_accumulated">計算中...</div>
+                            </div>
+                            <% } %>
+                            <!-- 折舊計算用隱藏資料 -->
+                            <div id="dep_data" 
+                                 data-cost="<%= asset.cost || 0 %>"
+                                 data-dep-rate="<%= asset.dep_rate || 0 %>"
+                                 data-dep-start="<%= asset.dep_start || '' %>"
+                                 data-residual="<%= asset.residual || 0 %>"
+                                 style="display:none;"></div>
                             <% if (asset.custodian) { %>
                             <div class="col-12 col-md-6">
                                 <label class="form-label text-muted">保管人</label>
-                                <div class="form-control-plaintext fw-semibold"><%= asset.custodian %></div>
+                                <div class="form-control-static"><%= asset.custodian %></div>
                             </div>
                             <% } %>
                             <% if (asset.location) { %>
                             <div class="col-12 col-md-6">
                                 <label class="form-label text-muted">保管地點</label>
-                                <div class="form-control-plaintext fw-semibold"><%= asset.location %></div>
+                                <div class="form-control-static"><%= asset.location %></div>
                             </div>
                             <% } %>
                         </div>
@@ -312,4 +330,56 @@
             alert('複製失敗，請手動複製連結。');
         });
     }
+
+    // 定率法折舊計算（前端計算）- 從 data-* 屬性讀取資料
+    (function() {
+        var depData = document.getElementById('dep_data');
+        if (!depData) return;
+        
+        var cost = parseFloat(depData.getAttribute('data-cost')) || 0;
+        var depRate = parseFloat(depData.getAttribute('data-dep-rate')) || 0;
+        var depStart = depData.getAttribute('data-dep-start') || '';
+        var residual = parseFloat(depData.getAttribute('data-residual')) || 0;
+
+        if (cost > 0 && depRate > 0 && depStart) {
+            // 計算已提列月數
+            var startParts = depStart.split('-');
+            var startYear = parseInt(startParts[0]);
+            var startMonth = parseInt(startParts[1]) - 1; // JS月份從0開始
+            var now = new Date();
+            
+            // 計算從提列年月到現在經過的完整月數
+            var monthsElapsed = (now.getFullYear() - startYear) * 12 + (now.getMonth() - startMonth);
+            if (monthsElapsed < 0) monthsElapsed = 0;
+            
+            // 定率法：年折舊率轉月折舊率
+            var monthlyRate = 1 - Math.pow(1 - depRate / 100, 1/12);
+            
+            // 計算定率年折舊額（第一年）
+            var annualDep = cost * (depRate / 100);
+            
+            // 計算定率累積折舊
+            var bookValue = cost;
+            var accumulatedDep = 0;
+            
+            // 逐月計算折舊
+            for (var m = 0; m < monthsElapsed; m++) {
+                var monthlyDep = bookValue * monthlyRate;
+                // 確保不折舊到低於殘值
+                if (bookValue - monthlyDep < residual) {
+                    accumulatedDep += (bookValue - residual);
+                    bookValue = residual;
+                    break;
+                }
+                accumulatedDep += monthlyDep;
+                bookValue -= monthlyDep;
+            }
+            
+            // 顯示結果
+            document.getElementById('show_annual_dep').textContent = 
+                Math.round(annualDep).toLocaleString('zh-TW', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+            document.getElementById('show_decl_accumulated').textContent = 
+                Math.round(accumulatedDep).toLocaleString('zh-TW', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+        }
+    })();
 </script>

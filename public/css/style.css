@@ -190,6 +190,58 @@ body {
     color: var(--dark-color);
 }
 
+/* 顯示用欄位值 - 模擬輸入框樣式（只讀） */
+.form-control-static {
+    background-color: #fff;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #212529;
+    min-height: calc(1.6em + 1.5rem + 2px);
+    display: flex;
+    align-items: center;
+    transition: var(--transition);
+    cursor: default;
+}
+
+.form-control-static i {
+    color: #6c757d;
+    margin-right: 0.5rem;
+}
+
+.form-control-static:hover {
+    border-color: #b0b8c4;
+    background-color: #fafafa;
+}
+
+/* Bootstrap form-control-plaintext 增強 - 加上背景框 */
+.form-control-plaintext {
+    background-color: #fff;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #212529;
+    min-height: calc(1.6em + 1.5rem + 2px);
+    display: flex;
+    align-items: center;
+    transition: var(--transition);
+    cursor: default;
+}
+
+.form-control-plaintext i {
+    color: #6c757d;
+    margin-right: 0.5rem;
+}
+
+.form-control-plaintext:hover {
+    border-color: #b0b8c4;
+    background-color: #fafafa;
+}
+
 /* 警告訊息增強 */
 .alert {
     border: none;
