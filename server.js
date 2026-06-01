@@ -60,6 +60,7 @@ app.use('/auth', require('./routes/auth'));
 app.use('/users', require('./routes/users'));
 app.use('/assets', require('./routes/assets'));
 app.use('/departments', require('./routes/departments'));
+app.use('/asset-categories', require('./routes/assetCategories'));
 app.use('/api', require('./routes/api'));
 
 // 404 錯誤處理

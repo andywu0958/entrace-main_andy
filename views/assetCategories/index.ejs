@@ -1,0 +1,84 @@
+<div class="container-fluid">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3"><i class="fas fa-tags"></i> 資產類別管理</h1>
+    <div>
+      <a href="/asset-categories/search" class="btn btn-outline-primary me-2">
+        <i class="fas fa-search"></i> 搜尋
+      </a>
+      <a href="/asset-categories/create" class="btn btn-primary">
+        <i class="fas fa-plus"></i> 新增類別
+      </a>
+    </div>
+  </div>
+
+  <% if (success_msg) { %>
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+      <i class="fas fa-check-circle"></i> <%= success_msg %>
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+  <% } %>
+
+  <% if (error_msg) { %>
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+      <i class="fas fa-exclamation-circle"></i> <%= error_msg %>
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+  <% } %>
+
+  <div class="card">
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-hover">
+          <thead class="table-light">
+            <tr>
+              <th>類別代號</th>
+              <th>類別名稱</th>
+              <th>資產科目</th>
+              <th>累計折舊科目</th>
+              <th>折舊科目</th>
+              <th>折舊方法</th>
+              <th>使用月數</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if (categories && categories.length > 0) { %>
+              <% categories.forEach(function(category) { %>
+                <tr>
+                  <td><strong><%= category.code %></strong></td>
+                  <td><%= category.name %></td>
+                  <td><%= category.acct_code ? category.acct_code + ' - ' + category.acct_name : '-' %></td>
+                  <td><%= category.ad_code ? category.ad_code + ' - ' + category.ad_name : '-' %></td>
+                  <td><%= category.dep_code ? category.dep_code + ' - ' + category.dep_name : '-' %></td>
+                  <td><%= category.dep_meth || '-' %></td>
+                  <td><%= category.useful_mo ? category.useful_mo + ' 個月' : '-' %></td>
+                  <td>
+                    <a href="/asset-categories/<%= category.code %>" class="btn btn-sm btn-info" title="檢視">
+                      <i class="fas fa-eye"></i>
+                    </a>
+                    <a href="/asset-categories/<%= category.code %>/edit" class="btn btn-sm btn-warning" title="編輯">
+                      <i class="fas fa-edit"></i>
+                    </a>
+                    <form action="/asset-categories/<%= category.code %>/delete" method="POST" style="display:inline;" 
+                          onsubmit="return confirm('確定要刪除類別「<%= category.name %>」嗎？');">
+                      <button type="submit" class="btn btn-sm btn-danger" title="刪除">
+                        <i class="fas fa-trash"></i>
+                      </button>
+                    </form>
+                  </td>
+                </tr>
+              <% }); %>
+            <% } else { %>
+              <tr>
+                <td colspan="8" class="text-center text-muted py-4">
+                  <i class="fas fa-inbox fa-2x d-block mb-2"></i>
+                  尚無資產類別資料
+                </td>
+              </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

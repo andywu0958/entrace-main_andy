@@ -1,0 +1,66 @@
+<div class="container-fluid">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3"><i class="fas fa-tag"></i> 資產類別詳情</h1>
+    <div>
+      <a href="/asset-categories/<%= category.code %>/edit" class="btn btn-warning me-2">
+        <i class="fas fa-edit"></i> 編輯
+      </a>
+      <a href="/asset-categories" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i> 返回列表
+      </a>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <h5 class="card-title mb-0">基本資訊</h5>
+    </div>
+    <div class="card-body">
+      <div class="row mb-3">
+        <div class="col-md-3 fw-bold">類別代號</div>
+        <div class="col-md-3"><%= category.code %></div>
+        <div class="col-md-3 fw-bold">類別名稱</div>
+        <div class="col-md-3"><%= category.name %></div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-md-3 fw-bold">會計科目</div>
+        <div class="col-md-3"><%= category.acct_code ? category.acct_code + ' - ' + category.acct_name : '-' %></div>
+        <div class="col-md-3 fw-bold">累計折舊科目</div>
+        <div class="col-md-3"><%= category.ad_code ? category.ad_code + ' - ' + category.ad_name : '-' %></div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-md-3 fw-bold">折舊科目</div>
+        <div class="col-md-3"><%= category.dep_code ? category.dep_code + ' - ' + category.dep_name : '-' %></div>
+        <div class="col-md-3 fw-bold">折舊方法</div>
+        <div class="col-md-3"><%= category.dep_meth || '-' %></div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-md-3 fw-bold">使用月數</div>
+        <div class="col-md-3"><%= category.useful_mo ? category.useful_mo + ' 個月' : '-' %></div>
+        <div class="col-md-3 fw-bold">建立時間</div>
+        <div class="col-md-3"><%= category.created_at ? new Date(category.created_at).toLocaleString('zh-TW') : '-' %></div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-md-3 fw-bold">最後更新</div>
+        <div class="col-md-3"><%= category.updated_at ? new Date(category.updated_at).toLocaleString('zh-TW') : '-' %></div>
+      </div>
+      <% if (category.remark) { %>
+      <div class="row mb-3">
+        <div class="col-md-12">
+          <span class="fw-bold">備註</span>
+          <p class="mt-2 mb-0"><%= category.remark %></p>
+        </div>
+      </div>
+      <% } %>
+    </div>
+  </div>
+
+  <div class="d-flex justify-content-end mt-3 gap-2">
+    <form action="/asset-categories/<%= category.code %>/delete" method="POST" 
+          onsubmit="return confirm('確定要刪除類別「<%= category.name %>」嗎？');">
+      <button type="submit" class="btn btn-danger">
+        <i class="fas fa-trash"></i> 刪除此類別
+      </button>
+    </form>
+  </div>
+</div>

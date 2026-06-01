@@ -1,0 +1,111 @@
+<div class="container-fluid">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3"><i class="fas fa-edit"></i> 編輯資產類別</h1>
+    <div>
+      <a href="/asset-categories/<%= category.code %>" class="btn btn-info me-2">
+        <i class="fas fa-eye"></i> 檢視
+      </a>
+      <a href="/asset-categories" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i> 返回列表
+      </a>
+    </div>
+  </div>
+
+  <% if (error_msg) { %>
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+      <i class="fas fa-exclamation-circle"></i> <%= error_msg %>
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+  <% } %>
+
+  <div class="card">
+    <div class="card-body">
+      <form action="/asset-categories/<%= category.code %>/update" method="POST">
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label for="code" class="form-label">類別代號</label>
+            <input type="text" class="form-control" id="code" value="<%= category.code %>" disabled>
+            <small class="text-muted">類別代號無法修改</small>
+          </div>
+          <div class="col-md-6">
+            <label for="name" class="form-label">類別名稱 <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" id="name" name="name" required maxlength="100" 
+                   value="<%= category.name %>" placeholder="請輸入類別名稱">
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label for="acct_code" class="form-label">資產科目代號</label>
+            <input type="text" class="form-control" id="acct_code" name="acct_code" maxlength="20" 
+                   value="<%= category.acct_code || '' %>" placeholder="請輸入資產科目代號">
+          </div>
+          <div class="col-md-6">
+            <label for="acct_name" class="form-label">資產科目名稱</label>
+            <input type="text" class="form-control" id="acct_name" name="acct_name" maxlength="100" 
+                   value="<%= category.acct_name || '' %>" placeholder="請輸入資產科目名稱">
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label for="ad_code" class="form-label">累計折舊科目代號</label>
+            <input type="text" class="form-control" id="ad_code" name="ad_code" maxlength="20" 
+                   value="<%= category.ad_code || '' %>" placeholder="請輸入累計折舊科目代號">
+          </div>
+          <div class="col-md-6">
+            <label for="ad_name" class="form-label">累計折舊科目名稱</label>
+            <input type="text" class="form-control" id="ad_name" name="ad_name" maxlength="100" 
+                   value="<%= category.ad_name || '' %>" placeholder="請輸入累計折舊科目名稱">
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label for="dep_code" class="form-label">折舊科目代號</label>
+            <input type="text" class="form-control" id="dep_code" name="dep_code" maxlength="20" 
+                   value="<%= category.dep_code || '' %>" placeholder="請輸入折舊科目代號">
+          </div>
+          <div class="col-md-6">
+            <label for="dep_name" class="form-label">折舊科目名稱</label>
+            <input type="text" class="form-control" id="dep_name" name="dep_name" maxlength="100" 
+                   value="<%= category.dep_name || '' %>" placeholder="請輸入折舊科目名稱">
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label for="dep_meth" class="form-label">折舊方法 <span class="text-danger">*</span></label>
+            <select class="form-select" id="dep_meth" name="dep_meth" required>
+              <option value="">請選擇折舊方法</option>
+              <option value="平均法" <%= category.dep_meth === '平均法' ? 'selected' : '' %>>平均法</option>
+              <option value="定率遞減法" <%= category.dep_meth === '定率遞減法' ? 'selected' : '' %>>定率遞減法</option>
+              <option value="不提折舊" <%= category.dep_meth === '不提折舊' ? 'selected' : '' %>>不提折舊</option>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label for="useful_mo" class="form-label">使用月數</label>
+            <input type="number" class="form-control" id="useful_mo" name="useful_mo" min="1" max="600" 
+                   value="<%= category.useful_mo || '' %>" placeholder="請輸入使用月數">
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col-md-12">
+            <label for="remark" class="form-label">備註</label>
+            <textarea class="form-control" id="remark" name="remark" rows="3" maxlength="500" placeholder="請輸入備註"><%= category.remark || '' %></textarea>
+          </div>
+        </div>
+
+        <div class="d-flex justify-content-end gap-2">
+          <a href="/asset-categories" class="btn btn-secondary">
+            <i class="fas fa-times"></i> 取消
+          </a>
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-save"></i> 更新
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
