@@ -56,6 +56,13 @@ const assetCategoryController = {
         });
       }
 
+      if (useful_mo === undefined || useful_mo === null || useful_mo === '' || isNaN(parseInt(useful_mo)) || parseInt(useful_mo) < 0) {
+        return res.render('assetCategories/create', {
+          title: '新增資產類別',
+          error_msg: '使用月數為必填，且必須大於等於 0'
+        });
+      }
+
       // 檢查代號是否重複
       const codeExists = await AssetCategory.codeExists(code.trim());
       if (codeExists) {
@@ -84,7 +91,7 @@ const assetCategoryController = {
         dep_code: dep_code ? dep_code.trim() : null,
         dep_name: dep_name ? dep_name.trim() : null,
         dep_meth: dep_meth ? dep_meth.trim() : null,
-        useful_mo: useful_mo ? parseInt(useful_mo) : null,
+        useful_mo: useful_mo !== undefined && useful_mo !== null && useful_mo !== '' ? parseInt(useful_mo) : null,
         remark: remark ? remark.trim() : null
       });
 
@@ -165,6 +172,15 @@ const assetCategoryController = {
         });
       }
 
+      if (useful_mo === undefined || useful_mo === null || useful_mo === '' || isNaN(parseInt(useful_mo)) || parseInt(useful_mo) < 0) {
+        const category = await AssetCategory.getById(categoryCode);
+        return res.render('assetCategories/edit', {
+          title: `編輯類別：${category.name}`,
+          category,
+          error_msg: '使用月數為必填，且必須大於等於 0'
+        });
+      }
+
       // 檢查名稱是否重複（排除自己）
       const nameExists = await AssetCategory.nameExists(name.trim(), categoryCode);
       if (nameExists) {
@@ -185,7 +201,7 @@ const assetCategoryController = {
         dep_code: dep_code ? dep_code.trim() : null,
         dep_name: dep_name ? dep_name.trim() : null,
         dep_meth: dep_meth ? dep_meth.trim() : null,
-        useful_mo: useful_mo ? parseInt(useful_mo) : null,
+        useful_mo: useful_mo !== undefined && useful_mo !== null && useful_mo !== '' ? parseInt(useful_mo) : null,
         remark: remark ? remark.trim() : null
       });
 

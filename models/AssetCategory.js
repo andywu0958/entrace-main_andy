@@ -56,8 +56,8 @@ class AssetCategory {
   // 新增類別
   static async create(data) {
     const sql = `INSERT INTO [pm].[dbo].[asset_category] 
-                 (code, name, acct_code, acct_name, ad_code, ad_name, dep_code, dep_name, dep_meth, useful_mo, remark) 
-                 VALUES (@code, @name, @acct_code, @acct_name, @ad_code, @ad_name, @dep_code, @dep_name, @dep_meth, @useful_mo, @remark)`;
+                 (code, name, acct_code, acct_name, ad_code, ad_name, dep_code, dep_name, dep_meth, useful_mo, remark, created_date, updated_date) 
+                 VALUES (@code, @name, @acct_code, @acct_name, @ad_code, @ad_name, @dep_code, @dep_name, @dep_meth, @useful_mo, @remark, GETDATE(), GETDATE())`;
     return await execute(sql, {
       code: data.code,
       name: data.name,
@@ -85,7 +85,8 @@ class AssetCategory {
                      dep_name = @dep_name, 
                      dep_meth = @dep_meth, 
                      useful_mo = @useful_mo, 
-                     remark = @remark 
+                     remark = @remark,
+                     updated_date = GETDATE()
                  WHERE code = @code`;
     return await execute(sql, {
       code: code,

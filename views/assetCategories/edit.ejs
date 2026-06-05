@@ -84,9 +84,9 @@
             </select>
           </div>
           <div class="col-md-6">
-            <label for="useful_mo" class="form-label">使用月數</label>
-            <input type="number" class="form-control" id="useful_mo" name="useful_mo" min="1" max="600" 
-                   value="<%= category.useful_mo || '' %>" placeholder="請輸入使用月數">
+            <label for="useful_mo" class="form-label">使用月數 <span class="text-danger">*</span></label>
+            <input type="number" class="form-control" id="useful_mo" name="useful_mo" required min="0" max="600" 
+                   value="<%= category.useful_mo !== null && category.useful_mo !== undefined ? category.useful_mo : '' %>" placeholder="請輸入使用月數">
           </div>
         </div>
 
