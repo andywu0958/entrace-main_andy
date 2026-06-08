@@ -223,9 +223,9 @@ class Asset {
     return await execute(sql, { id });
   }
 
-  // 取得所有類別
+  // 取得所有類別（從 asset_category 資料表）
   static async getCategories() {
-    const sql = 'SELECT DISTINCT category FROM assets ORDER BY category';
+    const sql = 'SELECT [code], [name], [dep_meth] FROM [pm].[dbo].[asset_category] ORDER BY [code]';
     return await query(sql);
   }
 

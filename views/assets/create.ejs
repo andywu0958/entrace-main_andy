@@ -33,17 +33,11 @@
                                         <label for="category" class="form-label">類別 <span class="text-danger">*</span></label>
                                         <select class="form-select" id="category" name="category" required>
                                             <option value="">請選擇類別</option>
-                                            <option value="電子設備" <%= (typeof formData !== 'undefined' && formData.category === '電子設備') ? 'selected' : '' %>>電子設備</option>
-                                            <option value="辦公設備" <%= (typeof formData !== 'undefined' && formData.category === '辦公設備') ? 'selected' : '' %>>辦公設備</option>
-                                            <option value="會議設備" <%= (typeof formData !== 'undefined' && formData.category === '會議設備') ? 'selected' : '' %>>會議設備</option>
-                                            <option value="資訊設備" <%= (typeof formData !== 'undefined' && formData.category === '資訊設備') ? 'selected' : '' %>>資訊設備</option>
-                                            <option value="網路設備" <%= (typeof formData !== 'undefined' && formData.category === '網路設備') ? 'selected' : '' %>>網路設備</option>
-                                            <option value="軟體授權" <%= (typeof formData !== 'undefined' && formData.category === '軟體授權') ? 'selected' : '' %>>軟體授權</option>
-                                            <option value="房屋建築及設備" <%= (typeof formData !== 'undefined' && formData.category === '房屋建築及設備') ? 'selected' : '' %>>房屋建築及設備</option>
-                                            <option value="機械設備" <%= (typeof formData !== 'undefined' && formData.category === '機械設備') ? 'selected' : '' %>>機械設備</option>
-                                            <option value="運輸設備" <%= (typeof formData !== 'undefined' && formData.category === '運輸設備') ? 'selected' : '' %>>運輸設備</option>
-                                            <option value="餐飲設備" <%= (typeof formData !== 'undefined' && formData.category === '餐飲設備') ? 'selected' : '' %>>餐飲設備</option>
-                                            <option value="雜項購置" <%= (typeof formData !== 'undefined' && formData.category === '雜項購置') ? 'selected' : '' %>>雜項購置</option>
+                                            <% if (typeof categories !== 'undefined' && categories.length > 0) { %>
+                                                <% categories.forEach(function(cat) { %>
+                                                    <option value="<%= cat.name %>" data-dep-meth="<%= cat.dep_meth || '' %>" <%= (typeof formData !== 'undefined' && formData.category === cat.name) ? 'selected' : '' %>><%= cat.code %> - <%= cat.name %></option>
+                                                <% }); %>
+                                            <% } %>
                                         </select>
                                         <div class="form-text">選擇資產所屬類別</div>
                                     </div>
@@ -505,7 +499,7 @@
                 }
             });
         }
-        
+
         // 自動聚焦第一個輸入欄位
         const nameInput = document.getElementById('name');
         if (nameInput) {
@@ -558,6 +552,24 @@
         const depMethSelect = document.getElementById('dep_meth');
         const unamortizedMoInput = document.getElementById('unamortized_mo');
         const avgDepInput = document.getElementById('avg_dep');
+
+        // === 類別選擇時自動帶出折舊方法 ===
+        const categorySelect = document.getElementById('category');
+        if (categorySelect) {
+            categorySelect.addEventListener('change', function() {
+                const selectedOption = categorySelect.options[categorySelect.selectedIndex];
+                if (selectedOption && selectedOption.dataset.depMeth) {
+                    const depMeth = selectedOption.dataset.depMeth;
+                    // 檢查該折舊方法是否存在於 dep_meth 選項中
+                    const depMethOption = depMethSelect.querySelector(`option[value="${depMeth}"]`);
+                    if (depMethOption) {
+                        depMethSelect.value = depMeth;
+                        // 觸發 change 事件以更新相關計算欄位
+                        depMethSelect.dispatchEvent(new Event('change'));
+                    }
+                }
+            });
+        }
 
         function calcResidualValue() {
             const method = depMethSelect.value;
