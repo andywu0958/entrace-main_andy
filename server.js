@@ -80,6 +80,10 @@ app.use((err, req, res, next) => {
   });
 });
 
+// 啟動折舊排程服務
+const DepreciationScheduler = require('./services/depreciationScheduler');
+DepreciationScheduler.start();
+
 // 啟動伺服器
 app.listen(PORT, () => {
   console.log(`伺服器運行在 http://localhost:${PORT}`);

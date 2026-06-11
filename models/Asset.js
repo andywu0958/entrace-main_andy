@@ -1,5 +1,6 @@
 const { query, execute } = require('../config/database');
 const QRCode = require('qrcode');
+const AssetHistory = require('./AssetHistory');
 
 class Asset {
   // 建立資產
@@ -46,6 +47,31 @@ class Asset {
     
     // 更新 QR Code URL
     await this.updateQRCode(assetId, qrCodeUrl);
+    
+    // 同步寫入折舊歷史記錄（開帳資料）
+    try {
+      await AssetHistory.create({
+        asset_id: assetId,
+        record_date: new Date().toISOString().split('T')[0],
+        unamortized_mo: unamortized_mo || null,
+        avg_dep: avg_dep || null,
+        accumulated: accumulated || null,
+        dep_rate: dep_rate || null,
+        annual_dep: dep_rate && cost && accumulated
+          ? (Number(cost) - Number(accumulated)) * (Number(dep_rate) / 100)
+          : null,
+        decl_accumulated: accumulated || null,
+        cost: cost || null,
+        quantity: quantity || null,
+        residual: residual || null,
+        useful_mo: useful_mo || null,
+        dep_meth: dep_meth || null,
+        dep_start: dep_start || null
+      });
+    } catch (historyErr) {
+      // 歷史記錄寫入失敗不影響主流程，僅記錄錯誤
+      console.error(`[Asset.create] 寫入折舊歷史記錄失敗 (assetId=${assetId}):`, historyErr.message);
+    }
     
     return { id: assetId, qrCodeUrl };
   }
@@ -214,7 +240,56 @@ class Asset {
       dep_rate: dep_rate || null
     };
     
-    return await execute(sql, params);
+    const result = await execute(sql, params);
+    
+    // 同步寫入折舊歷史記錄（更新後的快照）
+    try {
+      // 從資料庫查詢該資產當前的累積折舊值，確保不依賴前端傳遞
+      const currentAsset = await this.findById(id);
+      const currentAccumulated = currentAsset ? currentAsset.accumulated : null;
+      const currentCost = currentAsset ? currentAsset.cost : null;
+      const currentDepRate = currentAsset ? currentAsset.dep_rate : null;
+      
+      // 使用資料庫中的值計算 annual_dep 和 decl_accumulated
+      const effectiveAccumulated = accumulated !== undefined && accumulated !== null ? accumulated : currentAccumulated;
+      const effectiveCost = cost !== undefined && cost !== null ? cost : currentCost;
+      const effectiveDepRate = dep_rate !== undefined && dep_rate !== null ? dep_rate : currentDepRate;
+      
+      const recordDate = new Date().toISOString().split('T')[0];
+      const historyData = {
+        unamortized_mo: unamortized_mo || null,
+        avg_dep: avg_dep || null,
+        accumulated: effectiveAccumulated,
+        dep_rate: effectiveDepRate,
+        annual_dep: effectiveDepRate && effectiveCost && effectiveAccumulated !== null
+          ? (Number(effectiveCost) - Number(effectiveAccumulated)) * (Number(effectiveDepRate) / 100)
+          : null,
+        decl_accumulated: effectiveAccumulated,
+        cost: effectiveCost,
+        quantity: quantity || null,
+        residual: residual || null,
+        useful_mo: useful_mo || null,
+        dep_meth: dep_meth || null,
+        dep_start: dep_start || null
+      };
+
+      // 檢查當天是否已有記錄，有則更新，無則新增（避免唯一鍵衝突）
+      const exists = await AssetHistory.exists(id, recordDate);
+      if (exists) {
+        await AssetHistory.updateByAssetIdAndDate(id, recordDate, historyData);
+      } else {
+        await AssetHistory.create({
+          asset_id: id,
+          record_date: recordDate,
+          ...historyData
+        });
+      }
+    } catch (historyErr) {
+      // 歷史記錄寫入失敗不影響主流程，僅記錄錯誤
+      console.error(`[Asset.update] 寫入折舊歷史記錄失敗 (assetId=${id}):`, historyErr.message);
+    }
+    
+    return result;
   }
 
   // 刪除資產
@@ -223,9 +298,9 @@ class Asset {
     return await execute(sql, { id });
   }
 
-  // 取得所有類別（從 asset_category 資料表）
+  // 取得所有類別（從 assets_category 資料表）
   static async getCategories() {
-    const sql = 'SELECT [code], [name], [dep_meth] FROM [pm].[dbo].[asset_category] ORDER BY [code]';
+    const sql = 'SELECT [code], [name], [dep_meth] FROM [pm].[dbo].[assets_category] ORDER BY [code]';
     return await query(sql);
   }
 

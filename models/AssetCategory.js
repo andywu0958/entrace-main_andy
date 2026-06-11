@@ -3,13 +3,13 @@ const { query, execute } = require('../config/database');
 class AssetCategory {
   // 取得所有類別
   static async getAll() {
-    const sql = 'SELECT * FROM [pm].[dbo].[asset_category] ORDER BY code';
+    const sql = 'SELECT * FROM [pm].[dbo].[assets_category] ORDER BY code';
     return await query(sql);
   }
 
   // 根據 code 取得類別
   static async getById(code) {
-    const sql = 'SELECT * FROM [pm].[dbo].[asset_category] WHERE code = @code';
+    const sql = 'SELECT * FROM [pm].[dbo].[assets_category] WHERE code = @code';
     const categories = await query(sql, { code });
     return categories[0] || null;
   }
@@ -18,7 +18,7 @@ class AssetCategory {
   static async search(params) {
     // 支援字串參數（向後兼容）
     if (typeof params === 'string') {
-      const sql = `SELECT * FROM [pm].[dbo].[asset_category] 
+      const sql = `SELECT * FROM [pm].[dbo].[assets_category] 
                    WHERE name LIKE @keyword OR code LIKE @keyword OR remark LIKE @keyword 
                    ORDER BY code`;
       return await query(sql, { keyword: `%${params}%` });
@@ -47,7 +47,7 @@ class AssetCategory {
       return [];
     }
 
-    const sql = `SELECT * FROM [pm].[dbo].[asset_category] 
+    const sql = `SELECT * FROM [pm].[dbo].[assets_category] 
                  WHERE ${conditions.join(' AND ')} 
                  ORDER BY code`;
     return await query(sql, queryParams);
@@ -55,7 +55,7 @@ class AssetCategory {
 
   // 新增類別
   static async create(data) {
-    const sql = `INSERT INTO [pm].[dbo].[asset_category] 
+    const sql = `INSERT INTO [pm].[dbo].[assets_category] 
                  (code, name, acct_code, acct_name, ad_code, ad_name, dep_code, dep_name, dep_meth, useful_mo, remark, created_date, updated_date) 
                  VALUES (@code, @name, @acct_code, @acct_name, @ad_code, @ad_name, @dep_code, @dep_name, @dep_meth, @useful_mo, @remark, GETDATE(), GETDATE())`;
     return await execute(sql, {
@@ -75,7 +75,7 @@ class AssetCategory {
 
   // 更新類別
   static async update(code, data) {
-    const sql = `UPDATE [pm].[dbo].[asset_category] 
+    const sql = `UPDATE [pm].[dbo].[assets_category] 
                  SET name = @name, 
                      acct_code = @acct_code, 
                      acct_name = @acct_name, 
@@ -105,13 +105,13 @@ class AssetCategory {
 
   // 刪除類別
   static async delete(code) {
-    const sql = 'DELETE FROM [pm].[dbo].[asset_category] WHERE code = @code';
+    const sql = 'DELETE FROM [pm].[dbo].[assets_category] WHERE code = @code';
     return await execute(sql, { code });
   }
 
   // 檢查類別代號是否已存在
   static async codeExists(code, excludeCode = null) {
-    let sql = 'SELECT COUNT(*) as count FROM [pm].[dbo].[asset_category] WHERE code = @code';
+    let sql = 'SELECT COUNT(*) as count FROM [pm].[dbo].[assets_category] WHERE code = @code';
     const params = { code };
     
     if (excludeCode) {
@@ -125,7 +125,7 @@ class AssetCategory {
 
   // 檢查類別名稱是否已存在
   static async nameExists(name, excludeCode = null) {
-    let sql = 'SELECT COUNT(*) as count FROM [pm].[dbo].[asset_category] WHERE name = @name';
+    let sql = 'SELECT COUNT(*) as count FROM [pm].[dbo].[assets_category] WHERE name = @name';
     const params = { name };
     
     if (excludeCode) {

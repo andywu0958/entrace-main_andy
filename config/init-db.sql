@@ -230,4 +230,54 @@ BEGIN
 END
 GO
 
+-- ============================================
+-- 資產折舊歷史記錄表 (assets_history)
+-- 用於儲存每個月各資產的折舊快照資料
+-- 不影響現有 assets 表的運算
+-- ============================================
+IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='assets_history' AND xtype='U')
+BEGIN
+    CREATE TABLE assets_history (
+        id INT IDENTITY(1,1) PRIMARY KEY,
+        asset_id INT NOT NULL,
+        record_date DATE NOT NULL,                   -- 記錄日期（每月1日）
+        
+        -- === 開帳欄位 ===
+        unamortized_mo INT,                          -- 未攤月數
+        avg_dep DECIMAL(18,2),                       -- 平均法月折舊額
+        accumulated DECIMAL(18,2),                   -- 累積折舊
+        dep_rate DECIMAL(10,6),                      -- 定率年折舊率（%）
+        annual_dep DECIMAL(18,2),                    -- 定率年折舊額
+        decl_accumulated DECIMAL(18,2),              -- 定率累積折舊
+        
+        -- === 快照資訊（記錄當下資產狀態）===
+        cost DECIMAL(18,2),                          -- 當時成本
+        quantity INT,
+        residual DECIMAL(18,2),                      -- 當時殘值
+        useful_mo INT,                               -- 當時耐用月數
+        dep_meth NVARCHAR(50),                       -- 當時折舊方法
+        dep_start NVARCHAR(7),                       -- 當時提列年月
+        
+        -- === 系統欄位 ===
+        created_at DATETIME DEFAULT GETDATE(),
+        
+        CONSTRAINT FK_assets_history_asset 
+            FOREIGN KEY (asset_id) REFERENCES assets(id) ON DELETE CASCADE,
+        CONSTRAINT UQ_assets_record_date 
+            UNIQUE (asset_id, record_date)
+    );
+
+    -- 建立索引以提升查詢效能
+    CREATE INDEX idx_assets_history_asset_id ON assets_history(asset_id);
+    CREATE INDEX idx_assets_history_record_date ON assets_history(record_date);
+    CREATE INDEX idx_assets_history_asset_date ON assets_history(asset_id, record_date);
+
+    PRINT '資料表 assets_history 建立成功';
+END
+ELSE
+BEGIN
+    PRINT '資料表 assets_history 已存在，跳過建立';
+END
+GO
+
 PRINT 'Database initialization completed successfully!';
