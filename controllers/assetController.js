@@ -103,7 +103,7 @@ const assetController = {
   // 儲存新資產
   store: async (req, res) => {
     try {
-      const { name, model, category, department_id, status, serialno, purchased_at, remark, supplier, quantity, unit, cost, warranty, dep_meth, useful_mo, residual, dep_start, unamortized_mo, avg_dep, accumulated, custodian, location, rate_dep } = req.body;
+      const { name, model, category, department_id, status, serialno, purchased_at, remark, supplier, quantity, unit, cost, warranty, dep_meth, useful_mo, residual, dep_start, unamortized_mo, avg_dep, accumulated, custodian, location, rate_dep, decl_accumulated } = req.body;
       
       // 驗證輸入
       if (!name || !category || !department_id) {
@@ -153,7 +153,8 @@ const assetController = {
         accumulated: accumulated ? parseFloat(accumulated) : null,
         custodian,
         location,
-        dep_rate: rate_dep ? parseFloat(rate_dep) : null
+        dep_rate: rate_dep ? parseFloat(rate_dep) : null,
+        decl_accumulated: decl_accumulated ? parseFloat(decl_accumulated) : null
       };
       
       const result = await Asset.create(assetData);
@@ -234,7 +235,7 @@ const assetController = {
   // 更新資產
   update: async (req, res) => {
     try {
-      const { name, model, category, department_id, status, serialno, purchased_at, remark, supplier, quantity, unit, cost, warranty, dep_meth, useful_mo, residual, dep_start, unamortized_mo, avg_dep, accumulated, custodian, location, rate_dep } = req.body;
+      const { name, model, category, department_id, status, serialno, purchased_at, remark, supplier, quantity, unit, cost, warranty, dep_meth, useful_mo, residual, dep_start, unamortized_mo, avg_dep, accumulated, custodian, location, rate_dep, decl_accumulated } = req.body;
       const assetId = req.params.id;
       
       // 驗證輸入
@@ -283,7 +284,8 @@ const assetController = {
         accumulated: accumulated ? parseFloat(accumulated) : null,
         custodian,
         location,
-        dep_rate: rate_dep ? parseFloat(rate_dep) : null
+        dep_rate: rate_dep ? parseFloat(rate_dep) : null,
+        decl_accumulated: decl_accumulated ? parseFloat(decl_accumulated) : null
       };
       
       await Asset.update(assetId, assetData);

@@ -1,6 +1,7 @@
 const { query, execute } = require('../config/database');
 const QRCode = require('qrcode');
 const AssetHistory = require('./AssetHistory');
+const { calcDecliningAccumulated, calcElapsedMonths } = require('../utils/depreciation');
 
 class Asset {
   // 建立資產
@@ -57,8 +58,34 @@ class Asset {
         avg_dep: avg_dep || null,
         accumulated: accumulated || null,
         dep_rate: dep_rate || null,
-        annual_dep: dep_rate && cost && accumulated
-          ? (Number(cost) - Number(accumulated)) * (Number(dep_rate) / 100)
+      annual_dep: dep_rate && cost && dep_start
+          ? (() => {
+              // 計算從提列開始到現在經過的完整年數
+              const startDate = new Date(dep_start);
+              const now = new Date();
+              const elapsedMonths = (now.getFullYear() - startDate.getFullYear()) * 12
+                + (now.getMonth() - startDate.getMonth());
+              const fullYearsElapsed = Math.floor(elapsedMonths / 12);
+              
+              // 計算第 N 年的期初帳面價值
+              let bookValue = Number(cost);
+              const rate = Number(dep_rate) / 100;
+              const residualVal = Number(residual) || 0;
+              
+              // 逐年模擬折舊，記錄每年的折舊額（與前端 calcAnnualDepreciation() 邏輯一致）
+              let lastYearDep = 0;
+              for (let i = 0; i < fullYearsElapsed; i++) {
+                let yearDep = Math.round(bookValue * rate);
+                if (bookValue - yearDep < residualVal) {
+                  yearDep = bookValue - residualVal;
+                }
+                lastYearDep = yearDep;
+                bookValue -= yearDep;
+              }
+              
+              // 回傳最後一個完整年度的年折舊額（與前端一致）
+              return lastYearDep;
+            })()
           : null,
         decl_accumulated: accumulated || null,
         cost: cost || null,
@@ -111,9 +138,15 @@ class Asset {
   // 根據 ID 尋找資產
   static async findById(id) {
     const sql = `
-      SELECT a.*, d.name as department_name 
+      SELECT a.*, d.name as department_name,
+             ah.annual_dep, ah.decl_accumulated
       FROM assets a 
       LEFT JOIN departments d ON a.department_id = d.id 
+      LEFT JOIN (
+        SELECT asset_id, annual_dep, decl_accumulated,
+               ROW_NUMBER() OVER (PARTITION BY asset_id ORDER BY record_date DESC) as rn
+        FROM [pm].[dbo].[assets_history]
+      ) ah ON a.id = ah.asset_id AND ah.rn = 1
       WHERE a.id = @id
     `;
     const assets = await query(sql, { id });
@@ -198,7 +231,7 @@ class Asset {
 
   // 更新資產
   static async update(id, data) {
-    const { name, model, category, departmentId, status, serialno, purchased_at, remark, supplier, quantity, unit, cost, warranty, dep_meth, useful_mo, residual, dep_start, unamortized_mo, avg_dep, accumulated, custodian, location, dep_rate } = data;
+    const { name, model, category, departmentId, status, serialno, purchased_at, remark, supplier, quantity, unit, cost, warranty, dep_meth, useful_mo, residual, dep_start, unamortized_mo, avg_dep, accumulated, custodian, location, dep_rate, decl_accumulated } = data;
     
     const sql = `
       UPDATE assets 
@@ -249,28 +282,65 @@ class Asset {
       const currentAccumulated = currentAsset ? currentAsset.accumulated : null;
       const currentCost = currentAsset ? currentAsset.cost : null;
       const currentDepRate = currentAsset ? currentAsset.dep_rate : null;
+      const currentDepStart = currentAsset ? currentAsset.dep_start : null;
+      const currentResidual = currentAsset ? currentAsset.residual : null;
       
       // 使用資料庫中的值計算 annual_dep 和 decl_accumulated
       const effectiveAccumulated = accumulated !== undefined && accumulated !== null ? accumulated : currentAccumulated;
       const effectiveCost = cost !== undefined && cost !== null ? cost : currentCost;
       const effectiveDepRate = dep_rate !== undefined && dep_rate !== null ? dep_rate : currentDepRate;
+      const effectiveDepStart = dep_start !== undefined && dep_start !== null ? dep_start : currentDepStart;
+      const effectiveResidual = residual !== undefined && residual !== null ? residual : currentResidual;
       
       const recordDate = new Date().toISOString().split('T')[0];
+      // 計算 annual_dep
+      const computedAnnualDep = effectiveDepRate && effectiveCost && effectiveDepStart
+        ? (() => {
+            // 計算從提列開始到現在經過的完整年數
+            const startDate = new Date(effectiveDepStart);
+            const now = new Date();
+            const elapsedMonths = (now.getFullYear() - startDate.getFullYear()) * 12
+              + (now.getMonth() - startDate.getMonth());
+            const fullYearsElapsed = Math.floor(elapsedMonths / 12);
+            
+            // 計算第 N 年的期初帳面價值
+            let bookValue = Number(effectiveCost);
+            const rate = Number(effectiveDepRate) / 100;
+            const residualVal = Number(effectiveResidual) || 0;
+            
+            // 逐年模擬折舊，記錄每年的折舊額（與前端 calcAnnualDepreciation() 邏輯一致）
+            let lastYearDep = 0;
+            for (let i = 0; i < fullYearsElapsed; i++) {
+              let yearDep = Math.round(bookValue * rate);
+              if (bookValue - yearDep < residualVal) {
+                yearDep = bookValue - residualVal;
+              }
+              lastYearDep = yearDep;
+              bookValue -= yearDep;
+            }
+            
+            // 回傳最後一個完整年度的年折舊額（與前端一致）
+            return lastYearDep;
+          })()
+        : null;
+
+      // 直接使用前端傳來的 decl_accumulated 值，不重新計算
+      // 前端 calcDecliningAccumulated() 已計算正確的累積折舊（按完整年數計算，不滿一年不計提）
+      const computedDeclAccumulated = decl_accumulated !== undefined && decl_accumulated !== null ? decl_accumulated : effectiveAccumulated;
+
       const historyData = {
         unamortized_mo: unamortized_mo || null,
         avg_dep: avg_dep || null,
         accumulated: effectiveAccumulated,
         dep_rate: effectiveDepRate,
-        annual_dep: effectiveDepRate && effectiveCost && effectiveAccumulated !== null
-          ? (Number(effectiveCost) - Number(effectiveAccumulated)) * (Number(effectiveDepRate) / 100)
-          : null,
-        decl_accumulated: effectiveAccumulated,
+        annual_dep: computedAnnualDep,
+        decl_accumulated: computedDeclAccumulated,
         cost: effectiveCost,
         quantity: quantity || null,
-        residual: residual || null,
+        residual: effectiveResidual,
         useful_mo: useful_mo || null,
         dep_meth: dep_meth || null,
-        dep_start: dep_start || null
+        dep_start: effectiveDepStart
       };
 
       // 檢查當天是否已有記錄，有則更新，無則新增（避免唯一鍵衝突）

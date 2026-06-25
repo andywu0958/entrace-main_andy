@@ -1,6 +1,7 @@
 const cron = require('node-cron');
 const { query } = require('../config/database');
 const AssetHistory = require('../models/AssetHistory');
+const { calcDecliningAccumulated, calcElapsedMonths } = require('../utils/depreciation');
 
 /**
  * 折舊歷史記錄排程服務
@@ -83,6 +84,7 @@ class DepreciationScheduler {
     const unamortizedMo = Number(asset.unamortized_mo) || 0;
     const accumulated = Number(asset.accumulated) || 0;
     const depRate = Number(asset.dep_rate) || 0;
+    const depStart = asset.dep_start;
 
     // 平均法月折舊額 = (成本 - 殘值) / 耐用月數
     let avgDep = 0;
@@ -90,13 +92,13 @@ class DepreciationScheduler {
       avgDep = (cost - residual) / usefulMo;
     }
 
-    // 定率年折舊額 = 未折舊餘額 × 年折舊率
-    const netBookValue = cost - accumulated; // 未折舊餘額（帳面價值）
-    const annualDep = netBookValue * (depRate / 100);
+    // === 定率遞減法累積折舊計算（使用共享工具函數） ===
+    const elapsedMonths = calcElapsedMonths(depStart, recordDate);
+    const declAccumulated = calcDecliningAccumulated(cost, depRate, elapsedMonths, residual);
 
-    // 定率累積折舊 = 原累積折舊 + 當月折舊（年折舊額 / 12）
-    const monthlyDeclDep = annualDep / 12;
-    const declAccumulated = accumulated + monthlyDeclDep;
+    // 定率年折舊額 = 未折舊餘額 × 年折舊率（用於記錄）
+    const netBookValue = cost - accumulated;
+    const annualDep = netBookValue * (depRate / 100);
 
     // 未攤月數遞減
     const newUnamortizedMo = Math.max(0, unamortizedMo - 1);
@@ -118,7 +120,7 @@ class DepreciationScheduler {
       residual: residual,
       useful_mo: usefulMo,
       dep_meth: asset.dep_meth,
-      dep_start: asset.dep_start
+      dep_start: depStart
     };
   }
 
