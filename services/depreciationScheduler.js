@@ -92,19 +92,24 @@ class DepreciationScheduler {
       avgDep = (cost - residual) / usefulMo;
     }
 
-    // === 定率遞減法累積折舊計算（使用共享工具函數） ===
-    const elapsedMonths = calcElapsedMonths(depStart, recordDate);
-    const declAccumulated = calcDecliningAccumulated(cost, depRate, elapsedMonths, residual);
-
-    // 定率年折舊額 = 未折舊餘額 × 年折舊率（用於記錄）
-    const netBookValue = cost - accumulated;
-    const annualDep = netBookValue * (depRate / 100);
-
     // 未攤月數遞減
     const newUnamortizedMo = Math.max(0, unamortizedMo - 1);
 
     // 平均法累積折舊遞增
     const newAccumulated = accumulated + avgDep;
+
+    // 根據折舊方法決定 decl_accumulated 的值：
+    // - 定率遞減法：使用 calcDecliningAccumulated() 計算的累積折舊
+    // - 平均法：decl_accumulated 應為 null，不應寫入平均法的累積折舊值
+    let declAccumulated = null;
+    let annualDep = 0;
+    if (asset.dep_meth === 'declining') {
+      const elapsedMonths = calcElapsedMonths(depStart, recordDate);
+      declAccumulated = calcDecliningAccumulated(cost, depRate, elapsedMonths, residual);
+      // 定率年折舊額 = 未折舊餘額 × 年折舊率（用於記錄）
+      const netBookValue = cost - accumulated;
+      annualDep = netBookValue * (depRate / 100);
+    }
 
     return {
       asset_id: asset.id,
@@ -114,7 +119,7 @@ class DepreciationScheduler {
       accumulated: Math.round(newAccumulated * 100) / 100,
       dep_rate: depRate,
       annual_dep: Math.round(annualDep * 100) / 100,
-      decl_accumulated: Math.round(declAccumulated * 100) / 100,
+      decl_accumulated: declAccumulated !== null ? Math.round(declAccumulated * 100) / 100 : null,
       cost: cost,
       quantity: quantity,
       residual: residual,

@@ -232,11 +232,26 @@ router.get('/users', isAdmin, async (req, res) => {
 // 匯出資產資料 (API，僅管理員可用)
 router.get('/export/assets', isAdmin, async (req, res) => {
   try {
-    // 自訂查詢（無排序）
+    // 自訂查詢：LEFT JOIN assets_history 取最新一筆折舊記錄
     const sql = `
-      SELECT a.*, d.name as department_name 
+      SELECT 
+        a.*, 
+        d.name as department_name,
+        ah.avg_dep as history_avg_dep,
+        ah.accumulated as history_accumulated,
+        ah.annual_dep as history_annual_dep,
+        ah.decl_accumulated as history_decl_accumulated,
+        ah.dep_rate as history_dep_rate,
+        ah.unamortized_mo as history_unamortized_mo,
+        ah.record_date as history_record_date
       FROM assets a 
       LEFT JOIN departments d ON a.department_id = d.id
+      OUTER APPLY (
+        SELECT TOP 1 *
+        FROM assets_history ah
+        WHERE ah.asset_id = a.id
+        ORDER BY ah.record_date DESC
+      ) ah
     `;
     const assets = await query(sql, {});
     
@@ -247,13 +262,14 @@ router.get('/export/assets', isAdmin, async (req, res) => {
     // 寫入 UTF-8 BOM（Excel 需要）
     res.write('\uFEFF');
     
-    // CSV 標題列 - 完整欄位
+    // CSV 標題列 - 完整欄位（新增定率年折舊額、定率累積折舊）
     const headers = [
       'ID', '資產名稱', '型號', '類別', '部門', '狀態', 
       '序號/編號', '購買日期',
       '供應商', '數量', '單位', '成本', '保固(月)',
       '折舊方法', '耐用月數', '殘值', '折舊起始(年月)', 
       '未攤銷月數', '平均折舊', '累計折舊', '折舊率(%)',
+      '定率年折舊額', '定率累積折舊',
       '保管人', '存放地點',
       '建立時間', '更新時間',
       '備註'
@@ -278,6 +294,15 @@ router.get('/export/assets', isAdmin, async (req, res) => {
       const statusChinese = statusMap[asset.status] || asset.status;
       const depMethChinese = depMethMap[asset.dep_meth] || asset.dep_meth || '';
       
+      // 決定使用哪個來源的折舊資料
+      // 優先使用 assets_history 的最新記錄，若無則回退到 assets 表
+      const avgDep = asset.history_avg_dep != null ? asset.history_avg_dep : asset.avg_dep;
+      const accumulated = asset.history_accumulated != null ? asset.history_accumulated : asset.accumulated;
+      const depRate = asset.history_dep_rate != null ? asset.history_dep_rate : asset.dep_rate;
+      const unamortizedMo = asset.history_unamortized_mo != null ? asset.history_unamortized_mo : asset.unamortized_mo;
+      const annualDep = asset.history_annual_dep;
+      const declAccumulated = asset.history_decl_accumulated;
+      
       const row = [
         asset.id,
         `"${(asset.name || '').replace(/"/g, '""')}"`,
@@ -296,10 +321,12 @@ router.get('/export/assets', isAdmin, async (req, res) => {
         asset.useful_mo != null ? asset.useful_mo : '',
         asset.residual != null ? asset.residual : '',
         `"${(asset.dep_start || '').replace(/"/g, '""')}"`,
-        asset.unamortized_mo != null ? asset.unamortized_mo : '',
-        asset.avg_dep != null ? asset.avg_dep : '',
-        asset.accumulated != null ? asset.accumulated : '',
-        asset.dep_rate != null ? asset.dep_rate : '',
+        unamortizedMo != null ? unamortizedMo : '',
+        avgDep != null ? avgDep : '',
+        accumulated != null ? accumulated : '',
+        depRate != null ? depRate : '',
+        annualDep != null ? annualDep : '',
+        declAccumulated != null ? declAccumulated : '',
         `"${(asset.custodian || '').replace(/"/g, '""')}"`,
         `"${(asset.location || '').replace(/"/g, '""')}"`,
         asset.created_at ? `"${new Date(asset.created_at).toISOString().replace('T', ' ').substring(0, 19)}"` : '',

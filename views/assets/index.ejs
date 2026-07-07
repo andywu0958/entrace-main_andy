@@ -28,8 +28,8 @@
                         <select class="form-select" id="category" name="category">
                             <option value="">全部類別</option>
                             <% categories.forEach(cat => { %>
-                                <option value="<%= cat.category %>" <%= (filters && filters.category && filters.category == cat.category) ? 'selected' : '' %>>
-                                    <%= cat.category %>
+                                <option value="<%= cat.name %>" <%= (filters && filters.category && filters.category == cat.name) ? 'selected' : '' %>>
+                                    <%= cat.name %>
                                 </option>
                             <% }); %>
                         </select>
@@ -60,7 +60,7 @@
                     <div class="col-12 col-md-8">
                         <div class="input-group">
                             <span class="input-group-text"><i class="fas fa-search"></i></span>
-                            <input type="text" class="form-control" name="search" placeholder="搜尋資產名稱..." value="<%= (filters && filters.search) ? filters.search : '' %>">
+                            <input type="text" class="form-control" name="search" placeholder="可搜尋資產名稱、品牌規格、類別、保管地點" value="<%= (filters && filters.search) ? filters.search : '' %>">
                         </div>
                     </div>
                     <div class="col-12 col-md-4 d-flex align-items-end">

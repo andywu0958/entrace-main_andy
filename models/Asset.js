@@ -6,7 +6,7 @@ const { calcDecliningAccumulated, calcElapsedMonths } = require('../utils/deprec
 class Asset {
   // 建立資產
   static async create(data) {
-    const { name, model, category, departmentId, status = 'active', serialno, purchased_at, remark, supplier, quantity, unit, cost, warranty, dep_meth, useful_mo, residual, dep_start, unamortized_mo, avg_dep, accumulated, custodian, location, dep_rate } = data;
+    const { name, model, category, departmentId, status = 'active', serialno, purchased_at, remark, supplier, quantity, unit, cost, warranty, dep_meth, useful_mo, residual, dep_start, unamortized_mo, avg_dep, accumulated, custodian, location, dep_rate, decl_accumulated } = data;
     
     const sql = `
       INSERT INTO assets (name, model, category, department_id, status, serialno, purchased_at, remark, supplier, quantity, unit, cost, warranty, dep_meth, useful_mo, residual, dep_start, unamortized_mo, avg_dep, accumulated, custodian, location, dep_rate) 
@@ -87,7 +87,10 @@ class Asset {
               return lastYearDep;
             })()
           : null,
-        decl_accumulated: accumulated || null,
+      // 根據折舊方法決定 decl_accumulated 的值：
+      // - 定率遞減法：使用 calcDecliningAccumulated() 計算的累積折舊
+      // - 平均法：decl_accumulated 應為 null，不應寫入平均法的累積折舊值
+      decl_accumulated: dep_meth === '定率遞減法' ? (decl_accumulated || null) : null,
         cost: cost || null,
         quantity: quantity || null,
         residual: residual || null,
@@ -184,7 +187,7 @@ class Asset {
     
     // 搜尋關鍵字
     if (filters.search) {
-      sql += ' AND (a.name LIKE @search OR a.category LIKE @search OR a.model LIKE @search)';
+      sql += ' AND (a.name LIKE @search OR a.category LIKE @search OR a.model LIKE @search OR a.location LIKE @search)';
       params.search = `%${filters.search}%`;
     }
     
@@ -221,7 +224,7 @@ class Asset {
     }
     
     if (filters.search) {
-      sql += ' AND (name LIKE @search OR category LIKE @search OR model LIKE @search)';
+      sql += ' AND (name LIKE @search OR category LIKE @search OR model LIKE @search OR location LIKE @search)';
       params.search = `%${filters.search}%`;
     }
     
@@ -324,9 +327,15 @@ class Asset {
           })()
         : null;
 
-      // 直接使用前端傳來的 decl_accumulated 值，不重新計算
-      // 前端 calcDecliningAccumulated() 已計算正確的累積折舊（按完整年數計算，不滿一年不計提）
-      const computedDeclAccumulated = decl_accumulated !== undefined && decl_accumulated !== null ? decl_accumulated : effectiveAccumulated;
+      // 根據折舊方法決定 decl_accumulated 的值：
+      // - 定率遞減法：使用前端傳來的 decl_accumulated 值（前端 calcDecliningAccumulated() 已計算正確的累積折舊）
+      // - 平均法：decl_accumulated 應為 null，不應寫入平均法的累積折舊值
+      const effectiveDepMeth = dep_meth !== undefined && dep_meth !== null ? dep_meth : (currentAsset ? currentAsset.dep_meth : null);
+      let computedDeclAccumulated = null;
+      if (effectiveDepMeth === '定率遞減法') {
+        computedDeclAccumulated = decl_accumulated !== undefined && decl_accumulated !== null ? decl_accumulated : null;
+      }
+      // 平均法 (straight-line) 或其他方法：decl_accumulated 保持 null
 
       const historyData = {
         unamortized_mo: unamortized_mo || null,
