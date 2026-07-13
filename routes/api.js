@@ -245,7 +245,7 @@ router.get('/export/assets', isAdmin, async (req, res) => {
         ah.unamortized_mo as history_unamortized_mo,
         ah.record_date as history_record_date
       FROM assets a 
-      LEFT JOIN departments d ON a.department_id = d.id
+      LEFT JOIN assets_departments d ON a.department_id = d.id
       OUTER APPLY (
         SELECT TOP 1 *
         FROM assets_history ah

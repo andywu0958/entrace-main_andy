@@ -144,7 +144,7 @@ class Asset {
       SELECT a.*, d.name as department_name,
              ah.annual_dep, ah.decl_accumulated
       FROM assets a 
-      LEFT JOIN departments d ON a.department_id = d.id 
+      LEFT JOIN assets_departments d ON a.department_id = d.id 
       LEFT JOIN (
         SELECT asset_id, annual_dep, decl_accumulated,
                ROW_NUMBER() OVER (PARTITION BY asset_id ORDER BY record_date DESC) as rn
@@ -161,7 +161,7 @@ class Asset {
     let sql = `
       SELECT a.*, d.name as department_name 
       FROM assets a 
-      LEFT JOIN departments d ON a.department_id = d.id 
+      LEFT JOIN assets_departments d ON a.department_id = d.id 
       WHERE 1=1
     `;
     
@@ -393,7 +393,7 @@ class Asset {
         SUM(CASE WHEN a.status = 'active' THEN 1 ELSE 0 END) as active_assets,
         SUM(CASE WHEN a.status = 'inactive' THEN 1 ELSE 0 END) as inactive_assets,
         SUM(CASE WHEN a.status = 'maintenance' THEN 1 ELSE 0 END) as maintenance_assets
-      FROM departments d
+      FROM assets_departments d
       LEFT JOIN assets a ON d.id = a.department_id
       WHERE 1=1
     `;
@@ -459,7 +459,7 @@ class Asset {
     let sql = `
       SELECT TOP ${limit} a.*, d.name as department_name 
       FROM assets a 
-      LEFT JOIN departments d ON a.department_id = d.id 
+      LEFT JOIN assets_departments d ON a.department_id = d.id 
       WHERE 1=1
     `;
     

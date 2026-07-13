@@ -75,10 +75,27 @@ const assetController = {
         userDepartment = await Department.findById(req.session.user.department_id);
       }
       
-      // 取得同部門的人員列表（用於保管人下拉選單）
-      let departmentUsers = [];
-      if (req.session.user.department_id) {
-        departmentUsers = await User.findByDepartmentId(req.session.user.department_id);
+        // 取得人員列表（用於保管人下拉選單）
+        let departmentUsers = [];
+        if (req.session.user.role === 'admin') {
+            // 管理員可以看到所有使用者
+            departmentUsers = await User.findAll();
+        } else if (req.session.user.department_id) {
+            // 一般使用者只能看到同部門的人員
+            departmentUsers = await User.findByDepartmentId(req.session.user.department_id);
+        }
+      
+      // 管理員可以看到所有部門，用於下拉選單
+      // 其他角色則不帶入 departments，讓 view 顯示唯讀的所屬部門
+      let departments = [];
+      if (req.session.user.role === 'admin') {
+        departments = await Department.findAll();
+        console.log(`[DEBUG] Admin user - departments count: ${departments.length}`);
+      } else if (req.session.user.department_id) {
+        const userDept = await Department.findById(req.session.user.department_id);
+        if (userDept) {
+          departments = [userDept];
+        }
       }
       
       // 從 session 中取出暫存的表單資料（序號重複時保留使用者輸入）
@@ -91,6 +108,7 @@ const assetController = {
         categories,
         user: req.session.user,
         departmentUsers,
+        departments,
         formData
       });
     } catch (error) {

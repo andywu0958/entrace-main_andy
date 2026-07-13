@@ -5,17 +5,17 @@ GO
 PRINT 'Using existing database: pm';
 
 -- 建立部門資料表
-IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='departments' AND xtype='U')
+IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='assets_departments' AND xtype='U')
 BEGIN
-    CREATE TABLE departments (
+    CREATE TABLE assets_departments (
         id INT IDENTITY(1,1) PRIMARY KEY,
         name NVARCHAR(100) NOT NULL UNIQUE,
         created_at DATETIME DEFAULT GETDATE()
     );
-    PRINT 'Table departments created.';
+    PRINT 'Table assets_departments created.';
     
     -- 插入預設部門
-    INSERT INTO departments (name) VALUES 
+    INSERT INTO assets_departments (name) VALUES 
     ('資訊部'),
     ('人事部'),
     ('財務部'),
@@ -35,7 +35,7 @@ BEGIN
         role NVARCHAR(20) NOT NULL CHECK (role IN ('admin', 'dept_manager')),
         department_id INT,
         created_at DATETIME DEFAULT GETDATE(),
-        FOREIGN KEY (department_id) REFERENCES departments(id) ON DELETE SET NULL
+        FOREIGN KEY (department_id) REFERENCES assets_departments(id) ON DELETE SET NULL
     );
     PRINT 'Table users created.';
     
@@ -77,7 +77,7 @@ BEGIN
         location NVARCHAR(200),
         created_at DATETIME DEFAULT GETDATE(),
         updated_at DATETIME DEFAULT GETDATE(),
-        FOREIGN KEY (department_id) REFERENCES departments(id) ON DELETE CASCADE
+        FOREIGN KEY (department_id) REFERENCES assets_departments(id) ON DELETE CASCADE
     );
     PRINT 'Table assets created.';
     
@@ -184,7 +184,7 @@ BEGIN
         a.created_at,
         a.updated_at
     FROM assets a
-    LEFT JOIN departments d ON a.department_id = d.id
+    LEFT JOIN assets_departments d ON a.department_id = d.id
     ');
     PRINT 'View vw_asset_details created.';
 END
@@ -224,7 +224,7 @@ BEGIN
         a.created_at,
         a.updated_at
     FROM assets a
-    LEFT JOIN departments d ON a.department_id = d.id
+    LEFT JOIN assets_departments d ON a.department_id = d.id
     ');
     PRINT 'View vw_asset_details updated to include all new financial columns.';
 END

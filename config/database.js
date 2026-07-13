@@ -70,47 +70,64 @@ let poolPromise;
 let query;
 let execute;
 
+// 模擬查詢輔助函數（供兩個分支使用）
+function mockQuery(text, params) {
+  if (text.includes('FROM users')) {
+    if (text.includes('WHERE username')) {
+      const username = params?.username;
+      return mockData.users.filter(user => user.username === username);
+    }
+    if (text.includes('WHERE id')) {
+      const id = params?.id;
+      return mockData.users.filter(user => user.id === id);
+    }
+    // 處理 LEFT JOIN 查詢，加入 department_name
+    if (text.includes('LEFT JOIN')) {
+      return mockData.users.map(user => {
+        const dept = mockData.departments.find(d => d.id === user.department_id);
+        return { ...user, department_name: dept ? dept.name : null };
+      });
+    }
+    return mockData.users;
+  }
+  
+  if (text.includes('FROM assets_departments')) {
+    if (text.includes('WHERE id')) {
+      const id = params?.id;
+      return mockData.departments.filter(dept => dept.id === id);
+    }
+    return mockData.departments;
+  }
+  
+  if (text.includes('FROM assets')) {
+    if (text.includes('WHERE id')) {
+      const id = params?.id;
+      return mockData.assets.filter(asset => asset.id === id);
+    }
+    // 處理 LEFT JOIN 查詢，加入 department_name
+    if (text.includes('LEFT JOIN')) {
+      return mockData.assets.map(asset => {
+        const dept = mockData.departments.find(d => d.id === asset.department_id);
+        return { ...asset, department_name: dept ? dept.name : null };
+      });
+    }
+    return mockData.assets;
+  }
+  
+  if (text.includes('COUNT(*)')) {
+    return [{ count: mockData.assets.length }];
+  }
+  
+  return [];
+}
+
 if (useMockDatabase) {
   console.log('Using mock database for testing');
   
   // 模擬查詢函數
   query = async (text, params) => {
     console.log('Mock Query:', text.substring(0, 100) + '...');
-    
-    // 簡單的模擬查詢邏輯
-    if (text.includes('FROM users')) {
-      if (text.includes('WHERE username')) {
-        const username = params?.username;
-        return mockData.users.filter(user => user.username === username);
-      }
-      if (text.includes('WHERE id')) {
-        const id = params?.id;
-        return mockData.users.filter(user => user.id === id);
-      }
-      return mockData.users;
-    }
-    
-    if (text.includes('FROM departments')) {
-      if (text.includes('WHERE id')) {
-        const id = params?.id;
-        return mockData.departments.filter(dept => dept.id === id);
-      }
-      return mockData.departments;
-    }
-    
-    if (text.includes('FROM assets')) {
-      if (text.includes('WHERE id')) {
-        const id = params?.id;
-        return mockData.assets.filter(asset => asset.id === id);
-      }
-      return mockData.assets;
-    }
-    
-    if (text.includes('COUNT(*)')) {
-      return [{ count: mockData.assets.length }];
-    }
-    
-    return [];
+    return mockQuery(text, params);
   };
   
   // 模擬執行函數
@@ -134,65 +151,22 @@ if (useMockDatabase) {
       
       // 回退到模擬資料庫
       process.env.USE_MOCK_DB = 'true';
-      // 避免循環依賴，直接使用模擬資料庫設定
       useMockDatabase = true;
       
-      // 模擬查詢函數
-      query = async (text, params) => {
-        console.log('Mock Query (fallback):', text.substring(0, 100) + '...');
-        
-        if (text.includes('FROM users')) {
-          if (text.includes('WHERE username')) {
-            const username = params?.username;
-            const result = mockData.users.filter(user => user.username === username);
-            return result || [];
-          }
-          if (text.includes('WHERE id')) {
-            const id = params?.id;
-            const result = mockData.users.filter(user => user.id === id);
-            return result || [];
-          }
-          return mockData.users;
-        }
-        
-        if (text.includes('FROM departments')) {
-          if (text.includes('WHERE id')) {
-            const id = params?.id;
-            const result = mockData.departments.filter(dept => dept.id === id);
-            return result || [];
-          }
-          return mockData.departments;
-        }
-        
-        if (text.includes('FROM assets')) {
-          if (text.includes('WHERE id')) {
-            const id = params?.id;
-            const result = mockData.assets.filter(asset => asset.id === id);
-            return result || [];
-          }
-          return mockData.assets;
-        }
-        
-        if (text.includes('COUNT(*)')) {
-          return [{ count: mockData.assets.length }];
-        }
-        
-        return [];
-      };
-      
-      // 模擬執行函數
-      execute = async (text, params) => {
-        console.log('Mock Execute (fallback):', text.substring(0, 100) + '...');
-        return 1;
-      };
-      
-      return { request: () => ({ input: () => {}, query }) };
+      return null; // 返回 null 表示連線失敗
     });
 
   // 真實的查詢函數
   query = async (text, params) => {
     try {
       const pool = await poolPromise;
+      
+      // 如果連線失敗（pool 為 null），使用模擬資料庫
+      if (!pool) {
+        console.log('Mock Query (fallback):', text.substring(0, 100) + '...');
+        return mockQuery(text, params);
+      }
+      
       const request = pool.request();
       
       if (params) {
@@ -213,6 +187,13 @@ if (useMockDatabase) {
   execute = async (text, params) => {
     try {
       const pool = await poolPromise;
+      
+      // 如果連線失敗（pool 為 null），使用模擬資料庫
+      if (!pool) {
+        console.log('Mock Execute (fallback):', text.substring(0, 100) + '...');
+        return 1;
+      }
+      
       const request = pool.request();
       
       if (params) {
@@ -228,6 +209,7 @@ if (useMockDatabase) {
       throw err;
     }
   };
+  
 }
 
 module.exports = {

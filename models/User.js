@@ -45,7 +45,7 @@ class User {
     const sql = `
       SELECT u.*, d.name as department_name 
       FROM users u 
-      LEFT JOIN departments d ON u.department_id = d.id 
+      LEFT JOIN assets_departments d ON u.department_id = d.id 
       ORDER BY u.created_at DESC
     `;
     return await query(sql);
@@ -102,7 +102,7 @@ class User {
   // 根據部門 ID 取得使用者
   static async findByDepartmentId(departmentId) {
     const sql = `
-      SELECT id, username, name, role, department_id 
+      SELECT id, username, role, department_id 
       FROM users 
       WHERE department_id = @departmentId 
       ORDER BY username ASC

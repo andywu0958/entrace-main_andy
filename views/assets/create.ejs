@@ -82,9 +82,28 @@
                                 <div class="col-12 col-md-6">
                                     <div class="mb-3">
                                         <label for="department_id" class="form-label">取得部門 <span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control" id="department_id_display" value="<%= userDepartment ? userDepartment.name : '未設定部門' %>" readonly>
-                                        <input type="hidden" id="department_id" name="department_id" value="<%= userDepartment ? userDepartment.id : '' %>">
-                                        <div class="form-text">自動帶入登入者的部門</div>
+                                        <% if (user.role === 'admin') { %>
+                                            <select class="form-select" id="department_id" name="department_id" required>
+                                                <option value="">請選擇部門</option>
+                                                <% if (typeof departments !== 'undefined' && departments.length > 0) { %>
+                                                    <% departments.forEach(function(dept) { %>
+                                                        <option value="<%= dept.id %>" <%= (typeof formData !== 'undefined' && formData.department_id && parseInt(formData.department_id) === dept.id) ? 'selected' : '' %>><%= dept.name %></option>
+                                                    <% }); %>
+                                                <% } %>
+                                            </select>
+                                            <div class="form-text">管理員可選擇所有部門</div>
+                                        <% } else if (typeof departments !== 'undefined' && departments.length > 0) { %>
+                                            <select class="form-select" id="department_id" name="department_id" required>
+                                                <% departments.forEach(function(dept) { %>
+                                                    <option value="<%= dept.id %>" selected><%= dept.name %></option>
+                                                <% }); %>
+                                            </select>
+                                            <div class="form-text">自動帶入登入者的部門</div>
+                                        <% } else { %>
+                                            <input type="text" class="form-control" id="department_id_display" value="<%= userDepartment ? userDepartment.name : '未設定部門' %>" readonly>
+                                            <input type="hidden" id="department_id" name="department_id" value="<%= userDepartment ? userDepartment.id : '' %>">
+                                            <div class="form-text">自動帶入登入者的部門</div>
+                                        <% } %>
                                     </div>
                                 </div>
                                 <div class="col-12 col-md-6">
